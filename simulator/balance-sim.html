@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeQuest Balance Simulator</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --accent2: #533483;
+  --text: #eee;
+  --text-dim: #999;
+  --growth: #4caf50;
+  --sustainability: #66bb6a;
+  --community: #ffc107;
+  --expression: #e91e63;
+  --learning: #2196f3;
+  --common: #aaa;
+  --uncommon: #4fc3f7;
+  --rare: #ce93d8;
+  --legendary: #ffd54f;
+  --spring: #66bb6a;
+  --summer: #ffc107;
+  --autumn: #ff7043;
+  --winter: #42a5f5;
+  --success: #2e7d32;
+  --danger: #c62828;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+h1, h2, h3, h4 { font-weight: 600; }
+
+.app { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+/* Header */
+.header { background: var(--surface); padding: 12px 20px; border-radius: 8px; border-bottom: 2px solid var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+.header h1 { font-size: 1.2rem; white-space: nowrap; }
+.header .subtitle { font-size: 0.8rem; color: var(--text-dim); }
+
+/* Config panel */
+.config { background: var(--surface); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.config-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.config-group { display: flex; flex-direction: column; gap: 4px; }
+.config-group label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+.config-group select, .config-group input { padding: 7px 12px; background: var(--bg); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 0.85rem; min-width: 160px; }
+.config-group select:focus, .config-group input:focus { outline: none; border-color: var(--accent); }
+.config-options { display: flex; gap: 16px; align-items: center; margin-top: 10px; }
+.config-options label { font-size: 0.8rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.config-options input[type="checkbox"] { accent-color: var(--accent); }
+
+/* Buttons */
+.btn { padding: 7px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: opacity 0.2s; }
+.btn:hover { opacity: 0.85; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-secondary { background: var(--surface2); color: var(--text); }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-small { padding: 4px 10px; font-size: 0.78rem; }
+
+/* Progress */
+.progress-container { background: var(--surface); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: none; }
+.progress-container.active { display: block; }
+.progress-bar-wrap { background: var(--bg); border-radius: 4px; height: 24px; overflow: hidden; position: relative; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.15s; border-radius: 4px; }
+.progress-text { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 600; }
+.progress-info { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.75rem; color: var(--text-dim); }
+
+/* Summary cards */
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; display: none; }
+.summary.active { display: grid; }
+.summary-card { background: var(--surface); border-radius: 8px; padding: 14px; text-align: center; }
+.summary-card .sc-value { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+.summary-card .sc-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-top: 4px; }
+.summary-card .sc-sub { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+
+/* Filter bar */
+.filter-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.filter-bar select { padding: 4px 8px; background: var(--bg); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 0.78rem; }
+
+/* Stats table */
+.stats-container { background: var(--surface); border-radius: 8px; padding: 16px; margin-bottom: 16px; display: none; }
+.stats-container.active { display: block; }
+.stats-table-wrap { overflow-x: auto; }
+table.stats-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+table.stats-table th { background: var(--surface2); padding: 8px 10px; text-align: left; cursor: pointer; user-select: none; white-space: nowrap; border-bottom: 2px solid var(--accent); position: sticky; top: 0; }
+table.stats-table th:hover { color: var(--accent); }
+table.stats-table th .sort-arrow { margin-left: 4px; font-size: 0.65rem; }
+table.stats-table td { padding: 6px 10px; border-bottom: 1px solid #2a2a4a; white-space: nowrap; }
+table.stats-table tr:hover { background: var(--surface2); }
+table.stats-table tr.flagged-op { background: rgba(233, 69, 96, 0.15); }
+table.stats-table tr.flagged-up { background: rgba(66, 165, 245, 0.15); }
+table.stats-table tr.flagged-never { background: rgba(153, 153, 153, 0.15); }
+.flag-badge { padding: 2px 6px; border-radius: 3px; font-size: 0.65rem; font-weight: 600; }
+.flag-op { background: var(--accent); color: white; }
+.flag-up { background: var(--winter); color: #000; }
+.flag-lp { background: var(--summer); color: #000; }
+.flag-never { background: #555; color: #ccc; }
+
+/* Charts */
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 16px; display: none; }
+.charts.active { display: grid; }
+.chart-card { background: var(--surface); border-radius: 8px; padding: 16px; }
+.chart-card h4 { font-size: 0.85rem; color: var(--accent); margin-bottom: 10px; }
+canvas { width: 100%; height: 220px; }
+
+/* Export bar */
+.export-bar { display: flex; gap: 8px; margin-bottom: 16px; display: none; }
+.export-bar.active { display: flex; }
+
+/* Toast */
+.toast { position: fixed; bottom: 16px; right: 16px; background: var(--surface2); border: 1px solid var(--accent); padding: 10px 18px; border-radius: 8px; z-index: 200; transition: opacity 0.3s; font-size: 0.8rem; }
+.toast.hidden { opacity: 0; pointer-events: none; }
+
+/* Parser report */
+.parser-report { background: var(--surface); border-radius: 8px; padding: 16px; margin-bottom: 16px; display: none; }
+.parser-report.active { display: block; }
+.parser-report h4 { font-size: 0.85rem; color: var(--accent); margin-bottom: 8px; }
+.parser-report .pr-stat { font-size: 0.78rem; margin-bottom: 4px; }
+.parser-report .pr-list { font-size: 0.72rem; color: var(--text-dim); max-height: 120px; overflow-y: auto; margin-top: 6px; }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .config-row { flex-direction: column; }
+  .summary { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <h1>LifeQuest Balance Simulator</h1>
+    <span class="subtitle">Automated playtesting & card balance analysis</span>
+  </div>
+
+  <!-- Config Panel -->
+  <div class="config">
+    <div class="config-row">
+      <div class="config-group">
+        <label>Deck A</label>
+        <select id="deck-a"></select>
+      </div>
+      <div class="config-group">
+        <label>Deck B</label>
+        <select id="deck-b"></select>
+      </div>
+      <div class="config-group">
+        <label>Games</label>
+        <input type="number" id="num-games" value="500" min="10" max="10000" step="10">
+      </div>
+      <div class="config-group" style="justify-content:flex-end;">
+        <button class="btn btn-primary" id="btn-run" onclick="runSimulation()" disabled>Run Simulation</button>
+      </div>
+    </div>
+    <div class="config-options">
+      <label><input type="checkbox" id="opt-swap" checked> Swap sides each game</label>
+      <label><input type="checkbox" id="opt-verbose"> Verbose log</label>
+      <div style="margin-left:auto;">
+        <button class="btn btn-small btn-secondary" onclick="document.getElementById('import-cards').click()">Import cards.json</button>
+        <button class="btn btn-small btn-secondary" onclick="document.getElementById('import-decks').click()">Import decks.json</button>
+        <input type="file" id="import-cards" accept=".json" style="display:none" onchange="importCardsFile(event)">
+        <input type="file" id="import-decks" accept=".json" style="display:none" onchange="importDecksFile(event)">
+      </div>
+    </div>
+    <div id="load-status" style="font-size:0.75rem;color:var(--text-dim);margin-top:8px;">Loading card data...</div>
+  </div>
+
+  <!-- Parser Report -->
+  <div class="parser-report" id="parser-report"></div>
+
+  <!-- Progress Bar -->
+  <div class="progress-container" id="progress">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <span style="font-size:0.8rem;">Simulating...</span>
+      <button class="btn btn-small btn-danger" id="btn-stop" onclick="stopSimulation()">Stop</button>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      <div class="progress-text" id="progress-text">0%</div>
+    </div>
+    <div class="progress-info">
+      <span id="progress-games">0 / 0 games</span>
+      <span id="progress-time">Elapsed: 0s</span>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary" id="summary"></div>
+
+  <!-- Charts -->
+  <div class="charts" id="charts">
+    <div class="chart-card">
+      <h4>Win Rate Distribution</h4>
+      <canvas id="chart-wins"></canvas>
+    </div>
+    <div class="chart-card">
+      <h4>Game Length (Years)</h4>
+      <canvas id="chart-years"></canvas>
+    </div>
+    <div class="chart-card">
+      <h4>Card Play Rate vs Win Correlation</h4>
+      <canvas id="chart-scatter"></canvas>
+    </div>
+  </div>
+
+  <!-- Export -->
+  <div class="export-bar" id="export-bar">
+    <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
+    <button class="btn btn-secondary" onclick="exportJSON()">Export JSON</button>
+  </div>
+
+  <!-- Stats Table -->
+  <div class="stats-container" id="stats-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <h3 style="font-size:0.95rem;">Card Statistics</h3>
+      <div class="filter-bar">
+        <select id="filter-deck" onchange="renderStatsTable()">
+          <option value="all">All Cards</option>
+        </select>
+        <select id="filter-type" onchange="renderStatsTable()">
+          <option value="all">All Types</option>
+          <option value="People">People</option>
+          <option value="Location">Location</option>
+          <option value="Event">Event</option>
+        </select>
+        <select id="filter-flag" onchange="renderStatsTable()">
+          <option value="all">All Flags</option>
+          <option value="flagged">Flagged Only</option>
+          <option value="op">Overpowered</option>
+          <option value="up">Underpowered</option>
+          <option value="lp">LP Outlier</option>
+          <option value="never">Never Played</option>
+        </select>
+      </div>
+    </div>
+    <div class="stats-table-wrap" style="max-height:500px;overflow-y:auto;">
+      <table class="stats-table" id="stats-table">
+        <thead><tr></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script>
+// =====================================================================
+// SECTION 1: CONSTANTS & STATE
+// =====================================================================
+const RESOURCES = ['growth','sustainability','community','expression','learning'];
+const RES_LABELS = { growth:'Growth', sustainability:'Sustainability', community:'Community', expression:'Expression', learning:'Learning' };
+
+let cardDb = [];
+let starterDecks = [];
+let simRunning = false;
+let simStopped = false;
+let currentStats = null;
+
+// =====================================================================
+// SECTION 2: UTILITY
+// =====================================================================
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function cloneCard(c) { return JSON.parse(JSON.stringify(c)); }
+function emptyTokens() { return { growth:0, sustainability:0, community:0, expression:0, learning:0 }; }
+function totalTokens(tokens) { return RESOURCES.reduce((s,r) => s + tokens[r], 0); }
+function poolTotal(pool) { return RESOURCES.reduce((s,r) => s + pool[r], 0); }
+
+function canAfford(tokens, cost) {
+  return RESOURCES.every(r => tokens[r] >= (cost[r]||0));
+}
+
+function yieldToUI() {
+  return new Promise(resolve => setTimeout(resolve, 0));
+}
+
+// =====================================================================
+// SECTION 3: ABILITY PARSER
+// =====================================================================
+
+// Parsed effect: { type, amount, resource, target, condition, raw }
+// type: 'lp', 'draw', 'discard_cards', 'token_gain', 'token_reclaim', 'token_return',
+//       'lp_per_tag', 'lp_per_type', 'lp_conditional', 'draw_conditional',
+//       'both_lp', 'both_draw', 'opponent_lp', 'claim_tokens', 'skip'
+// target: 'self', 'opponent', 'both', 'pool'
+// condition: { type: 'control_tag', 'control_type', 'control_count', 'token_count', 'has_tag', tag/cardType/count }
+
+const ABILITY_PATTERNS = [
+  // === LP GAINS ===
+  // "Gain N LP" (simple)
+  { re: /^Gain (\d+) LP\.?$/i,
+    parse: m => ({ type:'lp', amount:+m[1], target:'self' }) },
+
+  // "Gain LP equal to the number of People you control (up to N)"
+  { re: /Gain LP equal to the number of (\w+) you control\s*\(up to (\d+)\)/i,
+    parse: m => ({ type:'lp_per_type', cardType:m[1], max:+m[2], target:'self' }) },
+
+  // "Gain N LP for each [tag] you control, up to M bonus" / "Gain N LP for each [type] card you control"
+  { re: /Gain (\d+) LP for each (?:People|Location|Event|cards?) (?:you control )?with (?:the )?(\w+)(?: or (\w+))? tag(?:.*?up to (\d+))?/i,
+    parse: m => ({ type:'lp_per_tag', amount:+m[1], tag:m[2], tag2:m[3]||null, max:m[4]?+m[4]:99, target:'self' }) },
+  { re: /Gain (\d+) LP for each (\w+)(?: card)? you control(?:.*?up to (\d+))?/i,
+    parse: m => ({ type:'lp_per_type', amount:+m[1], cardType:m[2], max:m[3]?+m[3]:99, target:'self' }) },
+  { re: /Gain (\d+) LP for each Location with the (\w+) tag you control/i,
+    parse: m => ({ type:'lp_per_tag', amount:+m[1], tag:m[2], cardType:'Location', max:99, target:'self' }) },
+  { re: /Gain (\d+) LP for each People (?:you control )?with (?:the )?(\w+)(?: or (\w+))? tag(?:.*?up to (\d+))?/i,
+    parse: m => ({ type:'lp_per_tag', amount:+m[1], tag:m[2], tag2:m[3]||null, cardType:'People', max:m[4]?+m[4]:99, target:'self' }) },
+  { re: /Gain (\d+) LP for each (\w+)-tagged (?:card|People) you control(?:.*?up to (\d+))?/i,
+    parse: m => ({ type:'lp_per_tag', amount:+m[1], tag:m[2], max:m[3]?+m[3]:99, target:'self' }) },
+
+  // "Gain N LP. If you control [condition], gain M LP instead"
+  { re: /Gain (\d+) LP\.\s*If you control (?:a )?(?:People|Location)(?: card)? with the (\w+) tag,?\s*gain (\d+) LP instead/i,
+    parse: m => ({ type:'lp_conditional', base:+m[1], tag:m[2], bonus:+m[3], target:'self' }) },
+  { re: /Gain (\d+) LP\.\s*If you control (?:a )?Location with the (\w+) tag,?\s*gain (\d+) (?:additional )?LP/i,
+    parse: m => ({ type:'lp_conditional', base:+m[1], tag:m[2], bonus:+m[1]+(+m[3]), target:'self' }) },
+
+  // "Gain N LP. If you control 2+ People with [tag], gain M LP instead"
+  { re: /Gain (\d+) LP\.\s*If you control (\d+) or more People with the (\w+)(?: or (\w+))? tag,?\s*gain (\d+) LP instead/i,
+    parse: m => ({ type:'lp_conditional', base:+m[1], condCount:+m[2], tag:m[3], tag2:m[4]||null, bonus:+m[5], target:'self' }) },
+
+  // "Both players gain N LP"
+  { re: /^Both players gain (\d+) LP\.?$/i,
+    parse: m => ({ type:'both_lp', amount:+m[1] }) },
+
+  // "Both players gain N LP. You gain M additional LP"
+  { re: /Both players gain (\d+) LP\.\s*You gain (\d+) additional LP/i,
+    parse: m => ({ type:'both_lp', amount:+m[1], selfExtra:+m[2] }) },
+
+  // "Both players gain N LP. You draw M card"
+  { re: /Both players gain (\d+) LP\.\s*You draw (\d+) card/i,
+    parse: m => [{ type:'both_lp', amount:+m[1] }, { type:'draw', amount:+m[2], target:'self' }] },
+
+  // "Both players gain 1 LP. If you control a Location with Food tag, you gain 2 LP instead"
+  { re: /Both players gain (\d+) LP\.\s*If you control a Location with the (\w+) tag,?\s*you gain (\d+) LP instead/i,
+    parse: m => ({ type:'both_lp_conditional', base:+m[1], tag:m[2], selfBonus:+m[3] }) },
+
+  // === DRAWS ===
+  // "Draw N cards"
+  { re: /^Draw (\d+) cards?\.?$/i,
+    parse: m => ({ type:'draw', amount:+m[1], target:'self' }) },
+
+  // "Draw N cards, then discard M" with optional keep-all condition
+  { re: /Draw (\d+) cards?,?\s*then discard (\d+)/i,
+    parse: m => ({ type:'draw_discard', draw:+m[1], discard:+m[2], target:'self' }) },
+
+  // "Draw N card. If condition, draw M instead"
+  { re: /Draw (\d+) cards?\.\s*If you control (?:a )?People (?:card )?with the (\w+) tag,?\s*draw (\d+) instead/i,
+    parse: m => ({ type:'draw_conditional', base:+m[1], tag:m[2], bonus:+m[3], target:'self' }) },
+
+  // "Both players draw N card. You gain LP..."
+  { re: /Both players draw (\d+) card/i,
+    parse: m => ({ type:'both_draw', amount:+m[1] }) },
+
+  // "Each player draws 1 card. You gain N LP for each..."
+  { re: /Each player draws? (\d+) cards?\.\s*You gain (\d+) LP for each (?:People you control with the (\w+) tag|(\w+)(?: card)? (?:with the (\w+) tag )?you control)(?:.*?up to (\d+))?/i,
+    parse: m => {
+      const tag = m[3] || m[5] || null;
+      const cardType = m[4] || null;
+      return [
+        { type:'both_draw', amount:+m[1] },
+        tag ? { type:'lp_per_tag', amount:+m[2], tag, max:m[6]?+m[6]:99, target:'self' }
+            : { type:'lp_per_type', amount:+m[2], cardType:cardType||'People', max:m[6]?+m[6]:99, target:'self' }
+      ];
+    }
+  },
+
+  // "Each player claims 1 Resource Token... You draw 1 card"
+  { re: /Each player claims? (\d+) Resource Token.*You draw (\d+) card/i,
+    parse: m => [{ type:'both_token_gain', amount:+m[1] }, { type:'draw', amount:+m[2], target:'self' }] },
+
+  // === TOKEN OPERATIONS ===
+  // "Gain 1 token of any type from the shared pool"
+  { re: /(?:Gain|Claim) (\d+) tokens? of any type from the (?:shared )?pool/i,
+    parse: m => ({ type:'token_gain_any', amount:+m[1], target:'self' }) },
+
+  // "Claim N tokens of different types"
+  { re: /Claim (\d+) tokens? of different types? from the (?:shared )?pool/i,
+    parse: m => ({ type:'claim_different', amount:+m[1], target:'self' }) },
+
+  // "Gain 1 [Resource]" / "Claim 1 [Resource] from pool"
+  { re: /(?:Gain|Claim) (\d+) (\w+) (?:token )?from the (?:shared )?pool/i,
+    parse: m => {
+      const res = m[2].toLowerCase();
+      if (RESOURCES.includes(res)) return { type:'token_gain', amount:+m[1], resource:res, target:'self' };
+      return null;
+    }
+  },
+
+  // "Reclaim 1 [Resource] token from the pool"
+  { re: /Reclaim (\d+) (\w+) token from the (?:shared )?pool/i,
+    parse: m => {
+      const res = m[2].toLowerCase();
+      if (RESOURCES.includes(res)) return { type:'token_reclaim', amount:+m[1], resource:res, target:'self' };
+      return null;
+    }
+  },
+
+  // "Reclaim 1 token of any type"
+  { re: /Reclaim (\d+) (?:of your (?:spent )?)?tokens? (?:of any type )?from the (?:shared )?pool/i,
+    parse: m => ({ type:'token_reclaim_any', amount:+m[1], target:'self' }) },
+
+  // "Reclaim 1 of your spent Resource Tokens"
+  { re: /Reclaim (\d+) of your spent Resource Token/i,
+    parse: m => ({ type:'token_reclaim_any', amount:+m[1], target:'self' }) },
+
+  // "Return 1 [Resource] to the pool. [effect]"
+  { re: /Return (\d+) (\w+) (?:token )?to the pool\.\s*Draw (\d+) card/i,
+    parse: m => {
+      const res = m[2].toLowerCase();
+      if (!RESOURCES.includes(res)) return null;
+      return [{ type:'token_return', amount:+m[1], resource:res }, { type:'draw', amount:+m[3], target:'self' }];
+    }
+  },
+  { re: /Return (\d+) (\w+) (?:token )?to the pool\.\s*(?:Each player gains? (\d+) LP|Gain (\d+) LP)/i,
+    parse: m => {
+      const res = m[2].toLowerCase();
+      if (!RESOURCES.includes(res)) return null;
+      if (m[3]) return [{ type:'token_return', amount:+m[1], resource:res }, { type:'both_lp', amount:+m[3] }];
+      return [{ type:'token_return', amount:+m[1], resource:res }, { type:'lp', amount:+m[4], target:'self' }];
+    }
+  },
+
+  // "Return 1 of your tokens to the pool. Gain N LP"
+  { re: /Return (\d+) of your tokens? to the (?:shared )?pool\.\s*Gain (\d+) LP/i,
+    parse: m => [{ type:'token_return_any', amount:+m[1] }, { type:'lp', amount:+m[2], target:'self' }] },
+
+  // "Each player returns N of their tokens to the pool. You draw N cards"
+  { re: /Each player returns? (\d+) of their tokens? to the (?:shared )?pool\.\s*You draw (\d+) card/i,
+    parse: m => [{ type:'both_token_return', amount:+m[1] }, { type:'draw', amount:+m[2], target:'self' }] },
+
+  // "Return any number of your tokens to the shared pool. For each token returned, draw 1 card"
+  { re: /Return any number of your tokens? to the (?:shared )?pool\.\s*For each token returned,?\s*draw (\d+) card/i,
+    parse: m => ({ type:'token_to_cards', target:'self' }) },
+
+  // "Both players gain 2 LP. Return 1 of your tokens to the pool"
+  { re: /Both players gain (\d+) LP\.\s*Return (\d+) of your tokens? to the (?:shared )?pool/i,
+    parse: m => [{ type:'both_lp', amount:+m[1] }, { type:'token_return_any', amount:+m[2] }] },
+
+  // "Gain 2 LP. If you control a Location with Nature tag, reclaim 1 Sustainability token"
+  { re: /Gain (\d+) LP\.\s*If you control (?:a )?Location with the (\w+) tag,?\s*reclaim (\d+) (\w+) token/i,
+    parse: m => {
+      const res = m[4].toLowerCase();
+      return [{ type:'lp', amount:+m[1], target:'self' },
+              { type:'token_reclaim_conditional', amount:+m[3], resource:RESOURCES.includes(res)?res:null, condTag:m[2] }];
+    }
+  },
+
+  // "Gain 1 LP. Claim 1 token of any type from the shared pool"
+  { re: /Gain (\d+) LP\.\s*(?:Claim|Gain) (\d+) tokens? of any type from the (?:shared )?pool/i,
+    parse: m => [{ type:'lp', amount:+m[1], target:'self' }, { type:'token_gain_any', amount:+m[2], target:'self' }] },
+
+  // "Gain 1 LP. Reclaim 1 of your spent tokens from the pool"
+  { re: /Gain (\d+) LP\.\s*Reclaim (\d+) of your (?:spent )?tokens? from the (?:shared )?pool/i,
+    parse: m => [{ type:'lp', amount:+m[1], target:'self' }, { type:'token_reclaim_any', amount:+m[2], target:'self' }] },
+
+  // "Gain 1 LP. Choose a People you control. It gains +N LP this Winter"
+  { re: /Gain (\d+) LP\.\s*Choose a People you control\.?\s*It gains? \+(\d+) LP this Winter/i,
+    parse: m => [{ type:'lp', amount:+m[1], target:'self' }, { type:'temp_lp_boost', amount:+m[2] }] },
+
+  // "Draw N cards. Choose a People you control -- it gains +N LP this Winter"
+  { re: /Draw (\d+) cards?\.\s*Choose a People you control.*gains? \+(\d+) LP this Winter/i,
+    parse: m => [{ type:'draw', amount:+m[1], target:'self' }, { type:'temp_lp_boost', amount:+m[2] }] },
+
+  // "Choose a People you control with the [tag] tag. It gains +N LP this Winter. Draw 1 card"
+  { re: /Choose a People you control with the (\w+) tag\.?\s*It gains? \+(\d+) LP this Winter\.\s*Draw (\d+) card/i,
+    parse: m => [{ type:'temp_lp_boost_tagged', amount:+m[2], tag:m[1] }, { type:'draw', amount:+m[3], target:'self' }] },
+
+  // Catch-all for "Both players draw + You gain bonus LP + Draw"
+  { re: /Each player gains? LP equal to the number of (\w+) they control\.\s*You gain (\d+) additional LP\.\s*Both players draw (\d+) card/i,
+    parse: m => [
+      { type:'both_lp_per_type', cardType:m[1], target:'both' },
+      { type:'lp', amount:+m[2], target:'self' },
+      { type:'both_draw', amount:+m[3] }
+    ]
+  },
+
+  // "Each Location you control gains +1 LP this Winter. If you control 3+ Locations, draw 1 card"
+  { re: /Each Location you control gains? \+(\d+) LP this Winter\.\s*If you control (\d+) or more Locations?,?\s*draw (\d+) card/i,
+    parse: m => ({ type:'location_lp_boost', amount:+m[1], condCount:+m[2], drawAmount:+m[3] }) },
+
+  // "Give 1 of your tokens to your opponent. You and your opponent each gain 1 LP"
+  { re: /Give (\d+) of your tokens? to your opponent\.\s*You and your opponent each gain (\d+) LP/i,
+    parse: m => [{ type:'token_give', amount:+m[1] }, { type:'both_lp', amount:+m[2] }] },
+
+  // "Draw 3 cards, then discard 1. If you control a People with the Convention tag, discard 0 instead"
+  { re: /Draw (\d+) cards?,?\s*then discard (\d+)\.\s*If you control (?:a )?People (?:card )?with the (\w+) tag,?\s*discard (\d+) instead/i,
+    parse: m => ({ type:'draw_discard_conditional', draw:+m[1], discard:+m[2], tag:m[3], bonusDiscard:+m[4] }) },
+
+  // "Draw 1 card. The next People card you play this Summer costs 1 fewer..."
+  { re: /Draw (\d+) cards?\.\s*The next/i,
+    parse: m => ({ type:'draw', amount:+m[1], target:'self' }) },
+];
+
+// Parse a single ability text into an array of effects
+function parseAbilityText(text) {
+  if (!text) return null;
+  for (const pat of ABILITY_PATTERNS) {
+    const m = text.match(pat.re);
+    if (m) {
+      const result = pat.parse(m);
+      if (result === null) continue;
+      const effects = Array.isArray(result) ? result : [result];
+      effects.forEach(e => { e.raw = text; });
+      return effects;
+    }
+  }
+  return null; // unparseable
+}
+
+// Parse all abilities for a card, considering trigger and level
+function parseCardAbilities(card) {
+  const parsed = [];
+  let unparsedCount = 0;
+
+  for (const ab of (card.abilities || [])) {
+    const text = ab.text;
+    const trigger = ab.trigger;
+
+    // Handle Location level-based abilities
+    if (text.match(/^Lvl \d+:/i)) {
+      const levelParts = text.split(/(?=Lvl \d+:)/i);
+      const levelEffects = {};
+      let anyParsed = false;
+
+      for (const part of levelParts) {
+        const lvlMatch = part.match(/^Lvl (\d+):\s*(.*)/i);
+        if (!lvlMatch) continue;
+        const lvl = +lvlMatch[1];
+        // Clean up "Also, " prefix
+        let cleaned = lvlMatch[2].replace(/^Also,?\s*/i, '').trim();
+        // Remove trailing period
+        cleaned = cleaned.replace(/\.\s*$/, '');
+
+        const effects = parseAbilityText(cleaned);
+        if (effects) {
+          levelEffects[lvl] = effects;
+          anyParsed = true;
+        }
+      }
+
+      if (anyParsed) {
+        parsed.push({ trigger, levelEffects, raw: text });
+      } else {
+        unparsedCount++;
+        parsed.push({ trigger, effects: null, raw: text, unparsed: true });
+      }
+    } else {
+      const effects = parseAbilityText(text);
+      if (effects) {
+        parsed.push({ trigger, effects, raw: text });
+      } else {
+        unparsedCount++;
+        parsed.push({ trigger, effects: null, raw: text, unparsed: true });
+      }
+    }
+  }
+
+  return { parsed, unparsedCount };
+}
+
+// Parse all cards in the database
+function parseAllCards() {
+  let totalAbilities = 0;
+  let parsedAbilities = 0;
+  let unparsedCards = [];
+
+  for (const card of cardDb) {
+    const result = parseCardAbilities(card);
+    card._parsed = result.parsed;
+    totalAbilities += (card.abilities || []).length;
+    parsedAbilities += (card.abilities || []).length - result.unparsedCount;
+    if (result.unparsedCount > 0) {
+      const unparsedTexts = result.parsed.filter(p => p.unparsed).map(p => p.raw);
+      unparsedCards.push({ name: card.name, id: card.id, texts: unparsedTexts });
+    }
+  }
+
+  // Show parser report
+  const el = document.getElementById('parser-report');
+  let html = `<h4>Ability Parser Report</h4>`;
+  html += `<div class="pr-stat">Parsed: <strong>${parsedAbilities}</strong> / ${totalAbilities} abilities (${totalAbilities > 0 ? Math.round(parsedAbilities/totalAbilities*100) : 0}%)</div>`;
+  if (unparsedCards.length > 0) {
+    html += `<div class="pr-stat" style="color:var(--summer);">${unparsedCards.length} cards have unparsed abilities (effects will be skipped during simulation):</div>`;
+    html += `<div class="pr-list">`;
+    for (const c of unparsedCards) {
+      html += `<div style="margin-bottom:3px;"><strong>${c.name}</strong> (${c.id}): ${c.texts.map(t => '"' + t.substring(0, 80) + (t.length > 80 ? '...' : '') + '"').join(', ')}</div>`;
+    }
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+  el.classList.add('active');
+
+  console.log(`Ability Parser: ${parsedAbilities}/${totalAbilities} parsed`);
+  if (unparsedCards.length > 0) {
+    console.warn('Unparsed cards:', unparsedCards);
+  }
+}
+
+
+// =====================================================================
+// SECTION 4: HEADLESS GAME ENGINE
+// =====================================================================
+
+function newEngine(deckCardsA, deckCardsB) {
+  return {
+    year: 1,
+    season: 'spring',
+    phaseStep: 'p0-refresh',
+    startPlayer: 0,
+    activePlayer: 0,
+    summerConsecutivePasses: 0,
+    status: 'playing',
+    pool: { growth:2, sustainability:2, community:2, expression:2, learning:2 },
+    players: [
+      { lp:0, tokens:emptyTokens(), hand:[], board:[], deck:shuffle([...deckCardsA]), discard:[], autumnPlayed:false },
+      { lp:0, tokens:emptyTokens(), hand:[], board:[], deck:shuffle([...deckCardsB]), discard:[], autumnPlayed:false }
+    ],
+    // Tracking
+    cardsPlayed: [],   // {cardId, player, year, season}
+    tempLPBoosts: [],  // {player, boardIdx, amount} - temporary +LP for this Winter
+    verbose: false
+  };
+}
+
+function otherP(p) { return p === 0 ? 1 : 0; }
+
+function engineDraw(eng, pi, count) {
+  const p = eng.players[pi];
+  let drawn = 0;
+  for (let i = 0; i < count; i++) {
+    if (p.deck.length > 0) {
+      p.hand.push(p.deck.pop());
+      drawn++;
+    }
+  }
+  return drawn;
+}
+
+function engineDiscard(eng, pi, count) {
+  // AI discards lowest-value cards
+  const p = eng.players[pi];
+  for (let i = 0; i < count && p.hand.length > 0; i++) {
+    // Score each card, discard lowest
+    let worstIdx = 0, worstScore = Infinity;
+    for (let j = 0; j < p.hand.length; j++) {
+      const s = aiCardScore(eng, pi, p.hand[j]);
+      if (s < worstScore) { worstScore = s; worstIdx = j; }
+    }
+    const card = p.hand.splice(worstIdx, 1)[0];
+    p.discard.push(card);
+  }
+}
+
+function engineRefresh(eng, pi) {
+  eng.players[pi].board.forEach(e => { e.exhausted = false; });
+}
+
+function enginePayCost(eng, pi, cost) {
+  RESOURCES.forEach(r => {
+    const amt = cost[r] || 0;
+    eng.players[pi].tokens[r] -= amt;
+    eng.pool[r] += amt;
+  });
+}
+
+function enginePlayCard(eng, pi, handIdx) {
+  const p = eng.players[pi];
+  const card = p.hand.splice(handIdx, 1)[0];
+  enginePayCost(eng, pi, card.cost);
+
+  if (card.type === 'Event') {
+    // Resolve played abilities
+    resolveAbilities(eng, pi, card, 'played', null);
+    p.discard.push(card);
+  } else {
+    const entry = { card, exhausted: false, level: 1 };
+    p.board.push(entry);
+    resolveAbilities(eng, pi, card, 'played', entry);
+  }
+
+  eng.cardsPlayed.push({ cardId: card.id, player: pi, year: eng.year, season: eng.season });
+}
+
+function engineActivate(eng, pi, boardIdx) {
+  const entry = eng.players[pi].board[boardIdx];
+  if (!entry || entry.card.type !== 'People' || entry.exhausted) return;
+  entry.exhausted = true;
+  resolveAbilities(eng, pi, entry.card, 'activate', entry);
+}
+
+function engineTallyLP(eng) {
+  for (let pi = 0; pi < 2; pi++) {
+    let gained = 0;
+    for (const entry of eng.players[pi].board) {
+      let lp = entry.card.lp || 0;
+      // Check temporary boosts
+      for (const boost of eng.tempLPBoosts) {
+        if (boost.player === pi) {
+          const bEntry = eng.players[pi].board[boost.boardIdx];
+          if (bEntry === entry) lp += boost.amount;
+        }
+      }
+      if (lp > 0) gained += lp;
+    }
+    eng.players[pi].lp += gained;
+  }
+  // Clear temp boosts
+  eng.tempLPBoosts = [];
+}
+
+// Count cards matching a tag for a player
+function countTag(eng, pi, tag) {
+  return eng.players[pi].board.filter(e =>
+    (e.card.tags || []).some(t => t.toLowerCase() === tag.toLowerCase())
+  ).length;
+}
+
+// Count cards matching a type for a player
+function countType(eng, pi, cardType) {
+  return eng.players[pi].board.filter(e =>
+    e.card.type.toLowerCase() === cardType.toLowerCase()
+  ).length;
+}
+
+// Check if player controls a card with given tag (optionally of a specific type)
+function hasTag(eng, pi, tag, cardType) {
+  return eng.players[pi].board.some(e => {
+    if (cardType && e.card.type.toLowerCase() !== cardType.toLowerCase()) return false;
+    return (e.card.tags || []).some(t => t.toLowerCase() === tag.toLowerCase());
+  });
+}
+
+// Token gain from pool (any available type, AI picks most needed)
+function engineGainAnyToken(eng, pi) {
+  const needed = aiMostNeededResource(eng, pi);
+  if (needed && eng.pool[needed] > 0) {
+    eng.pool[needed]--;
+    eng.players[pi].tokens[needed]++;
+    return true;
+  }
+  // Fallback: any available
+  for (const r of RESOURCES) {
+    if (eng.pool[r] > 0) {
+      eng.pool[r]--;
+      eng.players[pi].tokens[r]++;
+      return true;
+    }
+  }
+  return false;
+}
+
+// Resolve abilities for a card based on trigger
+function resolveAbilities(eng, pi, card, trigger, entry) {
+  for (const ab of (card._parsed || [])) {
+    if (ab.trigger !== trigger) continue;
+    if (ab.unparsed) continue;
+
+    if (ab.levelEffects) {
+      // Location level-based: resolve effects at current level and below
+      const currentLevel = entry ? entry.level : 1;
+      for (let lvl = 1; lvl <= currentLevel; lvl++) {
+        if (ab.levelEffects[lvl]) {
+          resolveEffects(eng, pi, ab.levelEffects[lvl], entry);
+        }
+      }
+    } else if (ab.effects) {
+      resolveEffects(eng, pi, ab.effects, entry);
+    }
+  }
+}
+
+// Resolve an array of effects
+function resolveEffects(eng, pi, effects, entry) {
+  for (const eff of effects) {
+    resolveEffect(eng, pi, eff, entry);
+  }
+}
+
+// Resolve a single effect
+function resolveEffect(eng, pi, eff, entry) {
+  const p = eng.players[pi];
+  const opp = eng.players[otherP(pi)];
+
+  switch (eff.type) {
+    case 'lp':
+      p.lp += eff.amount;
+      break;
+
+    case 'opponent_lp':
+      opp.lp += eff.amount;
+      break;
+
+    case 'both_lp':
+      p.lp += eff.amount + (eff.selfExtra || 0);
+      opp.lp += eff.amount;
+      break;
+
+    case 'both_lp_conditional': {
+      const has = hasTag(eng, pi, eff.tag, 'Location');
+      if (has) {
+        p.lp += eff.selfBonus;
+        opp.lp += eff.base;
+      } else {
+        p.lp += eff.base;
+        opp.lp += eff.base;
+      }
+      break;
+    }
+
+    case 'lp_conditional': {
+      let has = false;
+      if (eff.condCount) {
+        // Need N+ People with tag
+        let count = countTag(eng, pi, eff.tag);
+        if (eff.tag2) count += countTag(eng, pi, eff.tag2);
+        has = count >= eff.condCount;
+      } else {
+        has = hasTag(eng, pi, eff.tag);
+      }
+      p.lp += has ? eff.bonus : eff.base;
+      break;
+    }
+
+    case 'lp_per_tag': {
+      let count = countTag(eng, pi, eff.tag);
+      if (eff.tag2) count += countTag(eng, pi, eff.tag2);
+      if (eff.cardType) {
+        count = eng.players[pi].board.filter(e =>
+          e.card.type.toLowerCase() === eff.cardType.toLowerCase() &&
+          (e.card.tags||[]).some(t => t.toLowerCase() === eff.tag.toLowerCase() || (eff.tag2 && t.toLowerCase() === eff.tag2.toLowerCase()))
+        ).length;
+      }
+      p.lp += Math.min(count, eff.max) * (eff.amount || 1);
+      break;
+    }
+
+    case 'lp_per_type': {
+      const count = countType(eng, pi, eff.cardType);
+      p.lp += Math.min(count, eff.max) * (eff.amount || 1);
+      break;
+    }
+
+    case 'both_lp_per_type': {
+      for (let i = 0; i < 2; i++) {
+        const c = countType(eng, i, eff.cardType);
+        eng.players[i].lp += c;
+      }
+      break;
+    }
+
+    case 'draw':
+      engineDraw(eng, eff.target === 'opponent' ? otherP(pi) : pi, eff.amount);
+      break;
+
+    case 'draw_discard':
+      engineDraw(eng, pi, eff.draw);
+      engineDiscard(eng, pi, eff.discard);
+      break;
+
+    case 'draw_discard_conditional': {
+      engineDraw(eng, pi, eff.draw);
+      const has = hasTag(eng, pi, eff.tag, 'People');
+      if (!has) engineDiscard(eng, pi, eff.discard);
+      break;
+    }
+
+    case 'draw_conditional': {
+      const has = hasTag(eng, pi, eff.tag, 'People');
+      engineDraw(eng, pi, has ? eff.bonus : eff.base);
+      break;
+    }
+
+    case 'both_draw':
+      engineDraw(eng, 0, eff.amount);
+      engineDraw(eng, 1, eff.amount);
+      break;
+
+    case 'token_gain':
+      if (eng.pool[eff.resource] >= eff.amount) {
+        eng.pool[eff.resource] -= eff.amount;
+        p.tokens[eff.resource] += eff.amount;
+      }
+      break;
+
+    case 'token_gain_any':
+    case 'both_token_gain':
+      if (eff.type === 'both_token_gain') {
+        engineGainAnyToken(eng, 0);
+        engineGainAnyToken(eng, 1);
+      } else {
+        for (let i = 0; i < eff.amount; i++) engineGainAnyToken(eng, pi);
+      }
+      break;
+
+    case 'claim_different': {
+      // Claim N tokens of different types
+      const claimed = new Set();
+      for (let i = 0; i < eff.amount; i++) {
+        const needed = aiMostNeededResource(eng, pi);
+        for (const r of [needed, ...RESOURCES]) {
+          if (!claimed.has(r) && eng.pool[r] > 0) {
+            eng.pool[r]--;
+            p.tokens[r]++;
+            claimed.add(r);
+            break;
+          }
+        }
+      }
+      break;
+    }
+
+    case 'token_reclaim':
+      if (eng.pool[eff.resource] >= eff.amount) {
+        eng.pool[eff.resource] -= eff.amount;
+        p.tokens[eff.resource] += eff.amount;
+      }
+      break;
+
+    case 'token_reclaim_any':
+      for (let i = 0; i < eff.amount; i++) engineGainAnyToken(eng, pi);
+      break;
+
+    case 'token_reclaim_conditional': {
+      const has = hasTag(eng, pi, eff.condTag, 'Location');
+      if (has && eff.resource && eng.pool[eff.resource] > 0) {
+        eng.pool[eff.resource]--;
+        p.tokens[eff.resource]++;
+      }
+      break;
+    }
+
+    case 'token_return':
+      if (p.tokens[eff.resource] >= eff.amount) {
+        p.tokens[eff.resource] -= eff.amount;
+        eng.pool[eff.resource] += eff.amount;
+      }
+      break;
+
+    case 'token_return_any': {
+      // Return least needed token
+      for (let i = 0; i < eff.amount; i++) {
+        const least = aiLeastNeededResource(eng, pi);
+        if (least && p.tokens[least] > 0) {
+          p.tokens[least]--;
+          eng.pool[least]++;
+        }
+      }
+      break;
+    }
+
+    case 'both_token_return':
+      for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < eff.amount; j++) {
+          const least = aiLeastNeededResource(eng, i);
+          if (least && eng.players[i].tokens[least] > 0) {
+            eng.players[i].tokens[least]--;
+            eng.pool[least]++;
+          }
+        }
+      }
+      break;
+
+    case 'token_to_cards': {
+      // Return tokens to draw cards - AI returns up to 2 if hand is small
+      const toReturn = Math.min(totalTokens(p.tokens), Math.max(0, 5 - p.hand.length));
+      for (let i = 0; i < toReturn; i++) {
+        const least = aiLeastNeededResource(eng, pi);
+        if (least && p.tokens[least] > 0) {
+          p.tokens[least]--;
+          eng.pool[least]++;
+          engineDraw(eng, pi, 1);
+        }
+      }
+      break;
+    }
+
+    case 'token_give': {
+      // Give token to opponent
+      const least = aiLeastNeededResource(eng, pi);
+      if (least && p.tokens[least] >= eff.amount) {
+        for (let i = 0; i < eff.amount; i++) {
+          p.tokens[least]--;
+          opp.tokens[least]++;
+        }
+      }
+      break;
+    }
+
+    case 'temp_lp_boost': {
+      // Boost best People on board
+      const peopleIdxs = p.board.map((e,i) => ({e,i})).filter(x => x.e.card.type === 'People');
+      if (peopleIdxs.length > 0) {
+        // Pick highest LP person
+        const best = peopleIdxs.sort((a,b) => (b.e.card.lp||0) - (a.e.card.lp||0))[0];
+        eng.tempLPBoosts.push({ player: pi, boardIdx: best.i, amount: eff.amount });
+      }
+      break;
+    }
+
+    case 'temp_lp_boost_tagged': {
+      const tagged = p.board.map((e,i) => ({e,i})).filter(x =>
+        x.e.card.type === 'People' && (x.e.card.tags||[]).some(t => t.toLowerCase() === eff.tag.toLowerCase())
+      );
+      if (tagged.length > 0) {
+        const best = tagged.sort((a,b) => (b.e.card.lp||0) - (a.e.card.lp||0))[0];
+        eng.tempLPBoosts.push({ player: pi, boardIdx: best.i, amount: eff.amount });
+      }
+      break;
+    }
+
+    case 'location_lp_boost': {
+      const locs = p.board.map((e,i) => ({e,i})).filter(x => x.e.card.type === 'Location');
+      for (const loc of locs) {
+        eng.tempLPBoosts.push({ player: pi, boardIdx: loc.i, amount: eff.amount });
+      }
+      if (locs.length >= eff.condCount) {
+        engineDraw(eng, pi, eff.drawAmount);
+      }
+      break;
+    }
+
+    // Skip unhandled
+    default:
+      break;
+  }
+}
+
+// Resolve seasonal triggers for all players
+function resolveSeasonTriggers(eng, season) {
+  // Sort: start player first, then by initiative desc
+  const triggers = [];
+  for (let pi = 0; pi < 2; pi++) {
+    for (const entry of eng.players[pi].board) {
+      for (const ab of (entry.card._parsed || [])) {
+        if (ab.trigger === season && !ab.unparsed) {
+          triggers.push({ pi, entry, ab, initiative: entry.card.initiative || 0 });
+        }
+      }
+    }
+  }
+  const sp = eng.startPlayer;
+  triggers.sort((a,b) => {
+    if (a.pi !== b.pi) return a.pi === sp ? -1 : 1;
+    return b.initiative - a.initiative;
+  });
+
+  for (const t of triggers) {
+    if (t.ab.levelEffects) {
+      const currentLevel = t.entry.level;
+      for (let lvl = 1; lvl <= currentLevel; lvl++) {
+        if (t.ab.levelEffects[lvl]) resolveEffects(eng, t.pi, t.ab.levelEffects[lvl], t.entry);
+      }
+    } else if (t.ab.effects) {
+      resolveEffects(eng, t.pi, t.ab.effects, t.entry);
+    }
+  }
+}
+
+// Resolve ongoing effects (for LP calculation and conditional bonuses)
+function resolveOngoing(eng) {
+  // Ongoing abilities that modify LP are complex - for simulation we handle
+  // the most common: "+1 LP while condition" effects modeled as temp boosts
+  for (let pi = 0; pi < 2; pi++) {
+    for (let bi = 0; bi < eng.players[pi].board.length; bi++) {
+      const entry = eng.players[pi].board[bi];
+      for (const ab of (entry.card._parsed || [])) {
+        if (ab.trigger !== 'ongoing' || ab.unparsed) continue;
+        // Ongoing level effects
+        if (ab.levelEffects) {
+          // Many ongoing level effects are passive (cost reduction, hand limit, etc)
+          // We handle LP-related ones during winter tally via tempLPBoosts
+          const currentLevel = entry.level;
+          for (let lvl = 1; lvl <= currentLevel; lvl++) {
+            if (ab.levelEffects[lvl]) {
+              for (const eff of ab.levelEffects[lvl]) {
+                if (eff.type === 'lp' || eff.type === 'lp_per_tag' || eff.type === 'lp_per_type') {
+                  // Treat as additional winter LP
+                  resolveEffect(eng, pi, eff, entry);
+                }
+              }
+            }
+          }
+        }
+        // Simple ongoing like "+1 LP while condition"
+        // These are hard to parse generically - skip for now, they affect LP field
+      }
+    }
+  }
+}
+
+// Run a single complete game, returns result
+function runSingleGame(deckA, deckB, startingPlayer, verbose) {
+  const eng = newEngine(deckA.map(c => cloneCard(c)), deckB.map(c => cloneCard(c)));
+  eng.startPlayer = startingPlayer;
+  eng.activePlayer = startingPlayer;
+  eng.verbose = verbose;
+
+  // Draw starting hands (5 each)
+  for (let pi = 0; pi < 2; pi++) {
+    engineDraw(eng, pi, 5);
+  }
+
+  // Main game loop - max 20 years
+  while (eng.status === 'playing' && eng.year <= 20) {
+    runYear(eng);
+  }
+
+  // Determine winner
+  let winner = null;
+  if (eng.players[0].lp > eng.players[1].lp) winner = 0;
+  else if (eng.players[1].lp > eng.players[0].lp) winner = 1;
+
+  return {
+    winner,
+    years: eng.year > 20 ? 20 : eng.year,
+    p0FinalLP: eng.players[0].lp,
+    p1FinalLP: eng.players[1].lp,
+    cardsPlayed: eng.cardsPlayed,
+    timeout: eng.year > 20
+  };
+}
+
+function runYear(eng) {
+  const sp = eng.startPlayer;
+  const op = otherP(sp);
+
+  // === SPRING ===
+  eng.season = 'spring';
+  // Refresh
+  engineRefresh(eng, sp);
+  engineRefresh(eng, op);
+
+  // Draw 1
+  engineDraw(eng, sp, 1);
+  engineDraw(eng, op, 1);
+
+  // Spring triggers (before resource actions)
+  resolveSeasonTriggers(eng, 'spring');
+
+  // Resource actions
+  aiResourceAction(eng, sp);
+  aiResourceAction(eng, op);
+
+  // === SUMMER ===
+  eng.season = 'summer';
+  // Non-start player goes first
+  let consecutivePasses = 0;
+  let currentPlayer = op;
+  let safetyCounter = 0;
+
+  // Summer triggers at start
+  resolveSeasonTriggers(eng, 'summer');
+
+  while (consecutivePasses < 2 && safetyCounter < 100) {
+    safetyCounter++;
+    const action = aiSummerAction(eng, currentPlayer);
+    if (action.type === 'pass') {
+      consecutivePasses++;
+    } else {
+      consecutivePasses = 0;
+      if (action.type === 'play') {
+        enginePlayCard(eng, currentPlayer, action.handIdx);
+      } else if (action.type === 'activate') {
+        engineActivate(eng, currentPlayer, action.boardIdx);
+      }
+    }
+    currentPlayer = otherP(currentPlayer);
+  }
+
+  // === AUTUMN ===
+  eng.season = 'autumn';
+  // Start player plays 1 card or passes
+  aiAutumnAction(eng, sp);
+  aiAutumnAction(eng, op);
+
+  // Autumn triggers
+  resolveSeasonTriggers(eng, 'autumn');
+
+  // Location development - advance qualifying locations
+  for (let pi = 0; pi < 2; pi++) {
+    for (const entry of eng.players[pi].board) {
+      if (entry.card.type === 'Location' && entry.level < (entry.card.maxLevel || 1)) {
+        // Simplified: always advance if possible (AI always wants to advance)
+        entry.level++;
+      }
+    }
+  }
+
+  // === WINTER ===
+  eng.season = 'winter';
+  // Resolve ongoing LP effects before tally
+  resolveOngoing(eng);
+
+  // Tally LP
+  engineTallyLP(eng);
+
+  // Winter triggers
+  resolveSeasonTriggers(eng, 'winter');
+
+  // Check win (30+ LP)
+  const lp0 = eng.players[0].lp;
+  const lp1 = eng.players[1].lp;
+  if (lp0 >= 30 || lp1 >= 30) {
+    if (lp0 >= 30 && lp1 >= 30 && lp0 === lp1) {
+      // Tie - play additional year (handled by loop continuing)
+    } else {
+      eng.status = 'finished';
+      return;
+    }
+  }
+
+  // Hand limit: discard to 5
+  for (let pi = 0; pi < 2; pi++) {
+    if (eng.players[pi].hand.length > 5) {
+      engineDiscard(eng, pi, eng.players[pi].hand.length - 5);
+    }
+  }
+
+  // Advance year
+  eng.startPlayer = otherP(eng.startPlayer);
+  eng.year++;
+}
+
+
+// =====================================================================
+// SECTION 5: AI PLAYER
+// =====================================================================
+
+function aiCardScore(eng, pi, card) {
+  let score = (card.lp || 0) * 3;
+
+  // Ability value estimation
+  for (const ab of (card._parsed || [])) {
+    if (ab.unparsed) continue;
+    const effects = ab.levelEffects ? (ab.levelEffects[1] || []) : (ab.effects || []);
+    for (const eff of effects) {
+      switch (eff.type) {
+        case 'lp': score += (eff.amount || 0) * 2.5; break;
+        case 'both_lp': score += (eff.amount || 0) * 1.5; break;
+        case 'lp_conditional': score += ((eff.base + eff.bonus) / 2) * 2; break;
+        case 'lp_per_tag': case 'lp_per_type': score += (eff.amount || 1) * 2; break;
+        case 'draw': case 'draw_discard': score += (eff.amount || eff.draw || 0) * 1.5; break;
+        case 'draw_conditional': score += ((eff.base + eff.bonus) / 2) * 1.5; break;
+        case 'token_gain': case 'token_gain_any': case 'token_reclaim': case 'token_reclaim_any':
+          score += (eff.amount || 1) * 1; break;
+        case 'claim_different': score += (eff.amount || 1) * 1.2; break;
+        case 'temp_lp_boost': case 'temp_lp_boost_tagged': score += (eff.amount || 1) * 2; break;
+        case 'location_lp_boost': score += 3; break;
+      }
+    }
+  }
+
+  // Tag synergy: +0.5 per matching tag already on board
+  const boardTags = new Set();
+  eng.players[pi].board.forEach(e => (e.card.tags || []).forEach(t => boardTags.add(t)));
+  (card.tags || []).forEach(t => { if (boardTags.has(t)) score += 0.5; });
+
+  // Cost penalty
+  score -= (card.totalCost || 0) * 1.5;
+
+  return score;
+}
+
+function aiMostNeededResource(eng, pi) {
+  // Check what resources are needed for cards in hand
+  const p = eng.players[pi];
+  const needs = emptyTokens();
+  for (const card of p.hand) {
+    RESOURCES.forEach(r => {
+      const needed = (card.cost[r] || 0) - p.tokens[r];
+      if (needed > 0) needs[r] += needed;
+    });
+  }
+  // Pick resource with highest need that's available in pool
+  let best = null, bestNeed = 0;
+  for (const r of RESOURCES) {
+    if (needs[r] > bestNeed && eng.pool[r] > 0) {
+      bestNeed = needs[r];
+      best = r;
+    }
+  }
+  // Fallback: any available resource
+  if (!best) {
+    for (const r of RESOURCES) {
+      if (eng.pool[r] > 0) return r;
+    }
+  }
+  return best;
+}
+
+function aiLeastNeededResource(eng, pi) {
+  const p = eng.players[pi];
+  // Find resource we hold that we need least for hand cards
+  const needs = emptyTokens();
+  for (const card of p.hand) {
+    RESOURCES.forEach(r => { needs[r] += (card.cost[r] || 0); });
+  }
+  let least = null, leastScore = Infinity;
+  for (const r of RESOURCES) {
+    if (p.tokens[r] > 0) {
+      const excess = p.tokens[r] - needs[r];
+      if (excess > leastScore || least === null || excess > 0) {
+        if (least === null || excess > leastScore) {
+          leastScore = excess;
+          least = r;
+        }
+      }
+    }
+  }
+  // Fallback
+  if (!least) {
+    for (const r of RESOURCES) {
+      if (p.tokens[r] > 0) return r;
+    }
+  }
+  return least;
+}
+
+function aiResourceAction(eng, pi) {
+  const p = eng.players[pi];
+  const pt = totalTokens(p.tokens);
+  const pTotal = poolTotal(eng.pool);
+
+  // Can we do anything?
+  const canForage = pTotal > 0;
+  const canBarter = pt > 0 && pTotal > 0;
+  const canPressure = pt >= 2 && totalTokens(eng.players[otherP(pi)].tokens) > 0;
+
+  if (!canForage && !canBarter && !canPressure) return; // skip
+
+  // Simple heuristic: Forage if pool has what we need, Barter if we have excess
+  // Pressure rarely (when opponent has what we want)
+
+  // Check if we have excess tokens we don't need
+  const hasExcess = RESOURCES.some(r => {
+    const need = p.hand.reduce((s, c) => s + (c.cost[r]||0), 0);
+    return p.tokens[r] > need && p.tokens[r] > 0;
+  });
+
+  if (canBarter && hasExcess && pTotal >= 2) {
+    // Barter: return least needed, take 2 most needed
+    const returnRes = aiLeastNeededResource(eng, pi);
+    if (returnRes && p.tokens[returnRes] > 0) {
+      p.tokens[returnRes]--;
+      eng.pool[returnRes]++;
+
+      // Take 2 different types
+      const taken = new Set();
+      for (let i = 0; i < 2; i++) {
+        const needed = aiMostNeededResource(eng, pi);
+        for (const r of [needed, ...RESOURCES]) {
+          if (r && !taken.has(r) && eng.pool[r] > 0) {
+            eng.pool[r]--;
+            p.tokens[r]++;
+            taken.add(r);
+            break;
+          }
+        }
+      }
+      return;
+    }
+  }
+
+  if (canForage) {
+    // Forage: pick most needed
+    const res = aiMostNeededResource(eng, pi);
+    if (res && eng.pool[res] > 0) {
+      eng.pool[res]--;
+      p.tokens[res]++;
+    }
+  }
+}
+
+function aiSummerAction(eng, pi) {
+  const p = eng.players[pi];
+
+  // Score all playable cards
+  const playable = [];
+  for (let i = 0; i < p.hand.length; i++) {
+    if (canAfford(p.tokens, p.hand[i].cost)) {
+      playable.push({ idx: i, score: aiCardScore(eng, pi, p.hand[i]) });
+    }
+  }
+  playable.sort((a,b) => b.score - a.score);
+
+  // Score activate options
+  const activatable = [];
+  for (let i = 0; i < p.board.length; i++) {
+    const e = p.board[i];
+    if (e.card.type === 'People' && !e.exhausted) {
+      // Estimate activate value
+      let val = 0;
+      for (const ab of (e.card._parsed || [])) {
+        if (ab.trigger !== 'activate' || ab.unparsed) continue;
+        const effects = ab.effects || [];
+        for (const eff of effects) {
+          switch (eff.type) {
+            case 'lp': val += (eff.amount||0) * 2.5; break;
+            case 'lp_conditional': val += ((eff.base+eff.bonus)/2) * 2; break;
+            case 'draw': case 'draw_discard': val += (eff.amount||eff.draw||0) * 1.5; break;
+            case 'token_gain': case 'token_gain_any': case 'token_reclaim': case 'token_reclaim_any':
+              val += (eff.amount||1); break;
+            case 'temp_lp_boost': val += (eff.amount||1) * 2; break;
+            default: val += 1; break;
+          }
+        }
+      }
+      // Account for LP lost from exhausting (ongoing +1 LP while Ready)
+      for (const ab of (e.card._parsed || [])) {
+        if (ab.trigger === 'ongoing' && ab.raw && ab.raw.includes('While Ready')) {
+          val -= 2; // Penalty for losing ongoing bonus
+        }
+      }
+      if (val > 0) activatable.push({ idx: i, score: val });
+    }
+  }
+  activatable.sort((a,b) => b.score - a.score);
+
+  // Decision: play card if score > 2, activate if score > 1, else pass
+  const bestPlay = playable.length > 0 ? playable[0] : null;
+  const bestActivate = activatable.length > 0 ? activatable[0] : null;
+
+  if (bestPlay && bestPlay.score > 2) {
+    if (bestActivate && bestActivate.score > bestPlay.score) {
+      return { type: 'activate', boardIdx: bestActivate.idx };
+    }
+    return { type: 'play', handIdx: bestPlay.idx };
+  }
+  if (bestActivate && bestActivate.score > 1) {
+    return { type: 'activate', boardIdx: bestActivate.idx };
+  }
+  if (bestPlay && bestPlay.score > 0) {
+    return { type: 'play', handIdx: bestPlay.idx };
+  }
+
+  return { type: 'pass' };
+}
+
+function aiAutumnAction(eng, pi) {
+  const p = eng.players[pi];
+  // Play best affordable card, or pass
+  let bestIdx = -1, bestScore = 0;
+  for (let i = 0; i < p.hand.length; i++) {
+    if (canAfford(p.tokens, p.hand[i].cost)) {
+      const s = aiCardScore(eng, pi, p.hand[i]);
+      if (s > bestScore) { bestScore = s; bestIdx = i; }
+    }
+  }
+  if (bestIdx >= 0) {
+    enginePlayCard(eng, pi, bestIdx);
+  }
+}
+
+
+// =====================================================================
+// SECTION 6: SIMULATION RUNNER
+// =====================================================================
+
+class SimStats {
+  constructor(deckAName, deckBName) {
+    this.deckAName = deckAName;
+    this.deckBName = deckBName;
+    this.games = [];
+    this.cardStats = new Map();
+    this.deckAWins = 0;
+    this.deckBWins = 0;
+    this.draws = 0;
+    this.totalYears = 0;
+    this.totalP0LP = 0;
+    this.totalP1LP = 0;
+  }
+
+  record(result) {
+    this.games.push(result);
+    if (result.winner === 0) this.deckAWins++;
+    else if (result.winner === 1) this.deckBWins++;
+    else this.draws++;
+    this.totalYears += result.years;
+    this.totalP0LP += result.p0FinalLP;
+    this.totalP1LP += result.p1FinalLP;
+
+    // Per-card stats
+    const playedSet = new Set();
+    for (const cp of result.cardsPlayed) {
+      if (!this.cardStats.has(cp.cardId)) {
+        this.cardStats.set(cp.cardId, { played: 0, wonWith: 0, lostWith: 0, games: 0 });
+      }
+      playedSet.add(cp.cardId + '_' + cp.player);
+    }
+
+    for (const key of playedSet) {
+      const lastUnderscore = key.lastIndexOf('_');
+      const cardId = key.substring(0, lastUnderscore);
+      const playerIdx = +key.substring(lastUnderscore + 1);
+      const cs = this.cardStats.get(cardId);
+      cs.played++;
+      cs.games = this.games.length;
+      if (result.winner === playerIdx) cs.wonWith++;
+      else if (result.winner !== null) cs.lostWith++;
+    }
+  }
+
+  getSummary() {
+    const n = this.games.length;
+    return {
+      total: n,
+      deckAWins: this.deckAWins,
+      deckBWins: this.deckBWins,
+      draws: this.draws,
+      deckAWinRate: n > 0 ? (this.deckAWins / n * 100).toFixed(1) : '0',
+      deckBWinRate: n > 0 ? (this.deckBWins / n * 100).toFixed(1) : '0',
+      drawRate: n > 0 ? (this.draws / n * 100).toFixed(1) : '0',
+      avgYears: n > 0 ? (this.totalYears / n).toFixed(1) : '0',
+      avgP0LP: n > 0 ? (this.totalP0LP / n).toFixed(1) : '0',
+      avgP1LP: n > 0 ? (this.totalP1LP / n).toFixed(1) : '0'
+    };
+  }
+
+  getCardReport() {
+    const n = this.games.length;
+    const report = [];
+    for (const card of cardDb) {
+      const cs = this.cardStats.get(card.id) || { played:0, wonWith:0, lostWith:0 };
+      const playRate = n > 0 ? (cs.played / n * 100) : 0;
+      const winCorr = cs.played > 0 ? (cs.wonWith / cs.played * 100) : 0;
+      const overallWinRate = n > 0 ? ((this.deckAWins + this.deckBWins) / 2 / n * 100) : 50;
+
+      report.push({
+        id: card.id,
+        name: card.name,
+        type: card.type,
+        rarity: card.rarity,
+        lp: card.lp,
+        totalCost: card.totalCost,
+        played: cs.played,
+        wonWith: cs.wonWith,
+        playRate: playRate,
+        winCorr: winCorr,
+        winCorrDelta: winCorr - overallWinRate,
+        flags: []
+      });
+    }
+    // Flag outliers
+    this.flagOutliers(report);
+    return report;
+  }
+
+  flagOutliers(report) {
+    // Group by type
+    const groups = { People: [], Location: [], Event: [] };
+    for (const r of report) {
+      if (groups[r.type]) groups[r.type].push(r);
+    }
+
+    for (const type of Object.keys(groups)) {
+      const group = groups[type];
+      if (group.length < 3) continue;
+
+      // Play rate stats
+      const playRates = group.filter(r => r.played > 0).map(r => r.playRate);
+      const prMean = playRates.length > 0 ? playRates.reduce((s,v) => s+v, 0) / playRates.length : 0;
+      const prStd = playRates.length > 1 ? Math.sqrt(playRates.reduce((s,v) => s + (v-prMean)**2, 0) / playRates.length) : 0;
+
+      // Win correlation stats
+      const winCorrs = group.filter(r => r.played > 2).map(r => r.winCorr);
+      const wcMean = winCorrs.length > 0 ? winCorrs.reduce((s,v) => s+v, 0) / winCorrs.length : 50;
+      const wcStd = winCorrs.length > 1 ? Math.sqrt(winCorrs.reduce((s,v) => s + (v-wcMean)**2, 0) / winCorrs.length) : 0;
+
+      for (const r of group) {
+        // Never played
+        if (r.played === 0) {
+          r.flags.push('never');
+          continue;
+        }
+
+        // Overpowered: high win correlation + high play rate
+        if (r.played > 2 && wcStd > 0 && r.winCorr > wcMean + 2 * wcStd && r.playRate > 30) {
+          r.flags.push('op');
+        }
+
+        // Underpowered: low win correlation or very low play rate
+        if (r.played > 2 && wcStd > 0 && r.winCorr < wcMean - 2 * wcStd) {
+          r.flags.push('up');
+        } else if (prStd > 0 && r.playRate < prMean - 2 * prStd && r.playRate < 10) {
+          r.flags.push('up');
+        }
+      }
+    }
+  }
+}
+
+async function runSimulation() {
+ try {
+  const deckAIdx = +document.getElementById('deck-a').value;
+  const deckBIdx = +document.getElementById('deck-b').value;
+  const numGames = +document.getElementById('num-games').value || 500;
+  const swapSides = document.getElementById('opt-swap').checked;
+  const verbose = document.getElementById('opt-verbose').checked;
+
+  if (deckAIdx < 0 || deckBIdx < 0) { toast('Select both decks'); return; }
+
+  const deckADef = starterDecks[deckAIdx];
+  const deckBDef = starterDecks[deckBIdx];
+  const deckACards = deckADef.cards.map(id => cardDb.find(c => c.id === id)).filter(Boolean);
+  const deckBCards = deckBDef.cards.map(id => cardDb.find(c => c.id === id)).filter(Boolean);
+
+  if (deckACards.length === 0 || deckBCards.length === 0) { toast('Deck has no cards!'); return; }
+
+  simRunning = true;
+  simStopped = false;
+  document.getElementById('btn-run').disabled = true;
+  document.getElementById('progress').classList.add('active');
+
+  const stats = new SimStats(deckADef.name, deckBDef.name);
+  const startTime = Date.now();
+
+  for (let i = 0; i < numGames; i++) {
+    if (simStopped) break;
+
+    // Swap sides every other game to eliminate first-player bias
+    const aCards = (swapSides && i % 2 === 1) ? deckBCards : deckACards;
+    const bCards = (swapSides && i % 2 === 1) ? deckACards : deckBCards;
+    const startingPlayer = i % 2; // Alternate who starts
+
+    const result = runSingleGame(aCards, bCards, startingPlayer, verbose);
+
+    // If sides were swapped, flip the winner
+    if (swapSides && i % 2 === 1) {
+      if (result.winner === 0) result.winner = 1;
+      else if (result.winner === 1) result.winner = 0;
+      // Swap LP
+      const tmp = result.p0FinalLP;
+      result.p0FinalLP = result.p1FinalLP;
+      result.p1FinalLP = tmp;
+      // Swap cardsPlayed player indexes
+      for (const cp of result.cardsPlayed) {
+        cp.player = otherP(cp.player);
+      }
+    }
+
+    stats.record(result);
+
+    // Update progress every 10 games
+    if (i % 10 === 0 || i === numGames - 1) {
+      const pct = ((i + 1) / numGames * 100).toFixed(0);
+      document.getElementById('progress-bar').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = pct + '%';
+      document.getElementById('progress-games').textContent = (i + 1) + ' / ' + numGames + ' games';
+      document.getElementById('progress-time').textContent = 'Elapsed: ' + ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+      await yieldToUI();
+    }
+  }
+
+  simRunning = false;
+  document.getElementById('btn-run').disabled = false;
+  document.getElementById('progress').classList.remove('active');
+
+  currentStats = stats;
+  renderResults(stats);
+
+  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+  toast(`Simulation complete: ${stats.games.length} games in ${elapsed}s`);
+ } catch(err) {
+  console.error('Simulation error:', err);
+  toast('Error: ' + err.message);
+  simRunning = false;
+  document.getElementById('btn-run').disabled = false;
+  document.getElementById('progress').classList.remove('active');
+ }
+}
+
+function stopSimulation() {
+  simStopped = true;
+  toast('Stopping after current game...');
+}
+
+
+// =====================================================================
+// SECTION 7: RESULTS RENDERING
+// =====================================================================
+
+function renderResults(stats) {
+  const summary = stats.getSummary();
+
+  // Summary cards
+  const el = document.getElementById('summary');
+  el.innerHTML = `
+    <div class="summary-card">
+      <div class="sc-value">${summary.deckAWinRate}%</div>
+      <div class="sc-label">${stats.deckAName}</div>
+      <div class="sc-sub">${summary.deckAWins} wins</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-value">${summary.deckBWinRate}%</div>
+      <div class="sc-label">${stats.deckBName}</div>
+      <div class="sc-sub">${summary.deckBWins} wins</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-value">${summary.drawRate}%</div>
+      <div class="sc-label">Draws</div>
+      <div class="sc-sub">${summary.draws} games</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-value">${summary.avgYears}</div>
+      <div class="sc-label">Avg Years</div>
+      <div class="sc-sub">per game</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-value">${summary.avgP0LP}</div>
+      <div class="sc-label">Avg LP (A)</div>
+      <div class="sc-sub">final LP</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-value">${summary.avgP1LP}</div>
+      <div class="sc-label">Avg LP (B)</div>
+      <div class="sc-sub">final LP</div>
+    </div>
+  `;
+  el.classList.add('active');
+
+  // Update deck filter
+  const filterDeck = document.getElementById('filter-deck');
+  filterDeck.innerHTML = `
+    <option value="all">All Cards</option>
+    <option value="deckA">${stats.deckAName}</option>
+    <option value="deckB">${stats.deckBName}</option>
+  `;
+
+  // Show containers BEFORE rendering so canvas can measure
+  document.getElementById('stats-container').classList.add('active');
+  document.getElementById('charts').classList.add('active');
+  document.getElementById('export-bar').classList.add('active');
+
+  // Render table and charts
+  renderStatsTable();
+  renderCharts(stats);
+}
+
+// Sortable table state
+let sortCol = 'playRate';
+let sortDir = -1; // -1 = desc, 1 = asc
+
+function renderStatsTable() {
+  if (!currentStats) return;
+  const report = currentStats.getCardReport();
+
+  // Filters
+  const deckFilter = document.getElementById('filter-deck').value;
+  const typeFilter = document.getElementById('filter-type').value;
+  const flagFilter = document.getElementById('filter-flag').value;
+
+  // Get deck card ID sets
+  const deckAIdx = +document.getElementById('deck-a').value;
+  const deckBIdx = +document.getElementById('deck-b').value;
+  const deckAIds = new Set((starterDecks[deckAIdx]||{}).cards || []);
+  const deckBIds = new Set((starterDecks[deckBIdx]||{}).cards || []);
+
+  let filtered = report.filter(r => {
+    if (deckFilter === 'deckA' && !deckAIds.has(r.id)) return false;
+    if (deckFilter === 'deckB' && !deckBIds.has(r.id)) return false;
+    if (typeFilter !== 'all' && r.type !== typeFilter) return false;
+    if (flagFilter === 'flagged' && r.flags.length === 0) return false;
+    if (flagFilter === 'op' && !r.flags.includes('op')) return false;
+    if (flagFilter === 'up' && !r.flags.includes('up')) return false;
+    if (flagFilter === 'lp' && !r.flags.includes('lp')) return false;
+    if (flagFilter === 'never' && !r.flags.includes('never')) return false;
+    return true;
+  });
+
+  // Sort
+  filtered.sort((a, b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+    return ((av || 0) - (bv || 0)) * sortDir;
+  });
+
+  // Render
+  const columns = [
+    { key:'name', label:'Card Name' },
+    { key:'type', label:'Type' },
+    { key:'rarity', label:'Rarity' },
+    { key:'totalCost', label:'Cost' },
+    { key:'lp', label:'LP' },
+    { key:'played', label:'Played' },
+    { key:'playRate', label:'Play %' },
+    { key:'winCorr', label:'Win Corr %' },
+    { key:'wonWith', label:'Won With' },
+    { key:'flags', label:'Flag' }
+  ];
+
+  const thead = document.querySelector('#stats-table thead tr');
+  thead.innerHTML = columns.map(c => {
+    const arrow = sortCol === c.key ? (sortDir === 1 ? '\u25B2' : '\u25BC') : '';
+    return `<th onclick="sortTable('${c.key}')">${c.label}<span class="sort-arrow">${arrow}</span></th>`;
+  }).join('');
+
+  const tbody = document.querySelector('#stats-table tbody');
+  tbody.innerHTML = filtered.map(r => {
+    const rowClass = r.flags.includes('op') ? 'flagged-op' : r.flags.includes('up') ? 'flagged-up' : r.flags.includes('never') ? 'flagged-never' : '';
+    const flagBadges = r.flags.map(f => {
+      const cls = f === 'op' ? 'flag-op' : f === 'up' ? 'flag-up' : f === 'lp' ? 'flag-lp' : 'flag-never';
+      const label = f === 'op' ? 'OP' : f === 'up' ? 'WEAK' : f === 'lp' ? 'LP' : 'UNUSED';
+      return `<span class="flag-badge ${cls}">${label}</span>`;
+    }).join(' ');
+
+    return `<tr class="${rowClass}">
+      <td>${r.name}</td>
+      <td>${r.type}</td>
+      <td>${r.rarity}</td>
+      <td>${r.totalCost}</td>
+      <td>${r.lp}</td>
+      <td>${r.played}</td>
+      <td>${r.playRate.toFixed(1)}%</td>
+      <td>${r.played > 0 ? r.winCorr.toFixed(1) + '%' : '-'}</td>
+      <td>${r.wonWith}</td>
+      <td>${flagBadges || '-'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function sortTable(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = -1; }
+  renderStatsTable();
+}
+
+
+// =====================================================================
+// SECTION 8: CANVAS CHARTS
+// =====================================================================
+
+function renderCharts(stats) {
+  renderWinPieChart(stats);
+  renderYearsBarChart(stats);
+  renderScatterChart(stats);
+}
+
+function renderWinPieChart(stats) {
+  const canvas = document.getElementById('chart-wins');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = (canvas.offsetWidth || 300) * 2;
+  const h = canvas.height = 440;
+  ctx.scale(2, 2);
+  const cw = w / 2, ch = h / 2;
+
+  ctx.clearRect(0, 0, cw, ch);
+
+  const summary = stats.getSummary();
+  const total = stats.games.length;
+  if (total === 0) return;
+
+  const slices = [
+    { label: stats.deckAName, value: stats.deckAWins, color: '#e94560' },
+    { label: stats.deckBName, value: stats.deckBWins, color: '#533483' },
+    { label: 'Draws', value: stats.draws, color: '#555' }
+  ];
+
+  const cx = cw / 2, cy = ch / 2 - 10;
+  const radius = Math.max(10, Math.min(cx, cy) - 30);
+  let startAngle = -Math.PI / 2;
+
+  for (const s of slices) {
+    const sweep = (s.value / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, startAngle, startAngle + sweep);
+    ctx.fillStyle = s.color;
+    ctx.fill();
+
+    // Label
+    if (s.value > 0) {
+      const midAngle = startAngle + sweep / 2;
+      const lx = cx + Math.cos(midAngle) * radius * 0.65;
+      const ly = cy + Math.sin(midAngle) * radius * 0.65;
+      ctx.fillStyle = '#fff';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText((s.value / total * 100).toFixed(0) + '%', lx, ly);
+    }
+    startAngle += sweep;
+  }
+
+  // Legend
+  let legendY = ch - 20;
+  ctx.font = '9px sans-serif';
+  let legendX = 10;
+  for (const s of slices) {
+    ctx.fillStyle = s.color;
+    ctx.fillRect(legendX, legendY - 7, 10, 10);
+    ctx.fillStyle = '#eee';
+    ctx.textAlign = 'left';
+    ctx.fillText(s.label + ' (' + s.value + ')', legendX + 14, legendY + 1);
+    legendX += ctx.measureText(s.label + ' (' + s.value + ')').width + 28;
+  }
+}
+
+function renderYearsBarChart(stats) {
+  const canvas = document.getElementById('chart-years');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = (canvas.offsetWidth || 300) * 2;
+  const h = canvas.height = 440;
+  ctx.scale(2, 2);
+  const cw = w / 2, ch = h / 2;
+
+  ctx.clearRect(0, 0, cw, ch);
+
+  // Count games by year length
+  const yearCounts = {};
+  for (const g of stats.games) {
+    yearCounts[g.years] = (yearCounts[g.years] || 0) + 1;
+  }
+
+  const years = Object.keys(yearCounts).map(Number).sort((a,b) => a - b);
+  if (years.length === 0) return;
+
+  const maxCount = Math.max(...Object.values(yearCounts));
+  const margin = { top: 15, right: 15, bottom: 25, left: 35 };
+  const plotW = cw - margin.left - margin.right;
+  const plotH = ch - margin.top - margin.bottom;
+  const barW = Math.min(plotW / years.length - 2, 30);
+
+  // Axes
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.moveTo(margin.left, margin.top);
+  ctx.lineTo(margin.left, ch - margin.bottom);
+  ctx.lineTo(cw - margin.right, ch - margin.bottom);
+  ctx.stroke();
+
+  // Bars
+  ctx.font = '8px sans-serif';
+  ctx.textAlign = 'center';
+  for (let i = 0; i < years.length; i++) {
+    const yr = years[i];
+    const count = yearCounts[yr];
+    const barH = (count / maxCount) * plotH;
+    const x = margin.left + (i / years.length) * plotW + barW * 0.3;
+    const y = ch - margin.bottom - barH;
+
+    const hue = 200 + (yr / 20) * 160;
+    ctx.fillStyle = `hsl(${hue}, 60%, 55%)`;
+    ctx.fillRect(x, y, barW, barH);
+
+    // Year label
+    ctx.fillStyle = '#999';
+    ctx.fillText(yr.toString(), x + barW / 2, ch - margin.bottom + 12);
+
+    // Count label
+    if (barH > 12) {
+      ctx.fillStyle = '#fff';
+      ctx.fillText(count.toString(), x + barW / 2, y + 10);
+    }
+  }
+
+  // Y axis label
+  ctx.save();
+  ctx.fillStyle = '#999';
+  ctx.font = '8px sans-serif';
+  ctx.translate(10, ch / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('Games', 0, 0);
+  ctx.restore();
+}
+
+function renderScatterChart(stats) {
+  const canvas = document.getElementById('chart-scatter');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = (canvas.offsetWidth || 300) * 2;
+  const h = canvas.height = 440;
+  ctx.scale(2, 2);
+  const cw = w / 2, ch = h / 2;
+
+  ctx.clearRect(0, 0, cw, ch);
+
+  const report = stats.getCardReport();
+  const points = report.filter(r => r.played > 0);
+  if (points.length === 0) return;
+
+  const margin = { top: 15, right: 15, bottom: 25, left: 35 };
+  const plotW = cw - margin.left - margin.right;
+  const plotH = ch - margin.top - margin.bottom;
+
+  const maxPlayRate = Math.max(...points.map(p => p.playRate), 100);
+  const maxWinCorr = 100;
+
+  // Axes
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.moveTo(margin.left, margin.top);
+  ctx.lineTo(margin.left, ch - margin.bottom);
+  ctx.lineTo(cw - margin.right, ch - margin.bottom);
+  ctx.stroke();
+
+  // 50% reference line
+  const ref50Y = margin.top + plotH * (1 - 50 / maxWinCorr);
+  ctx.strokeStyle = '#333';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(margin.left, ref50Y);
+  ctx.lineTo(cw - margin.right, ref50Y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Points
+  const typeColors = { People: '#9c27b0', Location: '#4caf50', Event: '#f44336' };
+  for (const p of points) {
+    const x = margin.left + (p.playRate / maxPlayRate) * plotW;
+    const y = margin.top + plotH * (1 - p.winCorr / maxWinCorr);
+    const r = 3 + Math.min(p.played / stats.games.length * 5, 5);
+
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = typeColors[p.type] || '#888';
+    ctx.globalAlpha = 0.7;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Flag highlight
+    if (p.flags.length > 0) {
+      ctx.strokeStyle = p.flags.includes('op') ? '#e94560' : '#42a5f5';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  }
+
+  // Axis labels
+  ctx.fillStyle = '#999';
+  ctx.font = '8px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Play Rate %', cw / 2, ch - 4);
+
+  ctx.save();
+  ctx.translate(8, ch / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Win Correlation %', 0, 0);
+  ctx.restore();
+
+  // Legend
+  let lx = margin.left + 5;
+  const ly = margin.top + 5;
+  ctx.font = '7px sans-serif';
+  for (const [type, color] of Object.entries(typeColors)) {
+    ctx.fillStyle = color;
+    ctx.fillRect(lx, ly, 8, 8);
+    ctx.fillStyle = '#ccc';
+    ctx.textAlign = 'left';
+    ctx.fillText(type, lx + 10, ly + 7);
+    lx += ctx.measureText(type).width + 20;
+  }
+}
+
+
+// =====================================================================
+// SECTION 9: EXPORT & INITIALIZATION
+// =====================================================================
+
+function exportCSV() {
+  if (!currentStats) { toast('No results to export'); return; }
+  const report = currentStats.getCardReport();
+  const header = 'Card Name,Type,Rarity,Cost,LP,Times Played,Play Rate %,Win Corr %,Won With,Flags\n';
+  const rows = report.map(r =>
+    `"${r.name}",${r.type},${r.rarity},${r.totalCost},${r.lp},${r.played},${r.playRate.toFixed(1)},${r.played > 0 ? r.winCorr.toFixed(1) : ''},${r.wonWith},"${r.flags.join(',')}"`
+  ).join('\n');
+
+  const blob = new Blob([header + rows], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'lifequest-balance-' + Date.now() + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+  toast('CSV exported');
+}
+
+function exportJSON() {
+  if (!currentStats) { toast('No results to export'); return; }
+  const data = {
+    summary: currentStats.getSummary(),
+    deckA: currentStats.deckAName,
+    deckB: currentStats.deckBName,
+    cardReport: currentStats.getCardReport(),
+    games: currentStats.games.length,
+    timestamp: new Date().toISOString()
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'lifequest-balance-' + Date.now() + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  toast('JSON exported');
+}
+
+// Card loading
+async function loadCardData() {
+  try {
+    const r = await fetch('../data/cards.json');
+    const d = await r.json();
+    cardDb = d.cards || [];
+  } catch(e) {
+    console.warn('Could not fetch cards.json:', e);
+  }
+  try {
+    const r = await fetch('../data/starter-decks.json');
+    const d = await r.json();
+    starterDecks = d.decks || [];
+  } catch(e) {
+    console.warn('Could not fetch starter-decks.json:', e);
+  }
+  onDataLoaded();
+}
+
+function importCardsFile(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      cardDb = d.cards || [];
+      toast('Loaded ' + cardDb.length + ' cards');
+      onDataLoaded();
+    } catch(err) { toast('Invalid JSON'); }
+  };
+  reader.readAsText(file);
+}
+
+function importDecksFile(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      starterDecks = d.decks || [];
+      toast('Loaded ' + starterDecks.length + ' decks');
+      onDataLoaded();
+    } catch(err) { toast('Invalid JSON'); }
+  };
+  reader.readAsText(file);
+}
+
+function onDataLoaded() {
+  document.getElementById('load-status').textContent =
+    cardDb.length + ' cards loaded, ' + starterDecks.length + ' starter decks';
+
+  // Populate deck selectors
+  for (const sel of ['deck-a', 'deck-b']) {
+    const el = document.getElementById(sel);
+    el.innerHTML = '<option value="-1">Select deck...</option>' +
+      starterDecks.map((d, i) => `<option value="${i}">${d.name} (${d.cardCount} cards)</option>`).join('');
+  }
+
+  // Parse abilities
+  if (cardDb.length > 0) {
+    parseAllCards();
+  }
+
+  document.getElementById('btn-run').disabled = false;
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (simRunning) stopSimulation();
+  }
+});
+
+// Init
+loadCardData();
+</script>
+</body>
+</html>

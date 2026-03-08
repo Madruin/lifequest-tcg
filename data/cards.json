@@ -1,0 +1,3018 @@
+{
+  "meta": {
+    "game": "LifeQuest",
+    "version": "0.2",
+    "lastModified": "2026-03-06",
+    "description": "Card database for LifeQuest community TCG - v0.2 rules (5 resources, People activate, Locations develop)"
+  },
+  "schema": {
+    "version": 2,
+    "resources": [
+      "growth",
+      "sustainability",
+      "community",
+      "expression",
+      "learning"
+    ],
+    "types": [
+      "People",
+      "Location",
+      "Event"
+    ],
+    "rarities": [
+      "Common",
+      "Uncommon",
+      "Rare",
+      "Legendary"
+    ],
+    "seasons": [
+      "spring",
+      "summer",
+      "autumn",
+      "winter"
+    ],
+    "triggerTypes": [
+      "played",
+      "activate",
+      "spring",
+      "summer",
+      "autumn",
+      "winter",
+      "ongoing",
+      "combo",
+      "discard"
+    ]
+  },
+  "cards": [
+    {
+      "id": "card_ex01",
+      "name": "Cosplay Crafter",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Choose another People card you control with the Artist tag. It gains +1 LP this Winter."
+        },
+        {
+          "trigger": "ongoing",
+          "text": "While Ready, this card has +1 LP."
+        }
+      ],
+      "flavorText": "Three months of hot glue and heartbreak, all for one perfect moment on that stage.",
+      "artNotes": "Person in elaborate handmade costume, sewing supplies visible, convention hall backdrop.",
+      "tags": [
+        "Artist",
+        "Pop Culture",
+        "Youth"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Excalibur Con Cosplay Contest",
+        "description": "Annual cosplay competition at Excalibur Con"
+      },
+      "designerNotes": "Low cost entry card. Activate ability buffs other Artists. Ongoing rewards keeping her Ready (not activating). Creates tension: activate to buff, or stay Ready for the LP bonus?",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex02",
+      "name": "Vendor Hall Veteran",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 3,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "initiative": 2,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Look at the top 3 cards of your deck. Keep one, put the rest on the bottom in any order."
+        },
+        {
+          "trigger": "combo",
+          "text": "If you control a Location with the Convention tag, draw 1 card instead of looking at 3."
+        }
+      ],
+      "flavorText": "She's been selling hand-painted minis since before the con had a name.",
+      "artNotes": "Older woman behind a vendor table covered in miniatures and art prints, warm smile.",
+      "tags": [
+        "Vendor",
+        "Artist",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "vendor",
+        "name": "Convention Vendors",
+        "description": "Represents the dedicated vendors who return year after year"
+      },
+      "designerNotes": "Card selection on a body via Activate. Combo with Convention Locations upgrades to straight draw. High initiative means she resolves before most others. 3 LP is strong for 2 cost \u00e2\u20ac\u201d justify with the Activate requirement.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex03",
+      "name": "DECC Convention Floor",
+      "type": "Location",
+      "rarity": "Rare",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "maxLevel": 3,
+      "advanceCondition": "Control 3 or more cards with the Convention tag",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: Cards with the Convention or Pop Culture tag cost 1 fewer total resource (min 0). Lvl 2: Also gain +1 LP per Convention-tagged People you control. Lvl 3: Also, at the start of Summer, you may look at the top card of your deck."
+        },
+        {
+          "trigger": "winter",
+          "text": "If you control 3 or more People, gain 1 Community token from the shared pool."
+        }
+      ],
+      "flavorText": "Where Duluth's biggest fans come together under one roof.",
+      "artNotes": "Interior of the DECC arena floor filled with vendor booths, cosplayers, and banners. Lake Superior visible through windows.",
+      "tags": [
+        "Convention",
+        "Pop Culture",
+        "Gathering"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Duluth Entertainment Convention Center",
+        "description": "DECC, the venue that hosts Excalibur Con and many community events"
+      },
+      "designerNotes": "Keystone Location for Convention decks. 3 development levels \u00e2\u20ac\u201d starts as cost reducer, scales into LP engine + card advantage. Advance condition requires board commitment. Rare is right for this much text.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex04",
+      "name": "Guest Panel",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Draw 2 cards, then discard 1. If you control a People card with the Guest tag, draw 3 instead."
+        }
+      ],
+      "flavorText": "The crowd leans forward as the voice actor steps up to the mic.",
+      "artNotes": "Convention panel room with spotlight on a table of speakers, excited audience silhouettes.",
+      "tags": [
+        "Convention",
+        "Learning",
+        "Pop Culture"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Excalibur Con Panels",
+        "description": "Guest panels and Q&A sessions at the convention"
+      },
+      "designerNotes": "Basic card draw Event. Learning cost fits thematically. Guest synergy is achievable but not free.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex05",
+      "name": "Lake Walk Break",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Reclaim 1 of your spent Resource Tokens from the shared pool. It can be any type available."
+        }
+      ],
+      "flavorText": "Sometimes you need a breath of Lake Superior air between panels.",
+      "artNotes": "Person walking along the Lakewalk with Lake Superior and the Aerial Lift Bridge in the background, convention badge still hanging around neck.",
+      "tags": [
+        "Nature",
+        "Duluth",
+        "Self-Care"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Lakewalk",
+        "description": "Duluth's scenic lakeside walking path, minutes from the DECC"
+      },
+      "designerNotes": "Resource recovery staple. In v0.2 economy where tokens don't auto-return, reclaiming from the pool is more valuable. 1 LP + 1 token back is fair for 1 Sustainability. Watch for auto-include.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex06",
+      "name": "Tabletop Tournament",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Both players draw 1 card. You gain 2 LP. The other player gains 1 LP."
+        },
+        {
+          "trigger": "combo",
+          "text": "If you control a Location with the Convention tag, you gain 3 LP instead of 2."
+        }
+      ],
+      "flavorText": "Win or lose, everyone leaves the table with a new friend.",
+      "artNotes": "Group of diverse people around a tabletop game, dice and cards visible, convention setting.",
+      "tags": [
+        "Gamer",
+        "Convention",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Excalibur Con Gaming",
+        "description": "Tabletop gaming tournaments and open play at the convention"
+      },
+      "designerNotes": "Shared benefit card \u00e2\u20ac\u201d both draw, but you get more LP. Community cost fits the White archetype identity. Convention Location combo is straightforward.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex07",
+      "name": "Local Food Truck Rally",
+      "type": "Location",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "maxLevel": 2,
+      "advanceCondition": "You have 3 or more People in play",
+      "abilities": [
+        {
+          "trigger": "spring",
+          "text": "Lvl 1: You may claim 1 additional Resource Token this Spring. Lvl 2: Claim 1 additional token and draw 1 card."
+        }
+      ],
+      "flavorText": "Tacos, pierogis, and kettle corn \u00e2\u20ac\u201d the real reason half the crowd showed up.",
+      "artNotes": "Row of colorful food trucks with a line of convention-goers, DECC visible in background.",
+      "tags": [
+        "Food",
+        "Community",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "business",
+        "name": "Duluth Food Trucks",
+        "description": "Local food vendors who set up near convention events"
+      },
+      "designerNotes": "Resource acceleration Location with 2 development levels. Lvl 2 adds card draw, making it a real engine piece. Growth cost = Black archetype (engine building).",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex08",
+      "name": "Convention Organizer",
+      "type": "People",
+      "rarity": "Rare",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "initiative": 3,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Search your deck for 1 Event card with the Convention tag and add it to your hand. Shuffle your deck."
+        },
+        {
+          "trigger": "activate",
+          "text": "Your next Event card played this Summer costs 1 fewer total Resource Token (minimum 0)."
+        }
+      ],
+      "flavorText": "She somehow keeps all the plates spinning while making it look effortless.",
+      "artNotes": "Determined woman with clipboard and headset, walkie-talkie in hand, convention chaos organized behind her.",
+      "tags": [
+        "Leader",
+        "Convention",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Convention Staff",
+        "description": "The volunteers and organizers who make Excalibur Con happen"
+      },
+      "designerNotes": "Tutor on entry + Activate for cost reduction. High initiative (3) means she sets up for others. In the Summer back-and-forth, activate her first, then play the cheap Event. Rare for the tutor.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex09",
+      "name": "Comic Book Artist Alley",
+      "type": "Location",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 2,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "maxLevel": 2,
+      "advanceCondition": "Control 2 or more People with the Artist tag",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: People cards you play with the Artist tag gain +1 LP. Lvl 2: Also, once per Summer, when you play an Artist People, you may draw 1 card."
+        },
+        {
+          "trigger": "autumn",
+          "text": "You may discard 1 card to gain 1 Expression token from the shared pool."
+        }
+      ],
+      "flavorText": "Every sketch starts a conversation. Every commission tells a story.",
+      "artNotes": "Long row of artist tables with original art, prints, and sketches. Artists drawing for fans.",
+      "tags": [
+        "Artist",
+        "Convention",
+        "Pop Culture"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Artist Alley",
+        "description": "The artist alley section of Excalibur Con"
+      },
+      "designerNotes": "Artist archetype payoff Location. 2 Expression cost is the Red investment. Develops by having Artists on board \u00e2\u20ac\u201d natural synergy. Autumn ability provides Expression recycling for the resource-hungry archetype.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex10",
+      "name": "Opening Ceremony",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Each player claims 1 Resource Token of their choice from the shared pool. You draw 1 card."
+        }
+      ],
+      "flavorText": "Welcome to Excalibur Con! Let the games begin.",
+      "artNotes": "Crowded convention entrance with banners dropping, excited attendees pouring in.",
+      "tags": [
+        "Convention",
+        "Community",
+        "Ceremony"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Excalibur Con Opening",
+        "description": "The official opening ceremony of the convention"
+      },
+      "designerNotes": "Community (White) identity: shared benefit with asymmetric advantage. Both players get a resource, you also get a card. In the new economy where tokens don't return, giving the opponent a free claim is a real cost.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex11",
+      "name": "Fitger's Brewhouse",
+      "type": "Location",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "maxLevel": 2,
+      "advanceCondition": "You have 4 or more cards in play total",
+      "abilities": [
+        {
+          "trigger": "winter",
+          "text": "Lvl 1: Gain 1 LP for each People card you control, up to 2 bonus. Lvl 2: Up to 3 bonus, and you may return 1 of your tokens to the pool to draw 1 card."
+        }
+      ],
+      "flavorText": "The after-con debrief spot. Best enjoyed with a Lake Superior Ale.",
+      "artNotes": "Historic brick brewery building interior, warm lighting, group of friends at a table with convention lanyards.",
+      "tags": [
+        "Food",
+        "Duluth",
+        "Social"
+      ],
+      "localConnection": {
+        "type": "business",
+        "name": "Fitger's Brewhouse",
+        "description": "Historic Duluth brewery and restaurant, popular after-convention gathering spot"
+      },
+      "designerNotes": "Sustainability (Green) \u00e2\u20ac\u201d slow, compounding value. Develops as your board grows. Winter-focused, rewards patience and board building. Lvl 2 adds a token-to-card conversion for late game flexibility.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex12",
+      "name": "Community Volunteer",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 1 token of any type from the shared pool."
+        },
+        {
+          "trigger": "activate",
+          "text": "Your next Event played this Summer costs 1 fewer Community (min 0)."
+        }
+      ],
+      "flavorText": "They show up early, stay late, and never ask for credit.",
+      "artNotes": "Young person in a volunteer t-shirt setting up chairs and hanging banners, cheerful expression.",
+      "tags": [
+        "Community",
+        "Youth",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Con Volunteers",
+        "description": "The backbone of every community event \u00e2\u20ac\u201d unpaid, underappreciated, essential"
+      },
+      "designerNotes": "Community (White) workhorse. Token on entry is tempo. Activate for Event discount creates Summer sequencing decisions: exhaust Volunteer, then play the discounted Event. Low initiative because she's a helper, not a leader.",
+      "created": "2026-02-26T00:00:00Z",
+      "modified": "2026-03-03T00:00:00Z"
+    },
+    {
+      "id": "card_ex13",
+      "name": "Anime Club President",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Reveal the top card of your deck. If it shares a tag with a card you control, draw it. Otherwise, put it on the bottom."
+        }
+      ],
+      "flavorText": "Welcome to Anime Club! Cosplay optional but encouraged.",
+      "artNotes": "",
+      "tags": [
+        "Gamer",
+        "Youth",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "UMD Anime Club",
+        "description": "University anime club"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex14",
+      "name": "Guest of Honor",
+      "type": "People",
+      "rarity": "Legendary",
+      "lp": 4,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 2,
+        "learning": 1
+      },
+      "totalCost": 3,
+      "initiative": 5,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Draw 2 cards."
+        },
+        {
+          "trigger": "activate",
+          "text": "Each other People you control with the Convention tag gains +1 LP this Winter."
+        }
+      ],
+      "flavorText": "The crowd goes silent as the legendary creator takes the stage.",
+      "artNotes": "",
+      "tags": [
+        "Convention",
+        "Pop Culture",
+        "Guest"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Excalibur Con Guests",
+        "description": "Celebrity convention guests"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex15",
+      "name": "Indie Game Developer",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "initiative": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Look at the top 2 cards of your deck."
+        },
+        {
+          "trigger": "activate",
+          "text": "Return 1 Growth token to the pool. Draw 1 card and gain 1 LP."
+        }
+      ],
+      "flavorText": "Three years of weekends, one demo booth. Worth every late night.",
+      "artNotes": "",
+      "tags": [
+        "Gamer",
+        "Convention",
+        "Youth"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Duluth Indie Devs",
+        "description": "Local indie game developers"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex16",
+      "name": "Sketch Artist",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Gain 1 LP. If you control a Location with the Artist tag, gain 2 LP instead."
+        }
+      ],
+      "flavorText": "Five bucks for a caricature, fifteen for a portrait.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Convention Artists",
+        "description": "Sketch artists at Excalibur Con"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex17",
+      "name": "Panel Moderator",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "initiative": 3,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Each player draws 1 card. You may look at the top card of your deck."
+        },
+        {
+          "trigger": "ongoing",
+          "text": "Events you play with the Convention tag gain +1 LP."
+        }
+      ],
+      "flavorText": "One question per person, please -- and hold the spoilers.",
+      "artNotes": "",
+      "tags": [
+        "Convention",
+        "Learning",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Panel Moderators",
+        "description": "Convention panel hosts"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex18",
+      "name": "Voice Actor Fan",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "If you control a People card with the Guest tag, draw 1 card."
+        },
+        {
+          "trigger": "activate",
+          "text": "Choose a People you control. It gains +1 LP this Winter."
+        }
+      ],
+      "flavorText": "I've watched that one clip 847 times. Don't judge me.",
+      "artNotes": "",
+      "tags": [
+        "Pop Culture",
+        "Youth",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Voice Acting Fans",
+        "description": "Dedicated fan community"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex19",
+      "name": "Speed Painter",
+      "type": "People",
+      "rarity": "Rare",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 2,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "initiative": 4,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Discard 1 card. Gain 3 LP this Winter. If the discarded card had the Artist tag, gain 4 LP instead."
+        }
+      ],
+      "flavorText": "In thirty minutes, a blank canvas becomes a masterpiece.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Pop Culture",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Live Painters",
+        "description": "Live painting performers"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex20",
+      "name": "Trivia Night Champion",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "initiative": 2,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Name a card type (People, Location, or Event). Reveal the top card. If it matches, draw it and gain 1 LP. Otherwise, bottom it."
+        }
+      ],
+      "flavorText": "What year did the original series premiere? ...1987.",
+      "artNotes": "",
+      "tags": [
+        "Gamer",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Convention Trivia",
+        "description": "Trivia events at Excalibur Con"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex21",
+      "name": "Manga Collector",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Look at the top 3 cards of your deck. Put 1 on top and the rest on the bottom."
+        },
+        {
+          "trigger": "combo",
+          "text": "If you control Comic Book Artist Alley, draw 1 of those cards instead."
+        }
+      ],
+      "flavorText": "Volume one through forty-seven. First editions. Don't touch the spines.",
+      "artNotes": "",
+      "tags": [
+        "Pop Culture",
+        "Youth"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Manga Readers",
+        "description": "Local manga and comic readers"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex22",
+      "name": "Sound Tech",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 2,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Ready another exhausted People you control. That Person cannot be activated again this year."
+        }
+      ],
+      "flavorText": "Check one, check two. All good? Cool, let's roll.",
+      "artNotes": "",
+      "tags": [
+        "Convention",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Tech Volunteers",
+        "description": "Convention tech crew"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex23",
+      "name": "Prop Builder",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "initiative": 2,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "This card gains +1 LP this Winter."
+        },
+        {
+          "trigger": "ongoing",
+          "text": "While you control 2 or more cards with the Artist tag, this card has +1 LP."
+        }
+      ],
+      "flavorText": "The foam sword took six weeks. The LED armor took all summer.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Convention",
+        "Pop Culture"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Prop Builders",
+        "description": "Cosplay prop crafters"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex24",
+      "name": "Convention Photographer",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "initiative": 3,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Choose a People card any player controls. It gains +1 LP this Winter."
+        },
+        {
+          "trigger": "winter",
+          "text": "If you activated this card this year, draw 1 card."
+        }
+      ],
+      "flavorText": "Hold that pose. Now one without the mask. Perfect.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Pop Culture",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Con Photographers",
+        "description": "Convention photographers"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex25",
+      "name": "Park Ranger",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Your Locations with the Nature tag have +1 LP."
+        },
+        {
+          "trigger": "activate",
+          "text": "Reclaim 1 Sustainability token from the shared pool."
+        }
+      ],
+      "flavorText": "Jay Cooke State Park, rain or shine. Fifteen years and counting.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "State Park Rangers",
+        "description": "Minnesota state park staff"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex26",
+      "name": "Trail Guide",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "initiative": 2,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Each player draws 1 card. You gain 1 LP for each Location with the Nature tag you control."
+        }
+      ],
+      "flavorText": "Watch your step on the basalt -- and keep your eyes peeled for moose.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Hiking Trail Guides",
+        "description": "North Shore trail guides"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex27",
+      "name": "Local Brewer",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Return 1 of your tokens to the pool. Gain 2 LP."
+        }
+      ],
+      "flavorText": "It's a porter aged with Lake Superior water. You can taste the iron.",
+      "artNotes": "",
+      "tags": [
+        "Food",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "business",
+        "name": "Bent Paddle Brewing",
+        "description": "Duluth craft brewery"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex28",
+      "name": "Harbor Historian",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "initiative": 3,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Look at the top 4 cards of your deck. Put 1 in your hand and the rest on the bottom."
+        },
+        {
+          "trigger": "winter",
+          "text": "If you control 2 or more Locations with the Duluth tag, gain 2 LP."
+        }
+      ],
+      "flavorText": "That bridge has opened over eleven thousand times. I can tell you about each one.",
+      "artNotes": "",
+      "tags": [
+        "Duluth",
+        "Learning"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Maritime Historians",
+        "description": "Lake Superior maritime historians"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex29",
+      "name": "Ore Boat Captain",
+      "type": "People",
+      "rarity": "Rare",
+      "lp": 3,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 2,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "initiative": 4,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Claim 1 Growth token from the shared pool if available."
+        },
+        {
+          "trigger": "ongoing",
+          "text": "While you control 3 or more cards total, this card has +1 LP."
+        },
+        {
+          "trigger": "activate",
+          "text": "Return 1 Growth token to the pool. Each player gains 1 LP."
+        }
+      ],
+      "flavorText": "Eight hundred feet of iron and purpose, sliding under the lift bridge at dawn.",
+      "artNotes": "",
+      "tags": [
+        "Duluth",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Lake Superior Sailors",
+        "description": "Ore boat crews"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex30",
+      "name": "Farmers Market Vendor",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 1 token of any type from the shared pool."
+        },
+        {
+          "trigger": "activate",
+          "text": "Give 1 of your tokens to your opponent. You and your opponent each gain 1 LP."
+        }
+      ],
+      "flavorText": "Try the wild rice. It's from Fond du Lac. You won't find better.",
+      "artNotes": "",
+      "tags": [
+        "Food",
+        "Duluth",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "business",
+        "name": "Duluth Farmers Market",
+        "description": "Local farmers market"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex31",
+      "name": "UMD Student",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Draw 1 card, then discard 1 card."
+        },
+        {
+          "trigger": "ongoing",
+          "text": "Events you play with the Learning tag have +1 LP."
+        }
+      ],
+      "flavorText": "Finals week at the library, con weekend at the DECC. Same energy.",
+      "artNotes": "",
+      "tags": [
+        "Youth",
+        "Duluth",
+        "Learning"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "UMD Students",
+        "description": "University of Minnesota Duluth"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex32",
+      "name": "Lakeside Busker",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "initiative": 2,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Gain 1 LP. If you control a Location with the Duluth tag, gain 1 additional LP."
+        },
+        {
+          "trigger": "autumn",
+          "text": "If this card is Ready, gain 1 Expression token from the pool if available."
+        }
+      ],
+      "flavorText": "Guitar case open, Lake Superior for a backdrop. Not a bad office.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Duluth",
+        "Nature"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Street Musicians",
+        "description": "Canal Park street performers"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex33",
+      "name": "Neighborhood Organizer",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "initiative": 3,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Choose a Location you control. It is treated as meeting its advance condition this Autumn."
+        },
+        {
+          "trigger": "played",
+          "text": "If you control 2 or more People with the Community tag, draw 1 card."
+        }
+      ],
+      "flavorText": "Door by door, block by block. That's how things actually change.",
+      "artNotes": "",
+      "tags": [
+        "Community",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Community Organizers",
+        "description": "Duluth neighborhood leaders"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex34",
+      "name": "Winter Sports Enthusiast",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Reclaim 1 token of any type from the shared pool."
+        },
+        {
+          "trigger": "winter",
+          "text": "If you control a Location with the Nature tag, gain 1 LP."
+        }
+      ],
+      "flavorText": "Spirit Mountain powder day. Everything else can wait.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth",
+        "Youth"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Winter Sports Community",
+        "description": "Spirit Mountain regulars"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex35",
+      "name": "First-Time Attendee",
+      "type": "People",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 0,
+      "initiative": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Look at the top card of your deck."
+        },
+        {
+          "trigger": "ongoing",
+          "text": "While you control 3 or more other cards with the Convention tag, this card has +1 LP."
+        }
+      ],
+      "flavorText": "Is it always this loud? I love it.",
+      "artNotes": "",
+      "tags": [
+        "Youth",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "New Con-Goers",
+        "description": "First-time convention attendees"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex36",
+      "name": "Social Media Influencer",
+      "type": "People",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "initiative": 2,
+      "abilities": [
+        {
+          "trigger": "activate",
+          "text": "Choose a People card you control. It gains +1 LP this Winter."
+        },
+        {
+          "trigger": "played",
+          "text": "If you control 3 or more People, draw 1 card."
+        }
+      ],
+      "flavorText": "Sixty thousand followers. They all want to know what badge ribbon I got.",
+      "artNotes": "",
+      "tags": [
+        "Pop Culture",
+        "Youth",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "person",
+        "name": "Content Creators",
+        "description": "Social media at conventions"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex37",
+      "name": "NorShor Theatre",
+      "type": "Location",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "maxLevel": 2,
+      "advanceCondition": "Control 2 or more People with the Artist tag",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: People you play with the Artist or Pop Culture tag gain +1 LP this year. Lvl 2: Also, once per Summer, when you activate an Artist Person, draw 1 card."
+        }
+      ],
+      "flavorText": "Restored and reimagined. The marquee lights up Superior Street once again.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Duluth",
+        "Pop Culture"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "NorShor Theatre",
+        "description": "Historic Duluth performance venue"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex38",
+      "name": "Gaming Lounge",
+      "type": "Location",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "maxLevel": 2,
+      "advanceCondition": "Control 2 or more People with the Gamer tag",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: Your hand limit is 6 instead of 5. Lvl 2: Also, draw 1 extra card during Spring."
+        }
+      ],
+      "flavorText": "Twenty tables, infinite possibilities. Dice hit the table at nine sharp.",
+      "artNotes": "",
+      "tags": [
+        "Gamer",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Convention Gaming Room",
+        "description": "Excalibur Con gaming area"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex39",
+      "name": "Cosplay Workshop",
+      "type": "Location",
+      "rarity": "Uncommon",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "maxLevel": 3,
+      "advanceCondition": "Activate a People with the Artist tag this year",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: People with the Artist tag you control have +1 Initiative. Lvl 2: Also, cards with the Artist tag cost 1 fewer Expression (min 0). Lvl 3: Also, gain 1 LP for each Artist-tagged People during Winter."
+        }
+      ],
+      "flavorText": "Glue guns at the ready. Show's in three hours.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Convention",
+        "Pop Culture"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Cosplay Crafting Space",
+        "description": "Convention cosplay prep area"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex40",
+      "name": "Canal Park Boardwalk",
+      "type": "Location",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "maxLevel": 2,
+      "advanceCondition": "You control 4 or more cards total",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: Gain 1 LP during Winter. Lvl 2: Gain 1 LP during Winter for each Nature-tagged card you control instead (up to 3)."
+        }
+      ],
+      "flavorText": "Locals know to bring a jacket. The wind off the lake doesn't care what month it is.",
+      "artNotes": "",
+      "tags": [
+        "Duluth",
+        "Nature",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Canal Park",
+        "description": "Duluth waterfront district"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex41",
+      "name": "Spirit Mountain",
+      "type": "Location",
+      "rarity": "Rare",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "maxLevel": 3,
+      "advanceCondition": "You hold unspent tokens of 3 or more different types",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: Gain 1 LP at the start of Spring. Lvl 2: Also, your People with the Nature tag have +1 LP. Lvl 3: Also, at end of Autumn, claim 1 token of any type from the pool."
+        }
+      ],
+      "flavorText": "Overlooking the lake from eight hundred feet up. Winter's playground.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Spirit Mountain",
+        "description": "Spirit Mountain Recreation Area"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex42",
+      "name": "Superior Hiking Trail",
+      "type": "Location",
+      "rarity": "Uncommon",
+      "lp": 2,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 2,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "maxLevel": 2,
+      "advanceCondition": "You control a People with the Nature tag",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: When you Barter, claim 3 tokens instead of 2 (still return 1). Lvl 2: Also, during Winter, gain 1 LP for each unspent Sustainability token you hold."
+        }
+      ],
+      "flavorText": "Three hundred miles of ridgeline, birch, and basalt. One step at a time.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Superior Hiking Trail",
+        "description": "310-mile North Shore trail"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex43",
+      "name": "Enger Tower",
+      "type": "Location",
+      "rarity": "Uncommon",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "maxLevel": 2,
+      "advanceCondition": "You have 3 or more cards in hand",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: At the start of Summer, look at the top 2 cards of your deck and put them back in any order. Lvl 2: Look at 3 instead, and draw 1 of them."
+        }
+      ],
+      "flavorText": "Five stories of blue stone and a view that goes forever.",
+      "artNotes": "",
+      "tags": [
+        "Duluth",
+        "Learning"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Enger Tower",
+        "description": "Historic Duluth observation tower"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex44",
+      "name": "Chester Creek Cafe",
+      "type": "Location",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "maxLevel": 2,
+      "advanceCondition": "You control 2 or more People",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: Gain 1 LP during Winter. Lvl 2: Also, when a People card you control is played, reclaim 1 Sustainability token from the pool."
+        }
+      ],
+      "flavorText": "Where the regulars know your order and the coffee's always fresh.",
+      "artNotes": "",
+      "tags": [
+        "Food",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "business",
+        "name": "Chester Creek Cafe",
+        "description": "Neighborhood cafe in Chester Park"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex45",
+      "name": "Park Point Beach",
+      "type": "Location",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "maxLevel": 2,
+      "advanceCondition": "You hold 2 or more unspent Sustainability tokens",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: At the start of Spring, you may return 1 token to the pool to draw 1 card. Lvl 2: Also, during Winter, gain 1 LP for each Sustainability token you hold (up to 2)."
+        }
+      ],
+      "flavorText": "The longest freshwater sandbar in the world. Locals claim it; tourists discover it.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Park Point",
+        "description": "7-mile Duluth sandbar"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex46",
+      "name": "Duluth Public Library",
+      "type": "Location",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "maxLevel": 2,
+      "advanceCondition": "You have 4 or more cards in hand",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: Draw 1 extra card during Spring (draw 2 total). Lvl 2: Also, your Events cost 1 fewer Learning (min 0)."
+        }
+      ],
+      "flavorText": "Knowledge doesn't have a cover charge. Never has.",
+      "artNotes": "",
+      "tags": [
+        "Learning",
+        "Duluth",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Duluth Public Library",
+        "description": "Duluth Public Library"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex47",
+      "name": "Grandma's Restaurant",
+      "type": "Location",
+      "rarity": "Common",
+      "lp": 1,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "maxLevel": 2,
+      "advanceCondition": "Control 2 or more People with the Community tag",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: Gain 1 LP during Winter for each People with Food or Community tag (up to 2). Lvl 2: Also, once per Summer, when you play a Community-tagged Event, gain 1 LP."
+        }
+      ],
+      "flavorText": "Marathon runners, tourists, and locals all end up here eventually.",
+      "artNotes": "",
+      "tags": [
+        "Food",
+        "Duluth",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "business",
+        "name": "Grandma's Restaurant",
+        "description": "Iconic Duluth restaurant"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex76",
+      "name": "Aerial Lift Bridge",
+      "type": "Location",
+      "rarity": "Legendary",
+      "lp": 3,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 1,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 3,
+      "maxLevel": 3,
+      "advanceCondition": "You control cards with 3 or more different tags",
+      "abilities": [
+        {
+          "trigger": "ongoing",
+          "text": "Lvl 1: Cards with the Duluth tag you control have +1 LP. Lvl 2: Also, during Spring, claim 1 additional token from the pool. Lvl 3: Also, during Winter, gain 1 LP for each different tag among cards you control (up to 5)."
+        }
+      ],
+      "flavorText": "Since 1905, the bridge has lifted for every ship that asked.",
+      "artNotes": "",
+      "tags": [
+        "Duluth",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "location",
+        "name": "Aerial Lift Bridge",
+        "description": "Iconic symbol of Duluth"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex48",
+      "name": "Costume Contest Finals",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 2,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 2 LP. If you control 2 or more People with the Artist or Pop Culture tag, gain 3 LP instead."
+        }
+      ],
+      "flavorText": "The judges deliberate. The audience has already decided.",
+      "artNotes": "",
+      "tags": [
+        "Convention",
+        "Pop Culture",
+        "Artist"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Cosplay Contest",
+        "description": "Excalibur Con cosplay competition"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex49",
+      "name": "Late Night Gaming Session",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Draw 2 cards, then discard 1. If you control a Location with the Gamer tag, keep all drawn cards instead."
+        }
+      ],
+      "flavorText": "It's 2 AM. One more round?",
+      "artNotes": "",
+      "tags": [
+        "Gamer",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Late Night Gaming",
+        "description": "Convention after-hours gaming"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex50",
+      "name": "Artist Commission",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 1 LP. If you control a People with the Artist tag, gain 2 LP instead."
+        }
+      ],
+      "flavorText": "Can you draw my DnD character? She's a tiefling bard with anxiety.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Convention Commissions",
+        "description": "Artist commissions at cons"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex51",
+      "name": "Surprise Celebrity Cameo",
+      "type": "Event",
+      "rarity": "Rare",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Search your deck for 1 People card and add it to your hand. Shuffle your deck."
+        }
+      ],
+      "flavorText": "Wait -- is that actually them? IN DULUTH?!",
+      "artNotes": "",
+      "tags": [
+        "Pop Culture",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Surprise Guests",
+        "description": "Unannounced convention appearances"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex52",
+      "name": "Convention After-Party",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Both players gain 1 LP. You draw 1 card."
+        }
+      ],
+      "flavorText": "The real networking happens after the badge comes off.",
+      "artNotes": "",
+      "tags": [
+        "Convention",
+        "Community",
+        "Social"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "After-Parties",
+        "description": "Post-convention gatherings"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex53",
+      "name": "Trading Card Swap Meet",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Look at the top 5 cards of your deck. Put 2 in your hand and the rest on the bottom in any order."
+        }
+      ],
+      "flavorText": "Two uncommons and a rare for that holographic. Final offer.",
+      "artNotes": "",
+      "tags": [
+        "Gamer",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Card Trading",
+        "description": "Convention card swap events"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex54",
+      "name": "Best in Show",
+      "type": "Event",
+      "rarity": "Rare",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 2,
+        "learning": 0
+      },
+      "totalCost": 3,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Choose a People you control with the Artist tag. It gains +3 LP this Winter. Draw 1 card."
+        }
+      ],
+      "flavorText": "And the award goes to...",
+      "artNotes": "",
+      "tags": [
+        "Convention",
+        "Artist",
+        "Pop Culture"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Convention Awards",
+        "description": "Excalibur Con awards ceremony"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex55",
+      "name": "Flash Mob Dance",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Both players gain 2 LP."
+        }
+      ],
+      "flavorText": "It started with one dancer. By the chorus, the whole vendor hall was moving.",
+      "artNotes": "",
+      "tags": [
+        "Pop Culture",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Flash Mobs",
+        "description": "Spontaneous convention performances"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex56",
+      "name": "Viral Moment",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain LP equal to the number of People you control (up to 4)."
+        }
+      ],
+      "flavorText": "Three million views overnight. Welcome to the internet.",
+      "artNotes": "",
+      "tags": [
+        "Pop Culture",
+        "Youth"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Viral Content",
+        "description": "Social media moments"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex57",
+      "name": "Live Art Demo",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Draw 1 card. If you control a People with the Artist tag, draw 2 instead."
+        }
+      ],
+      "flavorText": "Watch a blank page become a dragon in twenty minutes.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Convention",
+        "Learning"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Live Art",
+        "description": "Live drawing demonstrations"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex58",
+      "name": "Cosplay Photo Shoot",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 1 LP. Choose a People you control. It gains +1 LP this Winter."
+        }
+      ],
+      "flavorText": "Strike a pose by the lake. The Aerial Lift Bridge makes the best backdrop.",
+      "artNotes": "",
+      "tags": [
+        "Pop Culture",
+        "Convention",
+        "Artist"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Cosplay Photography",
+        "description": "Convention photo opportunities"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex59",
+      "name": "Panel Q&A Breakthrough",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 2
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Draw 3 cards, then discard 1. If you control a People with the Convention tag, discard 0 instead."
+        }
+      ],
+      "flavorText": "That question changed the whole conversation.",
+      "artNotes": "",
+      "tags": [
+        "Convention",
+        "Learning"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Panel Discussions",
+        "description": "Convention panel Q&A sessions"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex60",
+      "name": "Lake Effect Storm",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 2,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Each player returns 2 of their tokens to the shared pool. You draw 2 cards."
+        }
+      ],
+      "flavorText": "The lake decides when the storm ends. Not you.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Lake Superior Weather",
+        "description": "Lake effect weather patterns"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex61",
+      "name": "Sunrise Over Superior",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 2 LP. If you control a Location with the Nature tag, reclaim 1 Sustainability token from the pool."
+        }
+      ],
+      "flavorText": "Five thirty AM on the shore. Worth every lost minute of sleep.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Lake Superior Sunrise",
+        "description": "Sunrise over Lake Superior"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex62",
+      "name": "Community Cleanup Day",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Both players gain 2 LP. Return 1 of your tokens to the pool."
+        }
+      ],
+      "flavorText": "Forty bags of trash. Twelve volunteers. One very clean park.",
+      "artNotes": "",
+      "tags": [
+        "Community",
+        "Nature",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Community Cleanups",
+        "description": "Duluth cleanup events"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex63",
+      "name": "Block Party",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Both players draw 1 card. You gain 1 LP for each People you control with the Community tag (up to 2)."
+        }
+      ],
+      "flavorText": "Grill's fired up, music's playing, and nobody remembers whose yard this started in.",
+      "artNotes": "",
+      "tags": [
+        "Community",
+        "Duluth",
+        "Food"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Block Parties",
+        "description": "Duluth neighborhood block parties"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex64",
+      "name": "Ship Arrives in Harbor",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Claim 2 tokens of different types from the shared pool."
+        }
+      ],
+      "flavorText": "The horn echoes off the hillside. A thousand feet of steel glides beneath the bridge.",
+      "artNotes": "",
+      "tags": [
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Ore Boats",
+        "description": "Ships arriving at Duluth harbor"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex65",
+      "name": "Farmers Market Morning",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 1,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 1 LP. Claim 1 token of any type from the shared pool."
+        }
+      ],
+      "flavorText": "Rhubarb season. The early birds got the jam.",
+      "artNotes": "",
+      "tags": [
+        "Food",
+        "Duluth",
+        "Community"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Farmers Market",
+        "description": "Duluth Farmers Market"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex66",
+      "name": "Wildflower Season",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 1 LP. Reclaim 1 of your spent tokens from the pool."
+        }
+      ],
+      "flavorText": "Trilliums along the trail. Some things can't be rushed.",
+      "artNotes": "",
+      "tags": [
+        "Nature"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Wildflower Season",
+        "description": "Spring wildflowers on North Shore"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex67",
+      "name": "Bonfire on the Beach",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 1,
+        "learning": 0
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Both players gain 1 LP. You gain 1 additional LP. Draw 1 card."
+        }
+      ],
+      "flavorText": "Driftwood crackles. Stars reflect off the water. Nobody checks their phone.",
+      "artNotes": "",
+      "tags": [
+        "Community",
+        "Nature",
+        "Social"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Beach Bonfires",
+        "description": "Park Point beach gatherings"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex68",
+      "name": "First Snowfall",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Each Location you control gains +1 LP this Winter. If you control 3 or more Locations, draw 1 card."
+        }
+      ],
+      "flavorText": "The city goes quiet. Everything's possible again under fresh white.",
+      "artNotes": "",
+      "tags": [
+        "Nature",
+        "Duluth"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "First Snow",
+        "description": "Duluth's first snowfall"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex69",
+      "name": "Historic Walking Tour",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Gain 1 LP. If you control a Location with the Duluth tag, gain 2 LP instead."
+        }
+      ],
+      "flavorText": "This building survived the 1918 fire. So did the stories inside it.",
+      "artNotes": "",
+      "tags": [
+        "Duluth",
+        "Learning"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Walking Tours",
+        "description": "Historic Duluth walking tours"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex70",
+      "name": "Chance Encounter",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Look at the top 3 cards of your deck. You may put a People card from among them into your hand. Put the rest on the bottom."
+        }
+      ],
+      "flavorText": "You're the one who makes those candles? I've been looking for you everywhere.",
+      "artNotes": "",
+      "tags": [
+        "Community"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Chance Meetings",
+        "description": "Serendipitous community encounters"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex71",
+      "name": "Moment of Inspiration",
+      "type": "Event",
+      "rarity": "Uncommon",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 0,
+        "expression": 1,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Draw 2 cards. Choose a People you control -- it gains +1 LP this Winter."
+        }
+      ],
+      "flavorText": "It hit her in the middle of the lecture. The whole thesis, crystal clear.",
+      "artNotes": "",
+      "tags": [
+        "Artist",
+        "Learning"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Creative Inspiration",
+        "description": "Moments of creative insight"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex72",
+      "name": "Word of Mouth",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Search your deck for a card with the Community tag. Add it to your hand. Shuffle your deck."
+        }
+      ],
+      "flavorText": "My neighbor told me about this place. Said it changed her life.",
+      "artNotes": "",
+      "tags": [
+        "Community"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Word of Mouth",
+        "description": "Community word-of-mouth networks"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex73",
+      "name": "Shared Meal",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Both players gain 1 LP. If you control a Location with the Food tag, you gain 2 LP instead."
+        }
+      ],
+      "flavorText": "There's always room for one more at the table.",
+      "artNotes": "",
+      "tags": [
+        "Community",
+        "Food"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Community Meals",
+        "description": "Potlucks and shared meals"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex74",
+      "name": "Unexpected Friendship",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 0,
+        "learning": 0
+      },
+      "totalCost": 1,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Draw 1 card. The next People card you play this Summer costs 1 fewer total resource (min 0)."
+        }
+      ],
+      "flavorText": "Matching cosplays. Different fandoms. Best friends by Sunday.",
+      "artNotes": "",
+      "tags": [
+        "Community",
+        "Convention"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "New Friendships",
+        "description": "Convention friendships"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex75",
+      "name": "Fresh Start",
+      "type": "Event",
+      "rarity": "Common",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 1,
+        "community": 0,
+        "expression": 0,
+        "learning": 1
+      },
+      "totalCost": 2,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Return any number of your tokens to the shared pool. For each token returned, draw 1 card."
+        }
+      ],
+      "flavorText": "Sometimes the bravest thing is to let go and begin again.",
+      "artNotes": "",
+      "tags": [
+        "Sustainability",
+        "Learning"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "New Beginnings",
+        "description": "Fresh starts in the community"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    },
+    {
+      "id": "card_ex77",
+      "name": "Excalibur Con Grand Finale",
+      "type": "Event",
+      "rarity": "Legendary",
+      "lp": 0,
+      "set": "Excalibur Con 2026",
+      "cost": {
+        "growth": 0,
+        "sustainability": 0,
+        "community": 1,
+        "expression": 1,
+        "learning": 1
+      },
+      "totalCost": 3,
+      "abilities": [
+        {
+          "trigger": "played",
+          "text": "Each player gains LP equal to the number of People they control. You gain 3 additional LP. Both players draw 2 cards."
+        }
+      ],
+      "flavorText": "Same time next year?",
+      "artNotes": "",
+      "tags": [
+        "Convention",
+        "Community",
+        "Pop Culture"
+      ],
+      "localConnection": {
+        "type": "event",
+        "name": "Excalibur Con Closing",
+        "description": "Convention closing ceremony"
+      },
+      "designerNotes": "",
+      "created": "2026-03-06T00:00:00Z",
+      "modified": "2026-03-06T00:00:00Z"
+    }
+  ]
+}

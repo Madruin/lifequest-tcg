@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeQuest TCG</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --accent2: #533483;
+  --text: #eee;
+  --text-dim: #999;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.container { max-width: 600px; width: 100%; text-align: center; }
+h1 { font-size: 2.5rem; margin-bottom: 4px; color: var(--accent); }
+.subtitle { font-size: 1rem; color: var(--text-dim); margin-bottom: 32px; }
+.tagline { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 40px; line-height: 1.5; }
+.cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+a.card {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--surface); border: 2px solid var(--surface2);
+  border-radius: 12px; padding: 18px 24px;
+  text-decoration: none; color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+}
+a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card-icon { font-size: 2rem; min-width: 48px; text-align: center; }
+.card-info { text-align: left; }
+.card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+.card-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.3; }
+.card.primary { border-color: var(--accent); }
+.card.primary .card-title { color: var(--accent); }
+.footer { font-size: 0.75rem; color: var(--text-dim); line-height: 1.6; }
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+.badge { display: inline-block; background: var(--accent2); color: var(--text); padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 600; margin-left: 8px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>LifeQuest</h1>
+  <p class="subtitle">A Community Trading Card Game</p>
+  <p class="tagline">
+    Set in Duluth, MN &mdash; build community, develop local places, and celebrate what makes the Northland special.
+    <br>Non-violent, values-driven, and designed for everyone.
+  </p>
+
+  <div class="cards">
+    <a class="card primary" href="online/client.html">
+      <div class="card-icon">🌐</div>
+      <div class="card-info">
+        <div class="card-title">Play Online <span class="badge">NEW</span></div>
+        <div class="card-desc">Play with a friend over the internet. Create a room, share the code, and start a game &mdash; no downloads needed.</div>
+      </div>
+    </a>
+
+    <a class="card" href="playtest/playtester.html">
+      <div class="card-icon">🎮</div>
+      <div class="card-info">
+        <div class="card-title">Local Playtester</div>
+        <div class="card-desc">Hotseat 2-player mode on one screen. Full game flow with undo, manual effects, and game log.</div>
+      </div>
+    </a>
+
+    <a class="card" href="tools/card-database.html">
+      <div class="card-icon">🗃️</div>
+      <div class="card-info">
+        <div class="card-title">Card Database</div>
+        <div class="card-desc">Browse, search, and edit all 77 cards in the Excalibur Con 2026 set.</div>
+      </div>
+    </a>
+
+    <a class="card" href="simulator/balance-sim.html">
+      <div class="card-icon">📊</div>
+      <div class="card-info">
+        <div class="card-title">Balance Simulator</div>
+        <div class="card-desc">Run hundreds of AI-vs-AI games to analyze card balance and win rates.</div>
+      </div>
+    </a>
+
+    <a class="card" href="docs/rules-v0.2.md">
+      <div class="card-icon">📜</div>
+      <div class="card-info">
+        <div class="card-title">Rules (v0.2)</div>
+        <div class="card-desc">Full game rules &mdash; 5 shared resources, seasonal phases, 30 LP to win.</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="footer">
+    <strong>Excalibur Con 2026 Test Set</strong> &mdash; 77 cards &bull; 2 starter decks<br>
+    LifeQuest TCG &copy; 2026. Designed for the Duluth community.
+  </div>
+</div>
+</body>
+</html>

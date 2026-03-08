@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeQuest Playtester</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --accent2: #533483;
+  --text: #eee;
+  --text-dim: #999;
+  --growth: #4caf50;
+  --sustainability: #66bb6a;
+  --community: #ffc107;
+  --expression: #e91e63;
+  --learning: #2196f3;
+  --people-bg: #2d1b4e;
+  --location-bg: #1b3a2d;
+  --event-bg: #3a1b1b;
+  --common: #aaa;
+  --uncommon: #4fc3f7;
+  --rare: #ce93d8;
+  --legendary: #ffd54f;
+  --spring: #66bb6a;
+  --summer: #ffc107;
+  --autumn: #ff7043;
+  --winter: #42a5f5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow: hidden; }
+h1, h2, h3 { font-weight: 600; }
+
+/* Layout */
+.app { display: grid; grid-template-columns: 220px 1fr; grid-template-rows: auto 1fr; height: 100vh; }
+.header { grid-column: 1 / -1; background: var(--surface); padding: 8px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid var(--accent); min-height: 44px; }
+.header h1 { font-size: 1.1rem; white-space: nowrap; }
+
+/* Phase bar in header */
+.phase-bar { display: flex; gap: 8px; align-items: center; margin-left: 12px; }
+.phase-badge { padding: 3px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.phase-badge.spring { background: var(--spring); color: #000; }
+.phase-badge.summer { background: var(--summer); color: #000; }
+.phase-badge.autumn { background: var(--autumn); color: #000; }
+.phase-badge.winter { background: var(--winter); color: #000; }
+.header-info { font-size: 0.8rem; color: var(--text-dim); display: flex; gap: 12px; align-items: center; }
+.header-info span { background: var(--surface2); padding: 3px 8px; border-radius: 4px; }
+.header-actions { margin-left: auto; display: flex; gap: 6px; }
+
+/* Log sidebar */
+.log-sidebar { background: var(--surface); overflow-y: auto; padding: 8px; border-right: 1px solid #333; font-size: 0.72rem; display: flex; flex-direction: column; }
+.log-sidebar h2 { font-size: 0.8rem; color: var(--accent); margin-bottom: 6px; padding: 0 4px; }
+.log-entries { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.log-entry { padding: 3px 6px; border-radius: 3px; background: var(--bg); line-height: 1.3; word-break: break-word; }
+.log-entry.spring { border-left: 2px solid var(--spring); }
+.log-entry.summer { border-left: 2px solid var(--summer); }
+.log-entry.autumn { border-left: 2px solid var(--autumn); }
+.log-entry.winter { border-left: 2px solid var(--winter); }
+.log-entry.system { border-left: 2px solid var(--accent); color: var(--accent); }
+.log-entry .log-time { color: var(--text-dim); font-size: 0.65rem; }
+
+/* Main board */
+.board { padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+
+/* Player zone */
+.player-zone { background: var(--surface); border-radius: 8px; padding: 8px; }
+.player-zone.active-turn { border: 2px solid var(--accent); }
+.player-zone:not(.active-turn) { border: 2px solid transparent; }
+.player-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.player-name { font-weight: 600; font-size: 0.9rem; }
+.player-lp { font-size: 1.1rem; font-weight: bold; color: var(--accent); }
+.player-tokens { display: flex; gap: 4px; margin-left: auto; }
+
+/* Token circles */
+.token { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: #000; cursor: default; }
+.token.growth { background: var(--growth); }
+.token.sustainability { background: var(--sustainability); }
+.token.community { background: var(--community); }
+.token.expression { background: var(--expression); }
+.token.learning { background: var(--learning); }
+.token.clickable { cursor: pointer; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+.token.clickable:hover { box-shadow: 0 0 0 3px rgba(255,255,255,0.6); transform: scale(1.1); }
+.token.selected { box-shadow: 0 0 0 3px var(--accent); transform: scale(1.15); }
+.token.disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* Board rows (People / Locations) */
+.board-cards { display: flex; gap: 6px; flex-wrap: wrap; min-height: 50px; padding: 4px; background: var(--bg); border-radius: 4px; margin-bottom: 4px; }
+.board-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px; }
+
+/* Hand zone */
+.hand-zone { display: flex; gap: 4px; flex-wrap: wrap; min-height: 60px; padding: 4px; background: rgba(0,0,0,0.3); border-radius: 4px; }
+.hand-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px; }
+
+/* Mini card (board) */
+.mini-card { width: 100px; padding: 5px; border-radius: 6px; cursor: pointer; position: relative; font-size: 0.7rem; transition: transform 0.15s; border: 1px solid #555; }
+.mini-card:hover { transform: translateY(-2px); border-color: var(--accent); z-index: 5; }
+.mini-card.type-People { background: var(--people-bg); border-top: 2px solid #9c27b0; }
+.mini-card.type-Location { background: var(--location-bg); border-top: 2px solid #4caf50; }
+.mini-card.type-Event { background: var(--event-bg); border-top: 2px solid #f44336; }
+.mini-card .mc-name { font-weight: 600; font-size: 0.68rem; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-card .mc-meta { display: flex; justify-content: space-between; align-items: center; }
+.mini-card .mc-lp { color: var(--accent); font-weight: bold; }
+.mini-card .mc-costs { display: flex; gap: 2px; }
+.mc-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.mini-card .mc-level { position: absolute; top: 3px; right: 4px; background: var(--accent2); padding: 1px 5px; border-radius: 3px; font-size: 0.6rem; font-weight: bold; }
+.mini-card.exhausted { transform: rotate(6deg); opacity: 0.6; }
+.mini-card.exhausted::after { content: 'EXHAUSTED'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-15deg); font-size: 0.55rem; color: var(--accent); font-weight: bold; letter-spacing: 1px; background: rgba(0,0,0,0.7); padding: 1px 6px; border-radius: 3px; }
+.mini-card.selectable { box-shadow: 0 0 0 2px var(--accent); animation: pulse 1.5s infinite; }
+
+/* Hand card */
+.hand-card { width: 90px; padding: 5px; border-radius: 6px; cursor: pointer; font-size: 0.68rem; border: 1px solid #555; transition: transform 0.15s; }
+.hand-card:hover { transform: translateY(-3px); border-color: var(--accent); z-index: 5; }
+.hand-card.type-People { background: var(--people-bg); }
+.hand-card.type-Location { background: var(--location-bg); }
+.hand-card.type-Event { background: var(--event-bg); }
+.hand-card .hc-name { font-weight: 600; font-size: 0.65rem; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hand-card .hc-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.6rem; }
+.hand-card .hc-lp { color: var(--accent); font-weight: bold; }
+.hand-card .hc-type { color: var(--text-dim); font-size: 0.55rem; }
+.hand-card .hc-costs { display: flex; gap: 2px; margin-top: 2px; }
+.hand-card.selectable { box-shadow: 0 0 0 2px var(--accent); animation: pulse 1.5s infinite; }
+.hand-card.unplayable { opacity: 0.5; }
+
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 2px var(--accent); } 50% { box-shadow: 0 0 8px 3px var(--accent); } }
+
+/* Shared pool */
+.shared-pool { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 6px 12px; background: var(--surface); border-radius: 8px; }
+.shared-pool .pool-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; }
+.pool-token { width: 36px; height: 36px; font-size: 0.85rem; }
+
+/* Action panel */
+.action-panel { background: var(--surface); border-radius: 8px; padding: 10px; min-height: 60px; }
+.action-panel h3 { font-size: 0.8rem; color: var(--accent); margin-bottom: 6px; }
+.action-buttons { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.action-msg { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
+
+/* Buttons */
+.btn { padding: 7px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: opacity 0.2s; }
+.btn:hover { opacity: 0.85; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-secondary { background: var(--surface2); color: var(--text); }
+.btn-success { background: #2e7d32; color: white; }
+.btn-danger { background: #c62828; color: white; }
+.btn-small { padding: 4px 10px; font-size: 0.72rem; }
+.btn-tiny { padding: 2px 6px; font-size: 0.65rem; border-radius: 3px; }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--surface); border-radius: 12px; padding: 20px; max-width: 520px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; }
+.modal-close { position: absolute; top: 10px; right: 14px; background: none; border: none; color: var(--text-dim); font-size: 1.4rem; cursor: pointer; }
+
+/* Card preview in modal */
+.card-preview { border-radius: 10px; overflow: hidden; border: 2px solid #555; max-width: 320px; margin: 0 auto; }
+.card-preview.type-People { border-color: #9c27b0; }
+.card-preview.type-Location { border-color: #4caf50; }
+.card-preview.type-Event { border-color: #f44336; }
+.card-preview-header { padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
+.card-preview.type-People .card-preview-header { background: var(--people-bg); }
+.card-preview.type-Location .card-preview-header { background: var(--location-bg); }
+.card-preview.type-Event .card-preview-header { background: var(--event-bg); }
+.card-preview-name { font-weight: 700; font-size: 1rem; }
+.card-preview-cost { display: flex; gap: 3px; }
+.card-preview-art { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; background: var(--bg); }
+.card-preview-body { padding: 10px 12px; background: var(--surface2); }
+.card-preview-type-line { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 6px; display: flex; justify-content: space-between; }
+.card-preview-abilities { font-size: 0.78rem; margin-bottom: 6px; }
+.card-preview-abilities .ability { margin-bottom: 4px; }
+.card-preview-abilities .trigger { font-weight: 600; color: var(--accent); text-transform: uppercase; font-size: 0.65rem; }
+.card-preview-flavor { font-size: 0.7rem; font-style: italic; color: var(--text-dim); border-top: 1px solid #444; padding-top: 4px; margin-top: 4px; }
+.card-preview-footer { padding: 4px 12px; display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-dim); background: var(--surface); }
+.card-preview-lp { font-size: 1rem; font-weight: bold; color: var(--accent); }
+
+/* Setup modal */
+.setup-screen { padding: 8px; }
+.setup-screen h2 { text-align: center; margin-bottom: 16px; }
+.deck-option { background: var(--surface2); border-radius: 8px; padding: 14px; margin-bottom: 10px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+.deck-option:hover { border-color: var(--accent); }
+.deck-option.selected { border-color: var(--accent); background: #1a2a50; }
+.deck-option h3 { margin-bottom: 4px; }
+.deck-option p { font-size: 0.8rem; color: var(--text-dim); }
+.deck-option .deck-stats { font-size: 0.72rem; margin-top: 6px; display: flex; gap: 12px; }
+.setup-row { display: flex; gap: 16px; margin-bottom: 12px; }
+.setup-col { flex: 1; }
+.setup-col label { display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; }
+.setup-col input { width: 100%; padding: 6px 10px; background: var(--bg); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 0.85rem; }
+.setup-col input:focus { outline: none; border-color: var(--accent); }
+
+/* Manual actions toolbar */
+.manual-toolbar { background: var(--surface2); border-radius: 6px; padding: 6px 8px; margin-top: 4px; }
+.manual-toolbar summary { font-size: 0.72rem; color: var(--text-dim); cursor: pointer; text-transform: uppercase; }
+.manual-toolbar .mt-row { display: flex; gap: 4px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
+.manual-toolbar .mt-label { font-size: 0.68rem; color: var(--text-dim); min-width: 60px; }
+
+/* Trigger resolution panel */
+.trigger-panel { background: var(--surface2); border-radius: 6px; padding: 8px; }
+.trigger-panel h4 { font-size: 0.75rem; color: var(--accent); margin-bottom: 6px; }
+.trigger-item { padding: 4px 8px; margin-bottom: 4px; background: var(--bg); border-radius: 4px; font-size: 0.75rem; }
+.trigger-item .ti-name { font-weight: 600; }
+.trigger-item .ti-text { color: var(--text-dim); margin-top: 2px; }
+.trigger-item .ti-owner { font-size: 0.65rem; color: var(--accent); }
+
+/* Discard selection */
+.discard-selection { display: flex; gap: 4px; flex-wrap: wrap; margin: 8px 0; }
+
+/* Token selection modal */
+.token-select { display: flex; gap: 8px; justify-content: center; padding: 12px; flex-wrap: wrap; }
+.token-select .token { width: 44px; height: 44px; font-size: 1rem; }
+
+/* Win screen */
+.win-banner { text-align: center; padding: 24px; }
+.win-banner h2 { font-size: 1.5rem; color: var(--accent); margin-bottom: 8px; }
+
+/* Toast */
+.toast { position: fixed; bottom: 16px; right: 16px; background: var(--surface2); border: 1px solid var(--accent); padding: 10px 18px; border-radius: 8px; z-index: 200; transition: opacity 0.3s; font-size: 0.8rem; }
+.toast.hidden { opacity: 0; pointer-events: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .log-sidebar { max-height: 120px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app-playing" style="display:none">
+  <div class="header">
+    <h1>LifeQuest</h1>
+    <div class="phase-bar">
+      <span class="phase-badge" id="phase-badge">SPRING</span>
+    </div>
+    <div class="header-info">
+      <span id="hdr-year">Year 1</span>
+      <span id="hdr-active">Active: ---</span>
+      <span id="hdr-step">---</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-small btn-secondary" onclick="doUndo()" title="Undo (Ctrl+Z)">Undo</button>
+      <button class="btn btn-small btn-secondary" onclick="showManualModal()">Manual</button>
+      <button class="btn btn-small btn-secondary" onclick="exportGame()">Export</button>
+      <button class="btn btn-small btn-danger" onclick="confirmNewGame()">New</button>
+    </div>
+  </div>
+
+  <div class="log-sidebar">
+    <h2>Game Log</h2>
+    <div class="log-entries" id="log-entries"></div>
+  </div>
+
+  <div class="board" id="board">
+    <!-- P2 zone (top, "away") -->
+    <div class="player-zone" id="pz-1">
+      <div class="player-header">
+        <span class="player-name" id="pn-1">Player 2</span>
+        <span class="player-lp">LP: <strong id="plp-1">0</strong></span>
+        <div class="player-tokens" id="pt-1"></div>
+        <span style="font-size:0.7rem;color:var(--text-dim)">Deck: <span id="pdeck-1">0</span> | Discard: <span id="pdisc-1">0</span></span>
+      </div>
+      <div class="board-label">Board</div>
+      <div class="board-cards" id="pb-1"></div>
+      <div class="hand-label">Hand (<span id="phc-1">0</span>)</div>
+      <div class="hand-zone" id="ph-1"></div>
+    </div>
+
+    <!-- Shared pool -->
+    <div class="shared-pool" id="shared-pool">
+      <span class="pool-label">Shared Pool</span>
+    </div>
+
+    <!-- P1 zone (bottom, "home") -->
+    <div class="player-zone" id="pz-0">
+      <div class="hand-label">Hand (<span id="phc-0">0</span>)</div>
+      <div class="hand-zone" id="ph-0"></div>
+      <div class="board-label">Board</div>
+      <div class="board-cards" id="pb-0"></div>
+      <div class="player-header">
+        <span class="player-name" id="pn-0">Player 1</span>
+        <span class="player-lp">LP: <strong id="plp-0">0</strong></span>
+        <div class="player-tokens" id="pt-0"></div>
+        <span style="font-size:0.7rem;color:var(--text-dim)">Deck: <span id="pdeck-0">0</span> | Discard: <span id="pdisc-0">0</span></span>
+      </div>
+    </div>
+
+    <!-- Action panel -->
+    <div class="action-panel" id="action-panel">
+      <h3 id="ap-title">Actions</h3>
+      <div class="action-buttons" id="ap-buttons"></div>
+      <div class="action-msg" id="ap-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Setup screen -->
+<div id="app-setup" style="padding:24px;max-width:700px;margin:0 auto;">
+  <div class="setup-screen">
+    <h2>LifeQuest Playtester</h2>
+    <p id="setup-status" style="text-align:center;color:var(--text-dim);margin-bottom:16px;">Loading card data...</p>
+
+    <div class="setup-row">
+      <div class="setup-col">
+        <label>Player 1 Name</label>
+        <input type="text" id="p1-name" value="Player 1">
+      </div>
+      <div class="setup-col">
+        <label>Player 2 Name</label>
+        <input type="text" id="p2-name" value="Player 2">
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:8px;">Player 1 Deck</h3>
+    <div id="p1-decks"></div>
+
+    <h3 style="margin-bottom:8px;margin-top:16px;">Player 2 Deck</h3>
+    <div id="p2-decks"></div>
+
+    <div style="text-align:center;margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-primary" id="btn-start" onclick="startGame()" disabled>Start Game</button>
+      <button class="btn btn-secondary" id="btn-resume" onclick="resumeGame()" style="display:none">Resume Saved Game</button>
+    </div>
+
+    <div style="margin-top:20px;text-align:center;">
+      <button class="btn btn-small btn-secondary" onclick="document.getElementById('import-cards').click()">Import cards.json</button>
+      <button class="btn btn-small btn-secondary" onclick="document.getElementById('import-decks').click()">Import starter-decks.json</button>
+      <input type="file" id="import-cards" accept=".json" style="display:none" onchange="importCards(event)">
+      <input type="file" id="import-decks" accept=".json" style="display:none" onchange="importDecks(event)">
+    </div>
+  </div>
+</div>
+
+<!-- Card detail modal -->
+<div class="modal-overlay" id="card-modal" onclick="if(event.target===this)closeCardModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeCardModal()">&times;</button>
+    <div id="card-modal-content"></div>
+  </div>
+</div>
+
+<!-- Generic action modal (token select, discard, etc.) -->
+<div class="modal-overlay" id="action-modal" onclick="if(event.target===this)closeActionModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeActionModal()">&times;</button>
+    <div id="action-modal-content"></div>
+  </div>
+</div>
+
+<!-- Manual effects modal -->
+<div class="modal-overlay" id="manual-modal" onclick="if(event.target===this)closeManualModal()">
+  <div class="modal" style="max-width:600px;">
+    <button class="modal-close" onclick="closeManualModal()">&times;</button>
+    <h3 style="margin-bottom:12px;color:var(--accent);">Manual Effects</h3>
+    <div id="manual-content"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script>
+// ==================== CONSTANTS ====================
+const RESOURCES = ['growth','sustainability','community','expression','learning'];
+const RES_LABELS = { growth:'Growth', sustainability:'Sustain', community:'Community', expression:'Express', learning:'Learn' };
+const RES_SHORT = { growth:'G', sustainability:'S', community:'C', expression:'E', learning:'L' };
+const TYPE_ICONS = { People: '\u{1F464}', Location: '\u{1F3E0}', Event: '\u{1F3AA}' };
+const STORAGE_KEY = 'lifequest-playtest';
+const UNDO_LIMIT = 50;
+
+// ==================== STATE ====================
+let game = null;
+let undoStack = [];
+let cardDb = [];        // full card database (immutable during game)
+let starterDecks = [];  // from starter-decks.json
+let p1DeckChoice = -1;  // index into starterDecks
+let p2DeckChoice = -1;
+let selectionMode = null; // null | { type, callback, filter, ... }
+
+function emptyTokens() { return { growth:0, sustainability:0, community:0, expression:0, learning:0 }; }
+
+function newPlayer(name) {
+  return {
+    name, lp: 0,
+    tokens: emptyTokens(),
+    hand: [], board: [], deck: [], discard: [],
+    springDone: false, autumnPlayed: false
+  };
+}
+
+function newGameState(p1Name, p2Name) {
+  return {
+    year: 1,
+    season: 'spring',
+    phaseStep: 'p0-refresh',
+    startPlayer: 0,
+    activePlayer: 0,
+    summerConsecutivePasses: 0,
+    status: 'playing',
+    pool: { growth:2, sustainability:2, community:2, expression:2, learning:2 },
+    players: [ newPlayer(p1Name), newPlayer(p2Name) ],
+    log: []
+  };
+}
+
+// ==================== UTILITY ====================
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function cloneCard(c) { return JSON.parse(JSON.stringify(c)); }
+
+function otherPlayer(p) { return p === 0 ? 1 : 0; }
+
+function totalTokens(p) { return RESOURCES.reduce((s,r) => s + game.players[p].tokens[r], 0); }
+function poolTotal() { return RESOURCES.reduce((s,r) => s + game.pool[r], 0); }
+
+function canAfford(playerIdx, cost) {
+  return RESOURCES.every(r => game.players[playerIdx].tokens[r] >= (cost[r]||0));
+}
+
+function payCardCost(playerIdx, cost) {
+  RESOURCES.forEach(r => {
+    const amt = cost[r] || 0;
+    game.players[playerIdx].tokens[r] -= amt;
+    game.pool[r] += amt;
+  });
+}
+
+function costString(cost) {
+  return RESOURCES.filter(r => cost[r] > 0).map(r => cost[r] + RES_SHORT[r]).join(' ') || 'Free';
+}
+
+function getTriggersForSeason(season) {
+  const results = [];
+  for (let pi = 0; pi < 2; pi++) {
+    const p = game.players[pi];
+    for (const entry of p.board) {
+      for (const ab of entry.card.abilities || []) {
+        if (ab.trigger === season) {
+          results.push({ playerIdx: pi, card: entry.card, entry, text: ab.text, initiative: entry.card.initiative || 0 });
+        }
+      }
+    }
+  }
+  // Sort: start player first, then by initiative desc
+  const sp = game.startPlayer;
+  results.sort((a,b) => {
+    if (a.playerIdx !== b.playerIdx) return a.playerIdx === sp ? -1 : 1;
+    return (b.initiative || 0) - (a.initiative || 0);
+  });
+  return results;
+}
+
+// ==================== UNDO ====================
+function snapshot() {
+  // Exclude cardDb from snapshot (it's immutable)
+  const state = JSON.parse(JSON.stringify(game));
+  undoStack.push(JSON.stringify(state));
+  if (undoStack.length > UNDO_LIMIT) undoStack.shift();
+}
+
+function doUndo() {
+  if (undoStack.length === 0) { toast('Nothing to undo'); return; }
+  selectionMode = null;
+  game = JSON.parse(undoStack.pop());
+  logAction('[Undo] Reverted to previous state');
+  saveGame();
+  render();
+  toast('Undone');
+}
+
+// ==================== LOGGING ====================
+function logAction(text) {
+  if (!game) return;
+  game.log.push({ time: new Date().toLocaleTimeString(), text, year: game.year, season: game.season });
+}
+
+function renderLog() {
+  const el = document.getElementById('log-entries');
+  el.innerHTML = game.log.map(e =>
+    `<div class="log-entry ${e.season || 'system'}"><span class="log-time">Y${e.year}</span> ${esc(e.text)}</div>`
+  ).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+// ==================== PERSISTENCE ====================
+function saveGame() {
+  if (!game) return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ game, undoStack }));
+}
+
+function loadSavedGame() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return false;
+  try {
+    const d = JSON.parse(raw);
+    if (d.game && d.game.players) {
+      game = d.game;
+      undoStack = d.undoStack || [];
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+function exportGame() {
+  const blob = new Blob([JSON.stringify({ game, undoStack, cardDb }, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'lifequest-game-' + Date.now() + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  toast('Game exported');
+}
+
+// ==================== CARD LOADING ====================
+async function loadCardData() {
+  try {
+    const r = await fetch('../data/cards.json');
+    const d = await r.json();
+    cardDb = d.cards || [];
+  } catch(e) {
+    console.warn('Could not fetch cards.json:', e);
+  }
+  try {
+    const r = await fetch('../data/starter-decks.json');
+    const d = await r.json();
+    starterDecks = d.decks || [];
+  } catch(e) {
+    console.warn('Could not fetch starter-decks.json:', e);
+  }
+  setupReady();
+}
+
+function importCards(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      cardDb = d.cards || [];
+      toast('Loaded ' + cardDb.length + ' cards');
+      setupReady();
+    } catch(err) { toast('Invalid JSON'); }
+  };
+  reader.readAsText(file);
+}
+
+function importDecks(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      starterDecks = d.decks || [];
+      toast('Loaded ' + starterDecks.length + ' decks');
+      setupReady();
+    } catch(err) { toast('Invalid JSON'); }
+  };
+  reader.readAsText(file);
+}
+
+function buildDeck(deckDef) {
+  return deckDef.cards
+    .map(id => cardDb.find(c => c.id === id))
+    .filter(c => c != null)
+    .map(c => cloneCard(c));
+}
+
+// ==================== SETUP SCREEN ====================
+function setupReady() {
+  document.getElementById('setup-status').textContent =
+    cardDb.length + ' cards loaded, ' + starterDecks.length + ' starter decks';
+
+  // Render deck options
+  for (const pid of [1, 2]) {
+    const container = document.getElementById('p' + pid + '-decks');
+    container.innerHTML = starterDecks.map((d, i) =>
+      `<div class="deck-option" data-p="${pid}" data-i="${i}" onclick="selectDeck(${pid},${i})">
+        <h3>${esc(d.name)}</h3>
+        <p>${esc(d.description)}</p>
+        <div class="deck-stats">
+          <span>Cards: ${d.cardCount}</span>
+          <span>People: ${d.typeSplit?.People||'?'}</span>
+          <span>Locations: ${d.typeSplit?.Location||'?'}</span>
+          <span>Events: ${d.typeSplit?.Event||'?'}</span>
+        </div>
+      </div>`
+    ).join('');
+  }
+
+  // Check for saved game
+  if (localStorage.getItem(STORAGE_KEY)) {
+    document.getElementById('btn-resume').style.display = '';
+  }
+
+  updateStartButton();
+}
+
+function selectDeck(player, idx) {
+  if (player === 1) p1DeckChoice = idx; else p2DeckChoice = idx;
+  document.querySelectorAll(`[data-p="${player}"]`).forEach(el => el.classList.remove('selected'));
+  document.querySelector(`[data-p="${player}"][data-i="${idx}"]`)?.classList.add('selected');
+  updateStartButton();
+}
+
+function updateStartButton() {
+  document.getElementById('btn-start').disabled = !(p1DeckChoice >= 0 && p2DeckChoice >= 0 && cardDb.length > 0);
+}
+
+function startGame() {
+  const name1 = document.getElementById('p1-name').value.trim() || 'Player 1';
+  const name2 = document.getElementById('p2-name').value.trim() || 'Player 2';
+
+  game = newGameState(name1, name2);
+  undoStack = [];
+
+  // Build and shuffle decks
+  game.players[0].deck = shuffle(buildDeck(starterDecks[p1DeckChoice]));
+  game.players[1].deck = shuffle(buildDeck(starterDecks[p2DeckChoice]));
+
+  // Draw starting hands (5 cards each)
+  for (let p = 0; p < 2; p++) {
+    for (let i = 0; i < 5; i++) {
+      if (game.players[p].deck.length > 0) {
+        game.players[p].hand.push(game.players[p].deck.pop());
+      }
+    }
+  }
+
+  // Randomly pick start player
+  game.startPlayer = Math.random() < 0.5 ? 0 : 1;
+  game.activePlayer = game.startPlayer;
+  game.phaseStep = 'p0-refresh';
+
+  logAction('Game started! ' + name1 + ' (' + starterDecks[p1DeckChoice].name + ') vs ' + name2 + ' (' + starterDecks[p2DeckChoice].name + ')');
+  logAction(game.players[game.startPlayer].name + ' is the Start Player for Year 1');
+
+  document.getElementById('app-setup').style.display = 'none';
+  document.getElementById('app-playing').style.display = '';
+
+  saveGame();
+  advancePhase();
+}
+
+function resumeGame() {
+  if (loadSavedGame()) {
+    document.getElementById('app-setup').style.display = 'none';
+    document.getElementById('app-playing').style.display = '';
+    render();
+    toast('Game resumed');
+  } else {
+    toast('No saved game found');
+  }
+}
+
+function confirmNewGame() {
+  if (!confirm('Start a new game? Current game will be lost.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  game = null;
+  undoStack = [];
+  document.getElementById('app-playing').style.display = 'none';
+  document.getElementById('app-setup').style.display = '';
+  setupReady();
+}
+
+// ==================== STATE MACHINE ====================
+function advancePhase() {
+  const sp = game.startPlayer;
+  const op = otherPlayer(sp);
+
+  switch (game.season) {
+    case 'spring': {
+      // Spring order: start player refresh, draw, resource; then other player same
+      if (game.phaseStep === 'p0-refresh') {
+        autoRefresh(sp);
+        game.phaseStep = 'p0-draw';
+        return advancePhase();
+      }
+      if (game.phaseStep === 'p0-draw') {
+        autoDraw(sp);
+        game.phaseStep = 'p0-resource';
+        game.activePlayer = sp;
+        render();
+        return;
+      }
+      if (game.phaseStep === 'p0-resource') {
+        // After P0 resource chosen, move to P1
+        game.phaseStep = 'p1-refresh';
+        return advancePhase();
+      }
+      if (game.phaseStep === 'p1-refresh') {
+        autoRefresh(op);
+        game.phaseStep = 'p1-draw';
+        return advancePhase();
+      }
+      if (game.phaseStep === 'p1-draw') {
+        autoDraw(op);
+        game.phaseStep = 'p1-resource';
+        game.activePlayer = op;
+        render();
+        return;
+      }
+      if (game.phaseStep === 'p1-resource') {
+        // Spring done, advance to Summer
+        game.season = 'summer';
+        game.phaseStep = 'action';
+        game.activePlayer = op; // Non-start player acts first in Summer
+        game.summerConsecutivePasses = 0;
+        logAction('--- Summer begins ---');
+        render();
+        return;
+      }
+      break;
+    }
+    case 'summer': {
+      if (game.phaseStep === 'action') {
+        // Check if both passed
+        if (game.summerConsecutivePasses >= 2) {
+          game.phaseStep = 'triggers';
+          logAction('Both players passed. Summer action phase ends.');
+          render();
+          return;
+        }
+        // Otherwise show action choices
+        render();
+        return;
+      }
+      if (game.phaseStep === 'triggers') {
+        const triggers = getTriggersForSeason('summer');
+        if (triggers.length === 0) {
+          game.season = 'autumn';
+          game.phaseStep = 'p0-play';
+          game.activePlayer = sp;
+          game.players[0].autumnPlayed = false;
+          game.players[1].autumnPlayed = false;
+          logAction('--- Autumn begins ---');
+          render();
+          return;
+        }
+        // Show triggers for manual resolution
+        render();
+        return;
+      }
+      break;
+    }
+    case 'autumn': {
+      if (game.phaseStep === 'p0-play') {
+        game.activePlayer = sp;
+        render();
+        return;
+      }
+      if (game.phaseStep === 'p1-play') {
+        game.activePlayer = op;
+        render();
+        return;
+      }
+      if (game.phaseStep === 'triggers') {
+        const triggers = getTriggersForSeason('autumn');
+        if (triggers.length === 0) {
+          game.phaseStep = 'development';
+          render();
+          return;
+        }
+        render();
+        return;
+      }
+      if (game.phaseStep === 'development') {
+        render();
+        return;
+      }
+      if (game.phaseStep === 'done') {
+        game.season = 'winter';
+        game.phaseStep = 'tally';
+        logAction('--- Winter begins ---');
+        return advancePhase();
+      }
+      break;
+    }
+    case 'winter': {
+      if (game.phaseStep === 'tally') {
+        autoTallyLP();
+        game.phaseStep = 'triggers';
+        return advancePhase();
+      }
+      if (game.phaseStep === 'triggers') {
+        const triggers = getTriggersForSeason('winter');
+        if (triggers.length === 0) {
+          game.phaseStep = 'check-win';
+          return advancePhase();
+        }
+        render();
+        return;
+      }
+      if (game.phaseStep === 'check-win') {
+        if (checkWin()) return; // game over
+        game.phaseStep = 'discard';
+        return advancePhase();
+      }
+      if (game.phaseStep === 'discard') {
+        // Check if any player needs to discard
+        const need0 = game.players[0].hand.length > 5;
+        const need1 = game.players[1].hand.length > 5;
+        if (!need0 && !need1) {
+          game.phaseStep = 'advance';
+          return advancePhase();
+        }
+        render();
+        return;
+      }
+      if (game.phaseStep === 'advance') {
+        autoAdvanceYear();
+        return advancePhase();
+      }
+      break;
+    }
+  }
+}
+
+// ==================== AUTO ACTIONS ====================
+function autoRefresh(playerIdx) {
+  let count = 0;
+  game.players[playerIdx].board.forEach(e => {
+    if (e.exhausted) { e.exhausted = false; count++; }
+  });
+  if (count > 0) logAction(game.players[playerIdx].name + ' refreshed ' + count + ' People');
+}
+
+function autoDraw(playerIdx) {
+  const p = game.players[playerIdx];
+  if (p.deck.length > 0) {
+    p.hand.push(p.deck.pop());
+    logAction(p.name + ' drew a card');
+  } else {
+    logAction(p.name + ' tried to draw but deck is empty');
+  }
+}
+
+function autoTallyLP() {
+  for (let pi = 0; pi < 2; pi++) {
+    let gained = 0;
+    for (const entry of game.players[pi].board) {
+      const lp = entry.card.lp || 0;
+      if (lp > 0) {
+        gained += lp;
+      }
+    }
+    if (gained > 0) {
+      game.players[pi].lp += gained;
+      logAction(game.players[pi].name + ' gained ' + gained + ' LP (total: ' + game.players[pi].lp + ')');
+    }
+  }
+}
+
+function checkWin() {
+  const lp0 = game.players[0].lp;
+  const lp1 = game.players[1].lp;
+  if (lp0 >= 30 || lp1 >= 30) {
+    game.status = 'finished';
+    let winner;
+    if (lp0 >= 30 && lp1 >= 30) {
+      winner = lp0 > lp1 ? 0 : lp1 > lp0 ? 1 : -1;
+      if (winner === -1) {
+        logAction('Both players tied at ' + lp0 + ' LP! Play one additional Year.');
+        game.status = 'playing';
+        game.phaseStep = 'advance';
+        advancePhase();
+        return true;
+      }
+    } else {
+      winner = lp0 >= 30 ? 0 : 1;
+    }
+    logAction(game.players[winner].name + ' WINS with ' + game.players[winner].lp + ' LP!');
+    render();
+    return true;
+  }
+  return false;
+}
+
+function autoAdvanceYear() {
+  game.startPlayer = otherPlayer(game.startPlayer);
+  game.year++;
+  game.season = 'spring';
+  game.phaseStep = 'p0-refresh';
+  game.players[0].springDone = false;
+  game.players[1].springDone = false;
+  logAction('=== Year ' + game.year + ' begins. ' + game.players[game.startPlayer].name + ' is Start Player ===');
+}
+
+// ==================== PLAYER ACTIONS ====================
+function doSkipResource() {
+  snapshot();
+  logAction(game.players[game.activePlayer].name + ' skipped resource action (no valid options)');
+  advancePhase();
+  saveGame();
+}
+
+function doForage() {
+  if (poolTotal() === 0) { toast('Shared pool is empty!'); return; }
+  showTokenSelect('Forage: Pick 1 token from the pool', game.pool, (res) => {
+    snapshot();
+    game.pool[res]--;
+    game.players[game.activePlayer].tokens[res]++;
+    logAction(game.players[game.activePlayer].name + ' foraged 1 ' + RES_LABELS[res]);
+    closeActionModal();
+    saveGame();
+    advancePhase();
+  });
+}
+
+function doBarter() {
+  // Step 1: return 1 token of yours
+  const p = game.players[game.activePlayer];
+  if (totalTokens(game.activePlayer) === 0) { toast('You have no tokens to return!'); return; }
+  // Check pool has at least 2 tokens of different types after return
+  showTokenSelect('Barter step 1: Return 1 of your tokens', p.tokens, (retRes) => {
+    // Temporarily add returned token to pool
+    const tempPool = { ...game.pool };
+    tempPool[retRes]++;
+    // Check: are there 2 different types available?
+    const availTypes = RESOURCES.filter(r => tempPool[r] > 0);
+    if (availTypes.length < 2) {
+      toast('Not enough variety in pool to claim 2 different types');
+      closeActionModal();
+      return;
+    }
+    // Step 2: pick first token
+    showTokenSelect('Barter step 2: Claim 1st token from pool', tempPool, (res1) => {
+      const tempPool2 = { ...tempPool };
+      tempPool2[res1]--;
+      // Step 3: pick second (different type)
+      const filtered = { ...tempPool2 };
+      filtered[res1] = 0; // Can't pick same type
+      if (RESOURCES.every(r => filtered[r] === 0)) {
+        toast('No different type available for 2nd pick');
+        closeActionModal();
+        return;
+      }
+      showTokenSelect('Barter step 3: Claim 2nd token (different type)', filtered, (res2) => {
+        snapshot();
+        p.tokens[retRes]--;
+        game.pool[retRes]++;
+        game.pool[res1]--;
+        p.tokens[res1]++;
+        game.pool[res2]--;
+        p.tokens[res2]++;
+        logAction(p.name + ' bartered: returned 1 ' + RES_LABELS[retRes] + ', claimed 1 ' + RES_LABELS[res1] + ' + 1 ' + RES_LABELS[res2]);
+        closeActionModal();
+        saveGame();
+        advancePhase();
+      });
+    });
+  });
+}
+
+function doPressure() {
+  const ap = game.activePlayer;
+  const opp = otherPlayer(ap);
+  const p = game.players[ap];
+  const o = game.players[opp];
+  if (totalTokens(ap) < 2) { toast('You need at least 2 tokens to pressure!'); return; }
+  if (RESOURCES.every(r => o.tokens[r] === 0)) { toast('Opponent has no tokens!'); return; }
+
+  // Step 1: give 1st token
+  showTokenSelect('Pressure step 1: Give 1st token to ' + o.name, p.tokens, (give1) => {
+    const tempTokens = { ...p.tokens };
+    tempTokens[give1]--;
+    // Step 2: give 2nd token
+    showTokenSelect('Pressure step 2: Give 2nd token to ' + o.name, tempTokens, (give2) => {
+      // Step 3: take 1 from opponent
+      showTokenSelect('Pressure step 3: Take 1 token from ' + o.name, o.tokens, (take1) => {
+        snapshot();
+        p.tokens[give1]--;
+        o.tokens[give1]++;
+        p.tokens[give2]--;
+        o.tokens[give2]++;
+        o.tokens[take1]--;
+        p.tokens[take1]++;
+        logAction(p.name + ' pressured ' + o.name + ': gave 1 ' + RES_LABELS[give1] + ' + 1 ' + RES_LABELS[give2] + ', took 1 ' + RES_LABELS[take1]);
+        closeActionModal();
+        saveGame();
+        advancePhase();
+      });
+    });
+  });
+}
+
+function doPlayCard(cardIdx) {
+  const ap = game.activePlayer;
+  const p = game.players[ap];
+  const card = p.hand[cardIdx];
+  if (!canAfford(ap, card.cost)) { toast('Cannot afford ' + card.name); return; }
+
+  snapshot();
+  payCardCost(ap, card.cost);
+  p.hand.splice(cardIdx, 1);
+
+  if (card.type === 'Event') {
+    // Events resolve and discard
+    logAction(p.name + ' played Event: ' + card.name + ' (' + costString(card.cost) + ')');
+    // Show ability text for manual resolution
+    const abilities = (card.abilities || []).filter(a => a.trigger === 'played');
+    if (abilities.length > 0) {
+      const abText = abilities.map(a => a.text).join('; ');
+      logAction('  -> ' + abText);
+    }
+    p.discard.push(card);
+  } else {
+    // People or Location go to board
+    const entry = { card, exhausted: false, level: 1 };
+    p.board.push(entry);
+    logAction(p.name + ' played ' + card.type + ': ' + card.name + ' (' + costString(card.cost) + ')');
+    // Check for "played" triggers
+    const abilities = (card.abilities || []).filter(a => a.trigger === 'played');
+    if (abilities.length > 0) {
+      const abText = abilities.map(a => a.text).join('; ');
+      logAction('  -> ' + abText);
+    }
+  }
+
+  selectionMode = null;
+
+  // Handle phase-specific logic
+  if (game.season === 'summer') {
+    game.summerConsecutivePasses = 0;
+    game.activePlayer = otherPlayer(ap);
+  } else if (game.season === 'autumn') {
+    game.players[ap].autumnPlayed = true;
+    if (game.phaseStep === 'p0-play') {
+      game.phaseStep = 'p1-play';
+    } else {
+      game.phaseStep = 'triggers';
+    }
+  }
+
+  saveGame();
+  if (game.season === 'autumn' && (game.phaseStep === 'p1-play' || game.phaseStep === 'triggers')) {
+    advancePhase();
+  } else {
+    render();
+  }
+}
+
+function doActivatePerson(boardIdx) {
+  const ap = game.activePlayer;
+  const p = game.players[ap];
+  const entry = p.board[boardIdx];
+  if (!entry || entry.card.type !== 'People' || entry.exhausted) return;
+
+  snapshot();
+  entry.exhausted = true;
+  const activateAbilities = (entry.card.abilities || []).filter(a => a.trigger === 'activate');
+  logAction(p.name + ' activated ' + entry.card.name);
+  if (activateAbilities.length > 0) {
+    logAction('  -> ' + activateAbilities.map(a => a.text).join('; '));
+  }
+
+  selectionMode = null;
+
+  if (game.season === 'summer') {
+    game.summerConsecutivePasses = 0;
+    game.activePlayer = otherPlayer(ap);
+  }
+
+  saveGame();
+  render();
+}
+
+function doPass() {
+  const ap = game.activePlayer;
+  snapshot();
+
+  if (game.season === 'summer') {
+    game.summerConsecutivePasses++;
+    logAction(game.players[ap].name + ' passed (' + game.summerConsecutivePasses + '/2)');
+    if (game.summerConsecutivePasses >= 2) {
+      game.phaseStep = 'triggers'; // move to summer triggers
+      saveGame();
+      advancePhase();
+      return;
+    }
+    game.activePlayer = otherPlayer(ap);
+  } else if (game.season === 'autumn') {
+    logAction(game.players[ap].name + ' passed (Autumn)');
+    if (game.phaseStep === 'p0-play') {
+      game.phaseStep = 'p1-play';
+    } else {
+      game.phaseStep = 'triggers';
+    }
+    saveGame();
+    advancePhase();
+    return;
+  }
+
+  saveGame();
+  render();
+}
+
+function doFinishTriggers() {
+  snapshot();
+  if (game.season === 'summer') {
+    game.season = 'autumn';
+    game.phaseStep = 'p0-play';
+    game.activePlayer = game.startPlayer;
+    game.players[0].autumnPlayed = false;
+    game.players[1].autumnPlayed = false;
+    logAction('--- Autumn begins ---');
+  } else if (game.season === 'autumn') {
+    game.phaseStep = 'development';
+  } else if (game.season === 'winter') {
+    game.phaseStep = 'check-win';
+    saveGame();
+    advancePhase();
+    return;
+  }
+  saveGame();
+  advancePhase();
+}
+
+function doAdvanceLocation(playerIdx, boardIdx) {
+  snapshot();
+  const entry = game.players[playerIdx].board[boardIdx];
+  if (!entry || entry.card.type !== 'Location') return;
+  const maxLvl = entry.card.maxLevel || 1;
+  if (entry.level < maxLvl) {
+    entry.level++;
+    logAction(game.players[playerIdx].name + ' advanced ' + entry.card.name + ' to Level ' + entry.level);
+  } else {
+    toast('Already at max level');
+  }
+  saveGame();
+  render();
+}
+
+function doFinishDevelopment() {
+  snapshot();
+  game.phaseStep = 'done';
+  saveGame();
+  advancePhase();
+}
+
+function doDiscardFromHand(playerIdx, handIdx) {
+  snapshot();
+  const p = game.players[playerIdx];
+  const card = p.hand.splice(handIdx, 1)[0];
+  p.discard.push(card);
+  logAction(p.name + ' discarded ' + card.name + ' (hand limit)');
+  saveGame();
+  // Check if still need to discard
+  if (game.season === 'winter' && game.phaseStep === 'discard') {
+    const need0 = game.players[0].hand.length > 5;
+    const need1 = game.players[1].hand.length > 5;
+    if (!need0 && !need1) {
+      advancePhase();
+      return;
+    }
+  }
+  render();
+}
+
+// ==================== SELECTION MODES ====================
+function enterPlayCardMode() {
+  selectionMode = { type: 'play-card' };
+  render();
+}
+
+function enterActivateMode() {
+  selectionMode = { type: 'activate' };
+  render();
+}
+
+function cancelSelection() {
+  selectionMode = null;
+  render();
+}
+
+// ==================== TOKEN SELECT MODAL ====================
+function showTokenSelect(title, tokenSource, callback) {
+  const el = document.getElementById('action-modal-content');
+  let html = `<h3 style="margin-bottom:12px">${esc(title)}</h3><div class="token-select">`;
+  RESOURCES.forEach(r => {
+    const count = tokenSource[r] || 0;
+    const dis = count <= 0 ? 'disabled' : 'clickable';
+    html += `<div class="token ${r} ${dis}" onclick="${dis === 'clickable' ? 'this.dataset.cb&&window._tokenCb(\'' + r + '\')' : ''}" style="cursor:${count > 0 ? 'pointer' : 'not-allowed'}">${count}</div>`;
+  });
+  html += `</div><div style="text-align:center;margin-top:8px;"><button class="btn btn-small btn-secondary" onclick="closeActionModal()">Cancel</button></div>`;
+  el.innerHTML = html;
+  window._tokenCb = callback;
+  document.getElementById('action-modal').classList.add('active');
+}
+
+function closeActionModal() {
+  document.getElementById('action-modal').classList.remove('active');
+  window._tokenCb = null;
+}
+
+// ==================== CARD DETAIL MODAL ====================
+function showCardDetail(card, context) {
+  const el = document.getElementById('card-modal-content');
+  let html = renderCardPreview(card);
+  // Add context info
+  if (context) {
+    html += `<div style="margin-top:10px;font-size:0.75rem;color:var(--text-dim);text-align:center;">${esc(context)}</div>`;
+  }
+  el.innerHTML = html;
+  document.getElementById('card-modal').classList.add('active');
+}
+
+function closeCardModal() {
+  document.getElementById('card-modal').classList.remove('active');
+}
+
+function renderCardPreview(card) {
+  const costs = RESOURCES.filter(r => (card.cost?.[r]||0) > 0)
+    .map(r => `<div class="mc-dot" style="width:14px;height:14px;background:var(--${r})"></div>`.repeat(card.cost[r]))
+    .join('');
+
+  let typeLine = card.type;
+  if (card.initiative) typeLine += ' | Initiative: ' + card.initiative;
+  if (card.maxLevel && card.maxLevel > 1) typeLine += ' | Max Level: ' + card.maxLevel;
+
+  const abilities = (card.abilities || []).map(a =>
+    `<div class="ability"><span class="trigger">[${a.trigger}]</span> ${esc(a.text)}</div>`
+  ).join('');
+
+  const tags = (card.tags || []).map(t => `<span style="background:var(--bg);padding:1px 6px;border-radius:3px;font-size:0.65rem;color:var(--text-dim);">${esc(t)}</span>`).join(' ');
+
+  return `
+    <div class="card-preview type-${card.type}">
+      <div class="card-preview-header">
+        <span class="card-preview-name">${esc(card.name)}</span>
+        <div class="card-preview-cost">${costs}</div>
+      </div>
+      <div class="card-preview-art">${TYPE_ICONS[card.type] || ''}</div>
+      <div class="card-preview-body">
+        <div class="card-preview-type-line"><span>${typeLine}</span><span class="card-preview-lp">${card.lp || 0} LP</span></div>
+        <div class="card-preview-abilities">${abilities || '<em>No abilities</em>'}</div>
+        ${card.flavorText ? `<div class="card-preview-flavor">${esc(card.flavorText)}</div>` : ''}
+        ${tags ? `<div style="margin-top:6px;">${tags}</div>` : ''}
+        ${card.advanceCondition ? `<div style="margin-top:4px;font-size:0.7rem;color:var(--text-dim);">Advance: ${esc(card.advanceCondition)}</div>` : ''}
+      </div>
+      <div class="card-preview-footer">
+        <span>${card.rarity || ''}</span>
+        <span>Cost: ${costString(card.cost || {})}</span>
+      </div>
+    </div>`;
+}
+
+// ==================== MANUAL EFFECTS MODAL ====================
+function showManualModal() {
+  const el = document.getElementById('manual-content');
+  let html = '';
+
+  for (let pi = 0; pi < 2; pi++) {
+    const p = game.players[pi];
+    html += `<h4 style="margin-top:${pi?'16':'0'}px;margin-bottom:6px;">${esc(p.name)} (LP: ${p.lp})</h4>`;
+
+    // LP controls
+    html += `<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+      <span style="font-size:0.75rem;width:80px;">LP:</span>
+      <button class="btn btn-tiny btn-danger" onclick="manualLP(${pi},-1)">-1</button>
+      <button class="btn btn-tiny btn-success" onclick="manualLP(${pi},1)">+1</button>
+      <button class="btn btn-tiny btn-success" onclick="manualLP(${pi},2)">+2</button>
+      <button class="btn btn-tiny btn-success" onclick="manualLP(${pi},5)">+5</button>
+    </div>`;
+
+    // Token controls
+    html += `<div style="font-size:0.72rem;margin-bottom:4px;">Tokens:</div>`;
+    RESOURCES.forEach(r => {
+      html += `<div style="display:flex;gap:4px;align-items:center;margin-bottom:3px;">
+        <span class="mc-dot" style="width:10px;height:10px;background:var(--${r})"></span>
+        <span style="font-size:0.7rem;width:70px;">${RES_LABELS[r]}: ${p.tokens[r]}</span>
+        <button class="btn btn-tiny btn-danger" onclick="manualToken(${pi},'${r}',-1)" ${p.tokens[r]<=0?'disabled':''}>-1</button>
+        <button class="btn btn-tiny btn-success" onclick="manualToken(${pi},'${r}',1)">+1</button>
+      </div>`;
+    });
+
+    // Draw / discard
+    html += `<div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;">
+      <button class="btn btn-tiny btn-secondary" onclick="manualDraw(${pi})">Draw Card</button>
+      <button class="btn btn-tiny btn-secondary" onclick="manualReturnDiscard(${pi})">Return from Discard</button>
+    </div>`;
+
+    // Board card actions
+    if (p.board.length > 0) {
+      html += `<div style="font-size:0.72rem;margin-top:8px;margin-bottom:4px;">Board Cards:</div>`;
+      p.board.forEach((entry, bi) => {
+        const c = entry.card;
+        html += `<div style="display:flex;gap:4px;align-items:center;margin-bottom:3px;flex-wrap:wrap;">
+          <span style="font-size:0.7rem;min-width:100px;">${esc(c.name)}</span>`;
+        if (c.type === 'People') {
+          html += entry.exhausted
+            ? `<button class="btn btn-tiny btn-success" onclick="manualReady(${pi},${bi})">Ready</button>`
+            : `<button class="btn btn-tiny btn-secondary" onclick="manualExhaust(${pi},${bi})">Exhaust</button>`;
+        }
+        if (c.type === 'Location') {
+          html += `<button class="btn btn-tiny btn-success" onclick="manualAdvance(${pi},${bi})" ${entry.level>=(c.maxLevel||1)?'disabled':''}>Advance</button>`;
+          html += `<button class="btn btn-tiny btn-danger" onclick="manualDegrade(${pi},${bi})">Degrade</button>`;
+        }
+        html += `<button class="btn btn-tiny btn-danger" onclick="manualDiscardBoard(${pi},${bi})">Discard</button>`;
+        html += `</div>`;
+      });
+    }
+  }
+
+  // Pool controls
+  html += `<h4 style="margin-top:16px;margin-bottom:6px;">Shared Pool</h4>`;
+  RESOURCES.forEach(r => {
+    html += `<div style="display:flex;gap:4px;align-items:center;margin-bottom:3px;">
+      <span class="mc-dot" style="width:10px;height:10px;background:var(--${r})"></span>
+      <span style="font-size:0.7rem;width:90px;">${RES_LABELS[r]}: ${game.pool[r]}</span>
+      <button class="btn btn-tiny btn-danger" onclick="manualPool('${r}',-1)" ${game.pool[r]<=0?'disabled':''}>-1</button>
+      <button class="btn btn-tiny btn-success" onclick="manualPool('${r}',1)">+1</button>
+    </div>`;
+  });
+
+  el.innerHTML = html;
+  document.getElementById('manual-modal').classList.add('active');
+}
+
+function closeManualModal() {
+  document.getElementById('manual-modal').classList.remove('active');
+}
+
+// Manual effect handlers
+function manualLP(pi, amt) { snapshot(); game.players[pi].lp += amt; logAction('[Manual] ' + game.players[pi].name + ' LP ' + (amt>0?'+':'') + amt + ' (now ' + game.players[pi].lp + ')'); saveGame(); showManualModal(); render(); }
+function manualToken(pi, res, amt) { snapshot(); game.players[pi].tokens[res] += amt; if (game.players[pi].tokens[res] < 0) game.players[pi].tokens[res] = 0; logAction('[Manual] ' + game.players[pi].name + ' ' + RES_LABELS[res] + ' ' + (amt>0?'+':'') + amt); saveGame(); showManualModal(); render(); }
+function manualPool(res, amt) { snapshot(); game.pool[res] += amt; if (game.pool[res] < 0) game.pool[res] = 0; logAction('[Manual] Pool ' + RES_LABELS[res] + ' ' + (amt>0?'+':'') + amt); saveGame(); showManualModal(); render(); }
+function manualDraw(pi) { snapshot(); const p = game.players[pi]; if (p.deck.length > 0) { p.hand.push(p.deck.pop()); logAction('[Manual] ' + p.name + ' drew a card'); } else { logAction('[Manual] ' + p.name + ' deck empty'); } saveGame(); showManualModal(); render(); }
+function manualReady(pi, bi) { snapshot(); game.players[pi].board[bi].exhausted = false; logAction('[Manual] ' + game.players[pi].board[bi].card.name + ' readied'); saveGame(); showManualModal(); render(); }
+function manualExhaust(pi, bi) { snapshot(); game.players[pi].board[bi].exhausted = true; logAction('[Manual] ' + game.players[pi].board[bi].card.name + ' exhausted'); saveGame(); showManualModal(); render(); }
+function manualAdvance(pi, bi) { snapshot(); const e = game.players[pi].board[bi]; e.level++; logAction('[Manual] ' + e.card.name + ' advanced to Level ' + e.level); saveGame(); showManualModal(); render(); }
+function manualDegrade(pi, bi) { snapshot(); const e = game.players[pi].board[bi]; e.level--; if (e.level < 1) { game.players[pi].board.splice(bi, 1); logAction('[Manual] ' + e.card.name + ' degraded below Level 1, discarded'); game.players[pi].discard.push(e.card); } else { logAction('[Manual] ' + e.card.name + ' degraded to Level ' + e.level); } saveGame(); showManualModal(); render(); }
+function manualDiscardBoard(pi, bi) { snapshot(); const e = game.players[pi].board.splice(bi, 1)[0]; game.players[pi].discard.push(e.card); logAction('[Manual] ' + e.card.name + ' discarded from board'); saveGame(); showManualModal(); render(); }
+
+function manualReturnDiscard(pi) {
+  const p = game.players[pi];
+  if (p.discard.length === 0) { toast('Discard pile is empty'); return; }
+  // Show discard pile to pick from
+  const el = document.getElementById('action-modal-content');
+  let html = `<h3 style="margin-bottom:12px">${esc(p.name)}: Return a card from discard</h3><div style="display:flex;flex-wrap:wrap;gap:6px;">`;
+  p.discard.forEach((c, i) => {
+    html += `<div class="hand-card type-${c.type}" onclick="doReturnFromDiscard(${pi},${i})" style="cursor:pointer;">
+      <div class="hc-name">${esc(c.name)}</div>
+      <div class="hc-type">${c.type}</div>
+    </div>`;
+  });
+  html += `</div><div style="text-align:center;margin-top:8px;"><button class="btn btn-small btn-secondary" onclick="closeActionModal()">Cancel</button></div>`;
+  el.innerHTML = html;
+  document.getElementById('action-modal').classList.add('active');
+}
+
+function doReturnFromDiscard(pi, di) {
+  snapshot();
+  const p = game.players[pi];
+  const card = p.discard.splice(di, 1)[0];
+  p.hand.push(card);
+  logAction('[Manual] ' + p.name + ' returned ' + card.name + ' from discard to hand');
+  closeActionModal();
+  saveGame();
+  render();
+}
+
+// ==================== RENDERING ====================
+function render() {
+  if (!game) return;
+  renderHeader();
+  renderPool();
+  for (let pi = 0; pi < 2; pi++) {
+    renderPlayerZone(pi);
+  }
+  renderActionPanel();
+  renderLog();
+}
+
+function renderHeader() {
+  const badge = document.getElementById('phase-badge');
+  badge.textContent = game.season.toUpperCase();
+  badge.className = 'phase-badge ' + game.season;
+  document.getElementById('hdr-year').textContent = 'Year ' + game.year;
+  document.getElementById('hdr-active').textContent = 'Active: ' + (game.status === 'finished' ? 'Game Over' : game.players[game.activePlayer].name);
+
+  let step = game.phaseStep;
+  if (game.season === 'spring' && step.includes('resource')) step = 'Resource Action';
+  else if (game.season === 'summer' && step === 'action') step = 'Actions';
+  else if (game.season === 'summer' && step === 'triggers') step = 'Triggers';
+  else if (step.includes('play')) step = 'Play 1 Card';
+  else if (step === 'triggers') step = 'Triggers';
+  else if (step === 'development') step = 'Development';
+  else if (step === 'tally') step = 'LP Tally';
+  else if (step === 'discard') step = 'Hand Limit';
+  else if (step === 'check-win') step = 'Win Check';
+  document.getElementById('hdr-step').textContent = step;
+}
+
+function renderPool() {
+  const el = document.getElementById('shared-pool');
+  let html = '<span class="pool-label">Shared Pool</span>';
+  RESOURCES.forEach(r => {
+    html += `<div class="token pool-token ${r}">${game.pool[r]}</div>`;
+  });
+  el.innerHTML = html;
+}
+
+function renderPlayerZone(pi) {
+  const p = game.players[pi];
+  const zone = document.getElementById('pz-' + pi);
+  const isActive = game.activePlayer === pi && game.status === 'playing';
+  zone.className = 'player-zone' + (isActive ? ' active-turn' : '');
+
+  document.getElementById('pn-' + pi).textContent = p.name + (pi === game.startPlayer ? ' [SP]' : '');
+  document.getElementById('plp-' + pi).textContent = p.lp;
+  document.getElementById('pdeck-' + pi).textContent = p.deck.length;
+  document.getElementById('pdisc-' + pi).textContent = p.discard.length;
+  document.getElementById('phc-' + pi).textContent = p.hand.length;
+
+  // Tokens
+  const tokEl = document.getElementById('pt-' + pi);
+  tokEl.innerHTML = RESOURCES.map(r =>
+    `<div class="token ${r}" title="${RES_LABELS[r]}">${p.tokens[r]}</div>`
+  ).join('');
+
+  // Board
+  const boardEl = document.getElementById('pb-' + pi);
+  if (p.board.length === 0) {
+    boardEl.innerHTML = '<span style="color:var(--text-dim);font-size:0.7rem;padding:8px;">No cards in play</span>';
+  } else {
+    boardEl.innerHTML = p.board.map((entry, bi) => {
+      const c = entry.card;
+      const costs = renderCostDots(c.cost);
+      const exhaustedClass = entry.exhausted ? ' exhausted' : '';
+      const selectableClass = (selectionMode?.type === 'activate' && pi === game.activePlayer && c.type === 'People' && !entry.exhausted) ? ' selectable' : '';
+      const levelBadge = c.type === 'Location' ? `<span class="mc-level">Lv.${entry.level}</span>` : '';
+      const onclick = selectionMode?.type === 'activate' && selectableClass
+        ? `onclick="doActivatePerson(${bi})"`
+        : `onclick="showCardDetail(game.players[${pi}].board[${bi}].card, '${esc(p.name)} board')"`;
+
+      return `<div class="mini-card type-${c.type}${exhaustedClass}${selectableClass}" ${onclick}>
+        ${levelBadge}
+        <div class="mc-name">${esc(c.name)}</div>
+        <div class="mc-meta"><span class="mc-lp">${c.lp||0} LP</span><div class="mc-costs">${costs}</div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Hand
+  const handEl = document.getElementById('ph-' + pi);
+  if (p.hand.length === 0) {
+    handEl.innerHTML = '<span style="color:var(--text-dim);font-size:0.7rem;padding:8px;">Empty hand</span>';
+  } else {
+    handEl.innerHTML = p.hand.map((c, hi) => {
+      const costs = renderCostDots(c.cost);
+      const affordable = canAfford(pi, c.cost);
+      const selectable = selectionMode?.type === 'play-card' && pi === game.activePlayer && affordable;
+      const cls = `hand-card type-${c.type}${selectable ? ' selectable' : ''}${!affordable && selectionMode?.type === 'play-card' && pi === game.activePlayer ? ' unplayable' : ''}`;
+
+      let onclick;
+      if (selectable) {
+        onclick = `onclick="doPlayCard(${hi})"`;
+      } else if (game.season === 'winter' && game.phaseStep === 'discard' && p.hand.length > 5) {
+        onclick = `onclick="doDiscardFromHand(${pi},${hi})"`;
+      } else {
+        onclick = `onclick="showCardDetail(game.players[${pi}].hand[${hi}], '${esc(p.name)} hand')"`;
+      }
+
+      return `<div class="${cls}" ${onclick}>
+        <div class="hc-name">${esc(c.name)}</div>
+        <div class="hc-meta"><span class="hc-lp">${c.lp||0} LP</span><span class="hc-type">${c.type}</span></div>
+        <div class="hc-costs">${costs}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderCostDots(cost) {
+  if (!cost) return '';
+  return RESOURCES.filter(r => (cost[r]||0) > 0)
+    .map(r => `<span class="mc-dot" style="background:var(--${r})" title="${RES_LABELS[r]}"></span>`.repeat(cost[r]))
+    .join('');
+}
+
+// ==================== ACTION PANEL ====================
+function renderActionPanel() {
+  const el = document.getElementById('ap-buttons');
+  const msgEl = document.getElementById('ap-msg');
+  const titleEl = document.getElementById('ap-title');
+  el.innerHTML = '';
+  msgEl.textContent = '';
+
+  if (game.status === 'finished') {
+    titleEl.textContent = 'Game Over';
+    const winner = game.players[0].lp > game.players[1].lp ? 0 : 1;
+    el.innerHTML = `<div class="win-banner"><h2>${esc(game.players[winner].name)} Wins!</h2><p>${game.players[0].name}: ${game.players[0].lp} LP | ${game.players[1].name}: ${game.players[1].lp} LP</p></div>`;
+    return;
+  }
+
+  const ap = game.activePlayer;
+  const pName = game.players[ap].name;
+
+  switch (game.season) {
+    case 'spring': {
+      titleEl.textContent = pName + ' — Spring Resource Action';
+      if (selectionMode) {
+        el.innerHTML = `<button class="btn btn-small btn-secondary" onclick="cancelSelection()">Cancel</button>`;
+        msgEl.textContent = 'Select a resource from the modal...';
+        return;
+      }
+      const canForage = poolTotal() > 0;
+      const canBarter = totalTokens(ap) > 0;
+      const canPressure = totalTokens(ap) >= 2 && !RESOURCES.every(r=>game.players[otherPlayer(ap)].tokens[r]===0);
+      el.innerHTML = `
+        <button class="btn btn-primary" onclick="doForage()" ${canForage?'':'disabled'}>Forage</button>
+        <button class="btn btn-secondary" onclick="doBarter()" ${canBarter?'':'disabled'}>Barter</button>
+        <button class="btn btn-secondary" onclick="doPressure()" ${canPressure?'':'disabled'}>Pressure</button>
+        ${(!canForage && !canBarter && !canPressure) ? '<button class="btn btn-secondary" onclick="doSkipResource()">Skip</button>' : ''}
+      `;
+      msgEl.textContent = (!canForage && !canBarter && !canPressure)
+        ? 'No valid resource actions available. You may skip.'
+        : 'Forage: +1 from pool | Barter: return 1, take 2 different | Pressure: give 2 to opponent, take 1 of theirs';
+      break;
+    }
+    case 'summer': {
+      if (game.phaseStep === 'triggers') {
+        titleEl.textContent = 'Summer Triggers';
+        renderTriggerPanel('summer');
+        return;
+      }
+      titleEl.textContent = pName + ' — Summer Action';
+      if (selectionMode?.type === 'play-card') {
+        el.innerHTML = `<button class="btn btn-small btn-secondary" onclick="cancelSelection()">Cancel</button>`;
+        msgEl.textContent = 'Click a card in your hand to play it (highlighted = affordable)';
+        return;
+      }
+      if (selectionMode?.type === 'activate') {
+        el.innerHTML = `<button class="btn btn-small btn-secondary" onclick="cancelSelection()">Cancel</button>`;
+        msgEl.textContent = 'Click a Ready Person on your board to activate';
+        return;
+      }
+      const hasReadyPeople = game.players[ap].board.some(e => e.card.type === 'People' && !e.exhausted);
+      el.innerHTML = `
+        <button class="btn btn-primary" onclick="enterPlayCardMode()" ${game.players[ap].hand.length===0?'disabled':''}>Play a Card</button>
+        <button class="btn btn-secondary" onclick="enterActivateMode()" ${!hasReadyPeople?'disabled':''}>Activate Person</button>
+        <button class="btn btn-secondary" onclick="doPass()">Pass</button>
+      `;
+      msgEl.textContent = 'Passes: ' + game.summerConsecutivePasses + '/2 (both pass = end Summer actions)';
+      break;
+    }
+    case 'autumn': {
+      if (game.phaseStep === 'triggers') {
+        titleEl.textContent = 'Autumn Triggers';
+        renderTriggerPanel('autumn');
+        return;
+      }
+      if (game.phaseStep === 'development') {
+        titleEl.textContent = 'Autumn — Location Development';
+        renderDevelopmentPanel();
+        return;
+      }
+      titleEl.textContent = pName + ' — Autumn (Play 1 Card)';
+      if (selectionMode?.type === 'play-card') {
+        el.innerHTML = `<button class="btn btn-small btn-secondary" onclick="cancelSelection()">Cancel</button>`;
+        msgEl.textContent = 'Click a card in your hand to play it';
+        return;
+      }
+      el.innerHTML = `
+        <button class="btn btn-primary" onclick="enterPlayCardMode()" ${game.players[ap].hand.length===0?'disabled':''}>Play a Card</button>
+        <button class="btn btn-secondary" onclick="doPass()">Pass</button>
+      `;
+      msgEl.textContent = 'You may play 1 card or pass';
+      break;
+    }
+    case 'winter': {
+      if (game.phaseStep === 'triggers') {
+        titleEl.textContent = 'Winter Triggers';
+        renderTriggerPanel('winter');
+        return;
+      }
+      if (game.phaseStep === 'discard') {
+        titleEl.textContent = 'Winter — Hand Limit';
+        let discardNeeded = '';
+        for (let pi = 0; pi < 2; pi++) {
+          const over = game.players[pi].hand.length - 5;
+          if (over > 0) discardNeeded += game.players[pi].name + ' must discard ' + over + ' card(s). ';
+        }
+        msgEl.textContent = discardNeeded + 'Click cards in hand to discard.';
+        return;
+      }
+      titleEl.textContent = 'Winter — Scoring';
+      msgEl.textContent = game.players[0].name + ': ' + game.players[0].lp + ' LP | ' + game.players[1].name + ': ' + game.players[1].lp + ' LP';
+      break;
+    }
+  }
+}
+
+function renderTriggerPanel(season) {
+  const el = document.getElementById('ap-buttons');
+  const triggers = getTriggersForSeason(season);
+  if (triggers.length === 0) {
+    el.innerHTML = `<p style="font-size:0.8rem;color:var(--text-dim);">No ${season} triggers to resolve.</p>
+      <button class="btn btn-primary" onclick="doFinishTriggers()">Continue</button>`;
+    return;
+  }
+  let html = `<div class="trigger-panel"><h4>Resolve these triggers (Start Player's first, by Initiative):</h4>`;
+  triggers.forEach(t => {
+    html += `<div class="trigger-item">
+      <span class="ti-owner">${esc(game.players[t.playerIdx].name)}</span>
+      <span class="ti-name">${esc(t.card.name)}</span> (Init: ${t.initiative})
+      <div class="ti-text">${esc(t.text)}</div>
+    </div>`;
+  });
+  html += `</div><button class="btn btn-primary" style="margin-top:8px;" onclick="doFinishTriggers()">Done with Triggers</button>`;
+  el.innerHTML = html;
+}
+
+function renderDevelopmentPanel() {
+  const el = document.getElementById('ap-buttons');
+  const msgEl = document.getElementById('ap-msg');
+  let html = '';
+  let hasLocations = false;
+  for (let pi = 0; pi < 2; pi++) {
+    game.players[pi].board.forEach((entry, bi) => {
+      if (entry.card.type === 'Location') {
+        hasLocations = true;
+        const maxLvl = entry.card.maxLevel || 1;
+        const canAdv = entry.level < maxLvl;
+        html += `<div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">
+          <span style="font-size:0.78rem;">${esc(game.players[pi].name)}: ${esc(entry.card.name)} (Lv.${entry.level}/${maxLvl})</span>
+          <button class="btn btn-tiny btn-success" onclick="doAdvanceLocation(${pi},${bi})" ${canAdv?'':'disabled'}>Advance</button>
+          <span style="font-size:0.65rem;color:var(--text-dim);">${esc(entry.card.advanceCondition || 'No condition')}</span>
+        </div>`;
+      }
+    });
+  }
+  if (!hasLocations) html = '<p style="font-size:0.8rem;color:var(--text-dim);">No Locations in play.</p>';
+  html += `<button class="btn btn-primary" style="margin-top:8px;" onclick="doFinishDevelopment()">Done with Development</button>`;
+  el.innerHTML = html;
+  msgEl.textContent = 'Check advance conditions and advance qualifying Locations. Players decide manually.';
+}
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'z') { e.preventDefault(); doUndo(); }
+  if (e.key === 'Escape') {
+    closeCardModal();
+    closeActionModal();
+    closeManualModal();
+    if (selectionMode) cancelSelection();
+  }
+});
+
+// ==================== INIT ====================
+(async function init() {
+  await loadCardData();
+})();
+</script>
+</body>
+</html>

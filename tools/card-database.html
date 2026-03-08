@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeQuest Card Database</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --accent2: #533483;
+  --text: #eee;
+  --text-dim: #999;
+  --growth: #4caf50;
+  --sustainability: #66bb6a;
+  --community: #ffc107;
+  --expression: #e91e63;
+  --learning: #2196f3;
+  --people-bg: #2d1b4e;
+  --location-bg: #1b3a2d;
+  --event-bg: #3a1b1b;
+  --common: #aaa;
+  --uncommon: #4fc3f7;
+  --rare: #ce93d8;
+  --legendary: #ffd54f;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+h1, h2, h3 { font-weight: 600; }
+
+/* Layout */
+.app { display: grid; grid-template-columns: 360px 1fr; grid-template-rows: auto 1fr; min-height: 100vh; }
+.header { grid-column: 1 / -1; background: var(--surface); padding: 12px 24px; display: flex; align-items: center; gap: 16px; border-bottom: 2px solid var(--accent); }
+.header h1 { font-size: 1.3rem; }
+.header .stats { margin-left: auto; font-size: 0.85rem; color: var(--text-dim); display: flex; gap: 16px; }
+.header .stats span { background: var(--surface2); padding: 4px 10px; border-radius: 4px; }
+
+/* Sidebar */
+.sidebar { background: var(--surface); overflow-y: auto; padding: 16px; border-right: 1px solid #333; }
+.sidebar h2 { font-size: 1rem; margin-bottom: 12px; color: var(--accent); }
+
+/* Forms */
+.form-group { margin-bottom: 10px; }
+.form-group label { display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 7px 10px; background: var(--bg); border: 1px solid #444;
+  border-radius: 4px; color: var(--text); font-size: 0.85rem; font-family: inherit;
+}
+.form-group textarea { resize: vertical; min-height: 50px; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+/* Resource cost grid */
+.resource-costs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.resource-cost { display: flex; align-items: center; gap: 4px; }
+.resource-cost label { font-size: 0.7rem; min-width: 0; flex: 1; }
+.resource-cost input { width: 40px !important; text-align: center; padding: 4px !important; }
+.resource-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.resource-dot.growth { background: var(--growth); }
+.resource-dot.sustainability { background: var(--sustainability); }
+.resource-dot.community { background: var(--community); }
+.resource-dot.expression { background: var(--expression); }
+.resource-dot.learning { background: var(--learning); }
+
+/* Abilities editor */
+.abilities-list { display: flex; flex-direction: column; gap: 6px; }
+.ability-row { display: grid; grid-template-columns: auto 1fr auto; gap: 6px; align-items: start; }
+.ability-row select { width: 90px; font-size: 0.75rem; }
+.ability-row textarea { min-height: 32px; font-size: 0.8rem; }
+.ability-row .remove-btn { background: #600; border: none; color: #f88; cursor: pointer; padding: 4px 8px; border-radius: 3px; font-size: 0.8rem; }
+
+/* Tags input */
+.tags-input { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--bg); border: 1px solid #444; border-radius: 4px; min-height: 32px; cursor: text; }
+.tags-input:focus-within { border-color: var(--accent); }
+.tags-input .tag { background: var(--surface2); padding: 2px 8px; border-radius: 3px; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
+.tags-input .tag .remove { cursor: pointer; color: var(--accent); font-weight: bold; }
+.tags-input input { border: none; background: none; color: var(--text); outline: none; flex: 1; min-width: 60px; font-size: 0.8rem; padding: 2px; }
+
+/* Buttons */
+.btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: opacity 0.2s; }
+.btn:hover { opacity: 0.85; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-secondary { background: var(--surface2); color: var(--text); }
+.btn-success { background: #2e7d32; color: white; }
+.btn-danger { background: #c62828; color: white; }
+.btn-small { padding: 4px 10px; font-size: 0.75rem; }
+.form-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+/* Main content */
+.main { padding: 16px; overflow-y: auto; }
+
+/* Toolbar */
+.toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.toolbar input { padding: 7px 12px; background: var(--surface); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 0.85rem; flex: 1; min-width: 200px; }
+.toolbar input:focus { outline: none; border-color: var(--accent); }
+.toolbar select { padding: 7px 10px; background: var(--surface); border: 1px solid #444; border-radius: 4px; color: var(--text); font-size: 0.85rem; }
+
+/* View toggle */
+.view-toggle { display: flex; border: 1px solid #444; border-radius: 4px; overflow: hidden; }
+.view-toggle button { background: var(--surface); border: none; color: var(--text-dim); padding: 6px 12px; cursor: pointer; font-size: 0.8rem; }
+.view-toggle button.active { background: var(--accent); color: white; }
+
+/* Card grid */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+
+/* Card in list view */
+.card-list-view { display: flex; flex-direction: column; gap: 4px; }
+.card-list-item { display: grid; grid-template-columns: 200px 80px auto 80px 60px 80px; gap: 12px; align-items: center;
+  padding: 8px 12px; background: var(--surface); border-radius: 4px; cursor: pointer; font-size: 0.85rem; border-left: 3px solid transparent; }
+.card-list-item:hover { background: var(--surface2); }
+.card-list-item.type-People { border-left-color: #9c27b0; }
+.card-list-item.type-Location { border-left-color: #4caf50; }
+.card-list-item.type-Event { border-left-color: #f44336; }
+.card-list-header { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; padding: 4px 12px; letter-spacing: 0.5px; }
+
+/* Card tile */
+.card-tile { background: var(--surface); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.15s; border: 1px solid #333; }
+.card-tile:hover { transform: translateY(-2px); border-color: var(--accent); }
+.card-tile.type-People { border-top: 3px solid #9c27b0; }
+.card-tile.type-Location { border-top: 3px solid #4caf50; }
+.card-tile.type-Event { border-top: 3px solid #f44336; }
+
+.card-tile-art { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+.card-tile.type-People .card-tile-art { background: var(--people-bg); }
+.card-tile.type-Location .card-tile-art { background: var(--location-bg); }
+.card-tile.type-Event .card-tile-art { background: var(--event-bg); }
+.card-tile-body { padding: 10px; }
+.card-tile-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+.card-tile-meta { font-size: 0.75rem; color: var(--text-dim); display: flex; gap: 8px; margin-bottom: 6px; }
+.card-tile-costs { display: flex; gap: 3px; }
+.card-tile-costs .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: bold; color: #000; }
+.card-tile-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
+.card-tile-tags .tag { font-size: 0.65rem; background: var(--bg); padding: 1px 6px; border-radius: 3px; color: var(--text-dim); }
+.card-tile-lp { font-size: 0.8rem; font-weight: bold; color: var(--accent); }
+
+.rarity-common { color: var(--common); }
+.rarity-uncommon { color: var(--uncommon); }
+.rarity-rare { color: var(--rare); }
+.rarity-legendary { color: var(--legendary); }
+
+/* Local connection */
+.local-conn { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+.local-conn select { width: 100px; }
+
+/* Section dividers */
+.section-divider { border-top: 1px solid #333; margin: 14px 0 10px; padding-top: 10px; }
+.section-divider h3 { font-size: 0.8rem; color: var(--accent); margin-bottom: 8px; }
+
+/* Import/Export */
+.io-bar { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+#import-file { display: none; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
+.empty-state h2 { margin-bottom: 8px; }
+
+/* Card preview (modal) */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--surface); border-radius: 12px; padding: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; }
+.modal-close { position: absolute; top: 12px; right: 16px; background: none; border: none; color: var(--text-dim); font-size: 1.5rem; cursor: pointer; }
+
+/* Card preview design */
+.card-preview { border-radius: 12px; overflow: hidden; border: 2px solid #555; max-width: 320px; margin: 0 auto; }
+.card-preview.type-People { border-color: #9c27b0; }
+.card-preview.type-Location { border-color: #4caf50; }
+.card-preview.type-Event { border-color: #f44336; }
+.card-preview-header { padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+.card-preview.type-People .card-preview-header { background: var(--people-bg); }
+.card-preview.type-Location .card-preview-header { background: var(--location-bg); }
+.card-preview.type-Event .card-preview-header { background: var(--event-bg); }
+.card-preview-name { font-weight: 700; font-size: 1.05rem; }
+.card-preview-cost { display: flex; gap: 3px; }
+.card-preview-art { height: 120px; display: flex; align-items: center; justify-content: center; font-size: 3rem; background: var(--bg); }
+.card-preview-body { padding: 12px 14px; background: var(--surface2); }
+.card-preview-type-line { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px; display: flex; justify-content: space-between; }
+.card-preview-abilities { font-size: 0.8rem; margin-bottom: 8px; }
+.card-preview-abilities .ability { margin-bottom: 4px; }
+.card-preview-abilities .trigger { font-weight: 600; color: var(--accent); text-transform: uppercase; font-size: 0.7rem; }
+.card-preview-flavor { font-size: 0.75rem; font-style: italic; color: var(--text-dim); border-top: 1px solid #444; padding-top: 6px; margin-top: 6px; }
+.card-preview-footer { padding: 6px 14px; display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); background: var(--surface); }
+.card-preview-lp { font-size: 1.1rem; font-weight: bold; color: var(--accent); }
+
+/* Notification toast */
+.toast { position: fixed; bottom: 20px; right: 20px; background: var(--surface2); border: 1px solid var(--accent); padding: 12px 20px; border-radius: 8px; z-index: 200; transition: opacity 0.3s; font-size: 0.85rem; }
+.toast.hidden { opacity: 0; pointer-events: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+/* Responsive */
+@media (max-width: 800px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { max-height: 50vh; }
+  .card-list-item { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <h1>LifeQuest Card Database</h1>
+    <div class="stats">
+      <span id="stat-total">0 cards</span>
+      <span id="stat-people">0 People</span>
+      <span id="stat-locations">0 Locations</span>
+      <span id="stat-events">0 Events</span>
+    </div>
+  </div>
+
+  <!-- Sidebar: Card Editor -->
+  <div class="sidebar" id="sidebar">
+    <h2 id="editor-title">Add New Card</h2>
+
+    <div class="form-group">
+      <label>Card Name</label>
+      <input type="text" id="card-name" placeholder="e.g. The Duluth Gamer">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type</label>
+        <select id="card-type">
+          <option value="People">People</option>
+          <option value="Location">Location</option>
+          <option value="Event">Event</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Rarity</label>
+        <select id="card-rarity">
+          <option value="Common">Common</option>
+          <option value="Uncommon">Uncommon</option>
+          <option value="Rare">Rare</option>
+          <option value="Legendary">Legendary</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>LP (Life Points)</label>
+        <input type="number" id="card-lp" value="0" min="0" max="20">
+      </div>
+      <div class="form-group">
+        <label>Set</label>
+        <input type="text" id="card-set" placeholder="e.g. Excalibur Con 2026">
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <h3>Resource Cost</h3>
+    </div>
+    <div class="resource-costs">
+      <div class="resource-cost"><span class="resource-dot growth"></span><label>Growth</label><input type="number" id="cost-growth" value="0" min="0" max="9"></div>
+      <div class="resource-cost"><span class="resource-dot sustainability"></span><label>Sustain</label><input type="number" id="cost-sustainability" value="0" min="0" max="9"></div>
+      <div class="resource-cost"><span class="resource-dot community"></span><label>Community</label><input type="number" id="cost-community" value="0" min="0" max="9"></div>
+      <div class="resource-cost"><span class="resource-dot expression"></span><label>Express</label><input type="number" id="cost-expression" value="0" min="0" max="9"></div>
+      <div class="resource-cost"><span class="resource-dot learning"></span><label>Learn</label><input type="number" id="cost-learning" value="0" min="0" max="9"></div>
+    </div>
+
+    <!-- People-specific fields -->
+    <div class="section-divider" id="people-fields" style="display:none">
+      <h3>People Stats</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Initiative</label>
+          <input type="number" id="card-initiative" value="0" min="0" max="10" title="Higher resolves first in simultaneous windows">
+        </div>
+      </div>
+    </div>
+
+    <!-- Location-specific fields -->
+    <div class="section-divider" id="location-fields" style="display:none">
+      <h3>Location Development</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Max Level</label>
+          <input type="number" id="card-max-level" value="1" min="1" max="5" title="Highest development level">
+        </div>
+        <div class="form-group">
+          <label>Advance Condition</label>
+          <input type="text" id="card-advance-cond" placeholder="e.g. Control 2+ People">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <h3>Abilities <button class="btn btn-small btn-secondary" onclick="addAbilityRow()">+ Add</button></h3>
+    </div>
+    <div class="abilities-list" id="abilities-list">
+      <!-- Ability rows added dynamically -->
+    </div>
+
+    <div class="section-divider">
+      <h3>Text & Flavor</h3>
+    </div>
+    <div class="form-group">
+      <label>Flavor Text</label>
+      <textarea id="card-flavor" placeholder="Thematic quote or description..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Art Notes</label>
+      <textarea id="card-art-notes" placeholder="Description for future artist..."></textarea>
+    </div>
+
+    <div class="section-divider">
+      <h3>Tags</h3>
+    </div>
+    <div class="form-group">
+      <label>Card Tags (press Enter to add)</label>
+      <div class="tags-input" id="tags-input" onclick="this.querySelector('input').focus()">
+        <input type="text" id="tag-entry" placeholder="e.g. Artist, Gamer, Pop Culture...">
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <h3>Local Connection</h3>
+    </div>
+    <div class="local-conn">
+      <div class="form-group">
+        <label>Type</label>
+        <select id="local-type">
+          <option value="">None</option>
+          <option value="business">Business</option>
+          <option value="person">Person</option>
+          <option value="location">Location</option>
+          <option value="event">Event</option>
+          <option value="vendor">Vendor</option>
+          <option value="guest">Guest</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="local-name" placeholder="e.g. Excalibur Comics">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Connection Notes</label>
+      <input type="text" id="local-desc" placeholder="Why this card connects to this entity">
+    </div>
+
+    <div class="section-divider">
+      <h3>Designer Notes</h3>
+    </div>
+    <div class="form-group">
+      <textarea id="card-notes" placeholder="Balance thoughts, playtest feedback..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" id="btn-save" onclick="saveCard()">Add Card</button>
+      <button class="btn btn-secondary" id="btn-cancel" onclick="resetEditor()" style="display:none">Cancel</button>
+      <button class="btn btn-danger btn-small" id="btn-delete" onclick="deleteCard()" style="display:none">Delete</button>
+    </div>
+
+    <div class="section-divider"><h3>Import / Export</h3></div>
+    <div class="io-bar">
+      <button class="btn btn-secondary btn-small" onclick="exportJSON()">Export JSON</button>
+      <button class="btn btn-secondary btn-small" onclick="document.getElementById('import-file').click()">Import JSON</button>
+      <button class="btn btn-secondary btn-small" onclick="exportCSV()">Export CSV</button>
+      <input type="file" id="import-file" accept=".json" onchange="importJSON(event)">
+    </div>
+  </div>
+
+  <!-- Main: Card Browser -->
+  <div class="main">
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="Search cards by name, tags, text..." oninput="renderCards()">
+      <select id="filter-type" onchange="renderCards()">
+        <option value="">All Types</option>
+        <option value="People">People</option>
+        <option value="Location">Location</option>
+        <option value="Event">Event</option>
+      </select>
+      <select id="filter-rarity" onchange="renderCards()">
+        <option value="">All Rarities</option>
+        <option value="Common">Common</option>
+        <option value="Uncommon">Uncommon</option>
+        <option value="Rare">Rare</option>
+        <option value="Legendary">Legendary</option>
+      </select>
+      <select id="filter-set" onchange="renderCards()">
+        <option value="">All Sets</option>
+      </select>
+      <select id="sort-by" onchange="renderCards()">
+        <option value="name">Name</option>
+        <option value="type">Type</option>
+        <option value="lp-desc">LP (High-Low)</option>
+        <option value="lp-asc">LP (Low-High)</option>
+        <option value="cost">Total Cost</option>
+        <option value="rarity">Rarity</option>
+        <option value="modified">Last Modified</option>
+      </select>
+      <div class="view-toggle">
+        <button class="active" onclick="setView('grid', this)">Grid</button>
+        <button onclick="setView('list', this)">List</button>
+      </div>
+    </div>
+    <div id="card-container"></div>
+  </div>
+</div>
+
+<!-- Card Detail Modal -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modal-content"></div>
+    <div style="display:flex; gap:8px; margin-top:16px; justify-content:center;">
+      <button class="btn btn-primary btn-small" onclick="editFromModal()">Edit</button>
+      <button class="btn btn-secondary btn-small" onclick="duplicateFromModal()">Duplicate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script>
+// ==================== STATE ====================
+let db = { meta: { game: "LifeQuest", version: "0.2", lastModified: "", description: "" }, schema: { version: 2, resources: ["growth","sustainability","community","expression","learning"], types: ["People","Location","Event"], rarities: ["Common","Uncommon","Rare","Legendary"], seasons: ["spring","summer","autumn","winter"], triggerTypes: ["played","activate","spring","summer","autumn","winter","ongoing","combo","discard"] }, cards: [] };
+let editingId = null;
+let currentView = 'grid';
+let currentTags = [];
+let modalCardId = null;
+
+const RESOURCES = db.schema.resources;
+
+// Show/hide type-specific fields
+document.getElementById('card-type').addEventListener('change', function() {
+  document.getElementById('people-fields').style.display = this.value === 'People' ? '' : 'none';
+  document.getElementById('location-fields').style.display = this.value === 'Location' ? '' : 'none';
+});
+// Init on load
+setTimeout(() => {
+  const t = document.getElementById('card-type').value;
+  document.getElementById('people-fields').style.display = t === 'People' ? '' : 'none';
+  document.getElementById('location-fields').style.display = t === 'Location' ? '' : 'none';
+}, 0);
+const TYPE_ICONS = { People: "\u{1F464}", Location: "\u{1F3E0}", Event: "\u{1F3AA}" };
+const RARITY_ORDER = { Common: 0, Uncommon: 1, Rare: 2, Legendary: 3 };
+
+// ==================== PERSISTENCE ====================
+function load() {
+  const raw = localStorage.getItem('lifequest-cards');
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed.cards) db = parsed;
+    } catch(e) { console.error('Failed to load:', e); }
+  }
+  updateSetFilter();
+  renderCards();
+  updateStats();
+}
+
+function save() {
+  db.meta.lastModified = new Date().toISOString().slice(0,10);
+  localStorage.setItem('lifequest-cards', JSON.stringify(db));
+  updateStats();
+  updateSetFilter();
+}
+
+// ==================== CARD CRUD ====================
+function generateId() {
+  return 'card_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+}
+
+function gatherCardData() {
+  const name = document.getElementById('card-name').value.trim();
+  if (!name) { toast('Card name is required'); return null; }
+
+  const cost = {};
+  let totalCost = 0;
+  RESOURCES.forEach(r => {
+    const v = parseInt(document.getElementById('cost-' + r).value) || 0;
+    cost[r] = v;
+    totalCost += v;
+  });
+
+  const abilities = [];
+  document.querySelectorAll('#abilities-list .ability-row').forEach(row => {
+    const trigger = row.querySelector('select').value;
+    const text = row.querySelector('textarea').value.trim();
+    if (text) abilities.push({ trigger, text });
+  });
+
+  const localType = document.getElementById('local-type').value;
+  const localConn = localType ? {
+    type: localType,
+    name: document.getElementById('local-name').value.trim(),
+    description: document.getElementById('local-desc').value.trim()
+  } : null;
+
+  const type = document.getElementById('card-type').value;
+  const result = {
+    name,
+    type,
+    rarity: document.getElementById('card-rarity').value,
+    lp: parseInt(document.getElementById('card-lp').value) || 0,
+    set: document.getElementById('card-set').value.trim(),
+    cost,
+    totalCost,
+    abilities,
+    flavorText: document.getElementById('card-flavor').value.trim(),
+    artNotes: document.getElementById('card-art-notes').value.trim(),
+    tags: [...currentTags],
+    localConnection: localConn,
+    designerNotes: document.getElementById('card-notes').value.trim()
+  };
+
+  // People-specific
+  if (type === 'People') {
+    result.initiative = parseInt(document.getElementById('card-initiative').value) || 0;
+  }
+  // Location-specific
+  if (type === 'Location') {
+    result.maxLevel = parseInt(document.getElementById('card-max-level').value) || 1;
+    result.advanceCondition = document.getElementById('card-advance-cond').value.trim();
+  }
+
+  return result;
+}
+
+function saveCard() {
+  const data = gatherCardData();
+  if (!data) return;
+
+  const now = new Date().toISOString();
+  if (editingId) {
+    const idx = db.cards.findIndex(c => c.id === editingId);
+    if (idx >= 0) {
+      db.cards[idx] = { ...db.cards[idx], ...data, modified: now };
+      toast('Card updated: ' + data.name);
+    }
+  } else {
+    db.cards.push({ id: generateId(), ...data, created: now, modified: now });
+    toast('Card added: ' + data.name);
+  }
+
+  save();
+  resetEditor();
+  renderCards();
+}
+
+function deleteCard() {
+  if (!editingId) return;
+  const card = db.cards.find(c => c.id === editingId);
+  if (!confirm('Delete "' + (card?.name || 'this card') + '"?')) return;
+  db.cards = db.cards.filter(c => c.id !== editingId);
+  save();
+  resetEditor();
+  renderCards();
+  closeModal();
+  toast('Card deleted');
+}
+
+function loadCardIntoEditor(id) {
+  const card = db.cards.find(c => c.id === id);
+  if (!card) return;
+
+  editingId = id;
+  document.getElementById('editor-title').textContent = 'Edit Card';
+  document.getElementById('btn-save').textContent = 'Update Card';
+  document.getElementById('btn-cancel').style.display = '';
+  document.getElementById('btn-delete').style.display = '';
+
+  document.getElementById('card-name').value = card.name;
+  document.getElementById('card-type').value = card.type;
+  document.getElementById('card-rarity').value = card.rarity;
+  document.getElementById('card-lp').value = card.lp;
+  document.getElementById('card-set').value = card.set || '';
+
+  RESOURCES.forEach(r => {
+    document.getElementById('cost-' + r).value = card.cost?.[r] || 0;
+  });
+
+  // Abilities
+  document.getElementById('abilities-list').innerHTML = '';
+  (card.abilities || []).forEach(a => addAbilityRow(a.trigger, a.text));
+
+  document.getElementById('card-flavor').value = card.flavorText || '';
+  document.getElementById('card-art-notes').value = card.artNotes || '';
+
+  // Tags
+  currentTags = [...(card.tags || [])];
+  renderTags();
+
+  // Local connection
+  if (card.localConnection) {
+    document.getElementById('local-type').value = card.localConnection.type || '';
+    document.getElementById('local-name').value = card.localConnection.name || '';
+    document.getElementById('local-desc').value = card.localConnection.description || '';
+  } else {
+    document.getElementById('local-type').value = '';
+    document.getElementById('local-name').value = '';
+    document.getElementById('local-desc').value = '';
+  }
+
+  document.getElementById('card-notes').value = card.designerNotes || '';
+
+  // People-specific
+  document.getElementById('card-initiative').value = card.initiative || 0;
+  document.getElementById('people-fields').style.display = card.type === 'People' ? '' : 'none';
+  // Location-specific
+  document.getElementById('card-max-level').value = card.maxLevel || 1;
+  document.getElementById('card-advance-cond').value = card.advanceCondition || '';
+  document.getElementById('location-fields').style.display = card.type === 'Location' ? '' : 'none';
+
+  document.getElementById('sidebar').scrollTop = 0;
+}
+
+function resetEditor() {
+  editingId = null;
+  document.getElementById('editor-title').textContent = 'Add New Card';
+  document.getElementById('btn-save').textContent = 'Add Card';
+  document.getElementById('btn-cancel').style.display = 'none';
+  document.getElementById('btn-delete').style.display = 'none';
+
+  document.getElementById('card-name').value = '';
+  document.getElementById('card-type').value = 'People';
+  document.getElementById('card-rarity').value = 'Common';
+  document.getElementById('card-lp').value = '0';
+  // Don't reset set — keep last used for batch entry
+
+  RESOURCES.forEach(r => document.getElementById('cost-' + r).value = '0');
+  document.getElementById('abilities-list').innerHTML = '';
+  document.getElementById('card-flavor').value = '';
+  document.getElementById('card-art-notes').value = '';
+  currentTags = [];
+  renderTags();
+  document.getElementById('local-type').value = '';
+  document.getElementById('local-name').value = '';
+  document.getElementById('local-desc').value = '';
+  document.getElementById('card-notes').value = '';
+  document.getElementById('card-initiative').value = '0';
+  document.getElementById('card-max-level').value = '1';
+  document.getElementById('card-advance-cond').value = '';
+  document.getElementById('people-fields').style.display = 'none';
+  document.getElementById('location-fields').style.display = 'none';
+}
+
+// ==================== ABILITIES ====================
+function addAbilityRow(trigger = 'played', text = '') {
+  const list = document.getElementById('abilities-list');
+  const row = document.createElement('div');
+  row.className = 'ability-row';
+  row.innerHTML = `<select>
+    <option value="played"${trigger==='played'?' selected':''}>Played</option>
+    <option value="activate"${trigger==='activate'?' selected':''}>Activate</option>
+    <option value="spring"${trigger==='spring'?' selected':''}>Spring</option>
+    <option value="summer"${trigger==='summer'?' selected':''}>Summer</option>
+    <option value="autumn"${trigger==='autumn'?' selected':''}>Autumn</option>
+    <option value="winter"${trigger==='winter'?' selected':''}>Winter</option>
+    <option value="ongoing"${trigger==='ongoing'?' selected':''}>Ongoing</option>
+    <option value="combo"${trigger==='combo'?' selected':''}>Combo</option>
+    <option value="discard"${trigger==='discard'?' selected':''}>Discard</option>
+  </select>
+  <textarea placeholder="Ability text...">${text}</textarea>
+  <button class="remove-btn" onclick="this.parentElement.remove()">X</button>`;
+  list.appendChild(row);
+}
+
+// ==================== TAGS ====================
+function renderTags() {
+  const container = document.getElementById('tags-input');
+  const input = document.getElementById('tag-entry');
+  container.querySelectorAll('.tag').forEach(t => t.remove());
+  currentTags.forEach((tag, i) => {
+    const el = document.createElement('span');
+    el.className = 'tag';
+    el.innerHTML = tag + ' <span class="remove" onclick="removeTag(' + i + ')">x</span>';
+    container.insertBefore(el, input);
+  });
+}
+
+function removeTag(i) {
+  currentTags.splice(i, 1);
+  renderTags();
+}
+
+document.getElementById('tag-entry').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = this.value.trim().replace(/,/g, '');
+    if (val && !currentTags.includes(val)) {
+      currentTags.push(val);
+      renderTags();
+    }
+    this.value = '';
+  }
+  if (e.key === 'Backspace' && !this.value && currentTags.length) {
+    currentTags.pop();
+    renderTags();
+  }
+});
+
+// ==================== RENDERING ====================
+function getFilteredCards() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const filterType = document.getElementById('filter-type').value;
+  const filterRarity = document.getElementById('filter-rarity').value;
+  const filterSet = document.getElementById('filter-set').value;
+  const sortBy = document.getElementById('sort-by').value;
+
+  let cards = db.cards.filter(c => {
+    if (filterType && c.type !== filterType) return false;
+    if (filterRarity && c.rarity !== filterRarity) return false;
+    if (filterSet && c.set !== filterSet) return false;
+    if (search) {
+      const haystack = [c.name, c.type, c.rarity, c.set, c.flavorText, c.designerNotes,
+        ...(c.tags || []),
+        ...(c.abilities || []).map(a => a.text),
+        c.localConnection?.name, c.localConnection?.description
+      ].filter(Boolean).join(' ').toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+
+  cards.sort((a, b) => {
+    switch(sortBy) {
+      case 'name': return a.name.localeCompare(b.name);
+      case 'type': return a.type.localeCompare(b.type) || a.name.localeCompare(b.name);
+      case 'lp-desc': return (b.lp||0) - (a.lp||0);
+      case 'lp-asc': return (a.lp||0) - (b.lp||0);
+      case 'cost': return (a.totalCost||0) - (b.totalCost||0);
+      case 'rarity': return (RARITY_ORDER[b.rarity]||0) - (RARITY_ORDER[a.rarity]||0);
+      case 'modified': return (b.modified||'').localeCompare(a.modified||'');
+      default: return 0;
+    }
+  });
+
+  return cards;
+}
+
+function renderCostDots(cost) {
+  if (!cost) return '';
+  let html = '';
+  RESOURCES.forEach(r => {
+    for (let i = 0; i < (cost[r]||0); i++) {
+      html += `<span class="dot" style="background:var(--${r})" title="${r}">${cost[r]}</span>`;
+      break; // show one dot per resource with count inside
+    }
+  });
+  return html;
+}
+
+function renderCostDotsLarge(cost) {
+  if (!cost) return '';
+  let html = '';
+  RESOURCES.forEach(r => {
+    for (let i = 0; i < (cost[r]||0); i++) {
+      html += `<span class="dot" style="background:var(--${r}); width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:bold; color:#000;" title="${r}">${cost[r] > 1 ? cost[r] : ''}</span>`;
+      break;
+    }
+  });
+  return html;
+}
+
+function renderCards() {
+  const cards = getFilteredCards();
+  const container = document.getElementById('card-container');
+
+  if (!cards.length) {
+    container.innerHTML = db.cards.length === 0
+      ? '<div class="empty-state"><h2>No cards yet</h2><p>Use the editor on the left to add your first card.</p></div>'
+      : '<div class="empty-state"><h2>No matching cards</h2><p>Try adjusting your search or filters.</p></div>';
+    return;
+  }
+
+  if (currentView === 'grid') {
+    container.className = 'card-grid';
+    container.innerHTML = cards.map(c => `
+      <div class="card-tile type-${c.type}" onclick="openModal('${c.id}')">
+        <div class="card-tile-art">${TYPE_ICONS[c.type] || '?'}</div>
+        <div class="card-tile-body">
+          <div class="card-tile-name">${esc(c.name)}</div>
+          <div class="card-tile-meta">
+            <span>${c.type}</span>
+            <span class="rarity-${c.rarity.toLowerCase()}">${c.rarity}</span>
+            ${c.lp ? `<span class="card-tile-lp">${c.lp} LP</span>` : ''}
+          </div>
+          <div class="card-tile-costs">${renderCostDots(c.cost)}</div>
+          ${(c.tags && c.tags.length) ? `<div class="card-tile-tags">${c.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } else {
+    container.className = 'card-list-view';
+    container.innerHTML = `
+      <div class="card-list-item card-list-header">
+        <span>Name</span><span>Type</span><span>Tags</span><span>Rarity</span><span>LP</span><span>Cost</span>
+      </div>
+      ${cards.map(c => `
+        <div class="card-list-item type-${c.type}" onclick="openModal('${c.id}')">
+          <span>${esc(c.name)}</span>
+          <span>${c.type}</span>
+          <span style="font-size:0.75rem; color:var(--text-dim)">${(c.tags||[]).join(', ')}</span>
+          <span class="rarity-${c.rarity.toLowerCase()}">${c.rarity}</span>
+          <span>${c.lp || 0}</span>
+          <span>${renderCostDots(c.cost)}</span>
+        </div>
+      `).join('')}
+    `;
+  }
+}
+
+function setView(view, btn) {
+  currentView = view;
+  document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards();
+}
+
+// ==================== MODAL ====================
+function openModal(id) {
+  const card = db.cards.find(c => c.id === id);
+  if (!card) return;
+  modalCardId = id;
+
+  const content = document.getElementById('modal-content');
+  const totalCost = RESOURCES.reduce((s, r) => s + (card.cost?.[r]||0), 0);
+
+  content.innerHTML = `
+    <div class="card-preview type-${card.type}">
+      <div class="card-preview-header">
+        <span class="card-preview-name">${esc(card.name)}</span>
+        <div class="card-preview-cost">${renderCostDotsLarge(card.cost)}</div>
+      </div>
+      <div class="card-preview-art">${TYPE_ICONS[card.type] || '?'}</div>
+      <div class="card-preview-body">
+        <div class="card-preview-type-line">
+          <span>${card.type}${card.initiative ? ' (Init ' + card.initiative + ')' : ''}${card.maxLevel > 1 ? ' (Lvl 1-' + card.maxLevel + ')' : ''}${(card.tags&&card.tags.length) ? ' - ' + card.tags.join(', ') : ''}</span>
+          ${card.lp ? `<span class="card-preview-lp">${card.lp} LP</span>` : ''}
+        </div>
+        ${(card.abilities&&card.abilities.length) ? `<div class="card-preview-abilities">
+          ${card.abilities.map(a => `<div class="ability"><span class="trigger">[${a.trigger}]</span> ${esc(a.text)}</div>`).join('')}
+        </div>` : ''}
+        ${card.flavorText ? `<div class="card-preview-flavor">${esc(card.flavorText)}</div>` : ''}
+      </div>
+      <div class="card-preview-footer">
+        <span class="rarity-${card.rarity.toLowerCase()}">${card.rarity}</span>
+        <span>${card.set || 'No Set'}</span>
+      </div>
+    </div>
+    ${card.localConnection ? `<div style="margin-top:12px; font-size:0.8rem; color:var(--text-dim)">
+      <strong>Local Connection:</strong> ${esc(card.localConnection.name)} (${card.localConnection.type})
+      ${card.localConnection.description ? '<br>' + esc(card.localConnection.description) : ''}
+    </div>` : ''}
+    ${card.artNotes ? `<div style="margin-top:8px; font-size:0.8rem; color:var(--text-dim)"><strong>Art Notes:</strong> ${esc(card.artNotes)}</div>` : ''}
+    ${card.designerNotes ? `<div style="margin-top:8px; font-size:0.8rem; color:var(--text-dim)"><strong>Designer Notes:</strong> ${esc(card.designerNotes)}</div>` : ''}
+  `;
+
+  document.getElementById('modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  modalCardId = null;
+}
+
+function editFromModal() {
+  if (modalCardId) loadCardIntoEditor(modalCardId);
+  closeModal();
+}
+
+function duplicateFromModal() {
+  if (!modalCardId) return;
+  const orig = db.cards.find(c => c.id === modalCardId);
+  if (!orig) return;
+  const now = new Date().toISOString();
+  const dupe = { ...JSON.parse(JSON.stringify(orig)), id: generateId(), name: orig.name + ' (Copy)', created: now, modified: now };
+  db.cards.push(dupe);
+  save();
+  renderCards();
+  closeModal();
+  toast('Card duplicated');
+}
+
+// ==================== STATS ====================
+function updateStats() {
+  document.getElementById('stat-total').textContent = db.cards.length + ' cards';
+  document.getElementById('stat-people').textContent = db.cards.filter(c => c.type === 'People').length + ' People';
+  document.getElementById('stat-locations').textContent = db.cards.filter(c => c.type === 'Location').length + ' Locations';
+  document.getElementById('stat-events').textContent = db.cards.filter(c => c.type === 'Event').length + ' Events';
+}
+
+function updateSetFilter() {
+  const sets = [...new Set(db.cards.map(c => c.set).filter(Boolean))].sort();
+  const sel = document.getElementById('filter-set');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Sets</option>' + sets.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+  sel.value = current;
+}
+
+// ==================== IMPORT / EXPORT ====================
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'lifequest-cards-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported ' + db.cards.length + ' cards');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (imported.cards && Array.isArray(imported.cards)) {
+        const mode = db.cards.length > 0
+          ? confirm('You have existing cards. Click OK to MERGE (add imported cards), or Cancel to REPLACE all cards.')
+            ? 'merge' : 'replace'
+          : 'replace';
+
+        if (mode === 'replace') {
+          db = imported;
+        } else {
+          const existingIds = new Set(db.cards.map(c => c.id));
+          let added = 0, updated = 0;
+          imported.cards.forEach(card => {
+            if (existingIds.has(card.id)) {
+              const idx = db.cards.findIndex(c => c.id === card.id);
+              db.cards[idx] = card;
+              updated++;
+            } else {
+              db.cards.push(card);
+              added++;
+            }
+          });
+          toast(`Merged: ${added} added, ${updated} updated`);
+        }
+        save();
+        renderCards();
+        if (mode === 'replace') toast('Imported ' + db.cards.length + ' cards');
+      } else {
+        toast('Invalid file format');
+      }
+    } catch(err) {
+      toast('Error reading file: ' + err.message);
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function exportCSV() {
+  const headers = ['Name','Type','Rarity','LP','Set','Total Cost','Growth','Sustainability','Community','Expression','Learning','Initiative','Max Level','Tags','Abilities','Flavor Text','Local Connection','Art Notes','Designer Notes'];
+  const rows = db.cards.map(c => [
+    c.name, c.type, c.rarity, c.lp, c.set||'',
+    RESOURCES.reduce((s,r) => s + (c.cost?.[r]||0), 0),
+    ...RESOURCES.map(r => c.cost?.[r]||0),
+    c.initiative||'',
+    c.maxLevel||'',
+    (c.tags||[]).join('; '),
+    (c.abilities||[]).map(a => `[${a.trigger}] ${a.text}`).join(' | '),
+    c.flavorText||'',
+    c.localConnection ? `${c.localConnection.type}: ${c.localConnection.name}` : '',
+    c.artNotes||'',
+    c.designerNotes||''
+  ]);
+
+  const csv = [headers, ...rows].map(row => row.map(cell => '"' + String(cell).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'lifequest-cards-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported CSV');
+}
+
+// ==================== UTILS ====================
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.add('hidden'), 2500);
+}
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    if (document.getElementById('modal').classList.contains('active')) closeModal();
+    else if (editingId) resetEditor();
+  }
+  if (e.ctrlKey && e.key === 's') {
+    e.preventDefault();
+    saveCard();
+  }
+  if (e.ctrlKey && e.key === 'n') {
+    e.preventDefault();
+    resetEditor();
+    document.getElementById('card-name').focus();
+  }
+});
+
+// ==================== INIT ====================
+load();
+// Add one empty ability row on start
+if (!editingId) addAbilityRow();
+</script>
+</body>
+</html>

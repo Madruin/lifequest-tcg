@@ -1,0 +1,15 @@
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# Claude Code workspace
+.claude/
+
+# Draft documents (personal, not for public)
+Draft concept ideas.*
