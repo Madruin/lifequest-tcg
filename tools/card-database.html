@@ -453,12 +453,27 @@ function load() {
   if (raw) {
     try {
       const parsed = JSON.parse(raw);
-      if (parsed.cards) db = parsed;
+      if (parsed.cards && parsed.cards.length) { db = parsed; updateSetFilter(); renderCards(); updateStats(); return; }
     } catch(e) { console.error('Failed to load:', e); }
   }
-  updateSetFilter();
-  renderCards();
-  updateStats();
+  // No cards in localStorage — auto-load from cards.json
+  fetch('../data/cards.json')
+    .then(r => r.ok ? r.json() : Promise.reject('Not found'))
+    .then(data => {
+      if (data.cards && data.cards.length) {
+        db = data;
+        save();
+        toast('Loaded ' + db.cards.length + ' cards from card database');
+      }
+      updateSetFilter();
+      renderCards();
+      updateStats();
+    })
+    .catch(() => {
+      updateSetFilter();
+      renderCards();
+      updateStats();
+    });
 }
 
 function save() {
