@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn LifeQuest</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --accent2: #533483;
+  --text: #eee;
+  --text-dim: #999;
+  --growth: #666;
+  --sustainability: #4caf50;
+  --community: #ffc107;
+  --expression: #f44336;
+  --learning: #2196f3;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; }
+
+.tutorial-container { max-width: 720px; margin: 0 auto; }
+.back-link { display: inline-block; color: var(--text-dim); font-size: 0.8rem; text-decoration: none; margin-bottom: 12px; }
+.back-link:hover { color: var(--accent); }
+.tutorial-header { text-align: center; margin-bottom: 16px; }
+.tutorial-header h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 2px; }
+.tutorial-header p { color: var(--text-dim); font-size: 0.85rem; }
+
+/* Progress */
+.progress-bar { height: 4px; background: var(--surface2); border-radius: 2px; margin-bottom: 20px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s ease; }
+
+/* Slides */
+.slide { display: none; }
+.slide.active { display: block; }
+.slide-content { background: var(--surface); border-radius: 12px; padding: 24px; margin-bottom: 16px; min-height: 320px; }
+.slide-content h2 { color: var(--accent); font-size: 1.3rem; margin-bottom: 14px; text-align: center; }
+.slide-content p { font-size: 0.85rem; line-height: 1.6; color: var(--text-dim); margin-bottom: 10px; }
+.slide-content strong { color: var(--text); }
+.slide-content ul, .slide-content ol { margin-left: 20px; margin-bottom: 10px; }
+.slide-content li { font-size: 0.82rem; line-height: 1.5; color: var(--text-dim); margin-bottom: 4px; }
+
+/* Navigation */
+.slide-nav { display: flex; justify-content: space-between; align-items: center; }
+.slide-counter { color: var(--text-dim); font-size: 0.8rem; }
+
+/* Buttons */
+.btn { padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.15s; }
+.btn:hover { transform: translateY(-1px); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-secondary { background: var(--surface2); color: var(--text); }
+.btn-link { background: none; border: 2px solid var(--accent); color: var(--accent); text-decoration: none; display: inline-block; padding: 10px 24px; border-radius: 8px; font-weight: 600; }
+.btn-link:hover { background: var(--accent); color: white; }
+
+/* Visual elements */
+.example-box { background: var(--bg); border-radius: 8px; padding: 14px; margin: 12px 0; }
+.token-row { display: flex; gap: 10px; justify-content: center; padding: 10px 0; flex-wrap: wrap; }
+.token-demo { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.token-circle { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; }
+.token-label { font-size: 0.65rem; color: var(--text-dim); text-align: center; }
+.card-demo { display: inline-block; background: var(--surface2); border-radius: 8px; padding: 10px; width: 160px; border-top: 3px solid; margin: 6px; vertical-align: top; text-align: left; }
+.card-demo .cd-type { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.card-demo .cd-name { font-weight: 600; font-size: 0.8rem; margin-bottom: 4px; }
+.card-demo .cd-text { font-size: 0.68rem; color: var(--text-dim); line-height: 1.4; }
+.card-demo .cd-lp { font-size: 0.7rem; color: var(--accent); margin-top: 4px; }
+.card-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+/* Phase diagram */
+.phase-flow { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+.phase-box { padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+.phase-arrow { color: var(--text-dim); font-size: 1.2rem; }
+
+/* Action diagram */
+.action-demo { background: var(--bg); border-radius: 8px; padding: 12px; margin: 8px 0; }
+.action-demo h4 { font-size: 0.8rem; color: var(--accent); margin-bottom: 6px; }
+.action-demo .ad-flow { display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; font-size: 0.75rem; }
+.ad-item { background: var(--surface); padding: 4px 10px; border-radius: 4px; }
+.ad-arrow { color: var(--text-dim); }
+
+/* Ready to play links */
+.play-links { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; text-align: center; }
+
+/* Highlight */
+.highlight { color: var(--accent); font-weight: 600; }
+
+@media (max-width: 600px) {
+  body { padding: 12px; }
+  .slide-content { padding: 16px; min-height: 280px; }
+  .slide-content h2 { font-size: 1.1rem; }
+  .card-demo { width: 130px; padding: 8px; }
+  .token-circle { width: 36px; height: 36px; font-size: 0.8rem; }
+  .btn { padding: 7px 16px; font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+<div class="tutorial-container">
+  <a class="back-link" href="../index.html">&larr; Back to Home</a>
+  <div class="tutorial-header">
+    <h1>Learn LifeQuest</h1>
+    <p>A step-by-step guide to the game</p>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:11.1%"></div></div>
+
+  <!-- Slide 1: Welcome -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-content">
+      <h2>Welcome to LifeQuest!</h2>
+      <p>LifeQuest is a <strong>non-violent, values-driven trading card game</strong> where you build meaningful communities by strategically playing cards and competing over shared resources.</p>
+      <p>The game is set in <strong>Duluth, Minnesota</strong> and celebrates what makes the Northland special.</p>
+      <div class="example-box" style="text-align:center;">
+        <p style="font-size:1.1rem;color:var(--accent);font-weight:600;margin-bottom:4px;">Your Goal</p>
+        <p style="font-size:1.5rem;font-weight:bold;color:var(--text);margin-bottom:4px;">Reach 30 Life Points</p>
+        <p style="font-size:0.75rem;">at the end of a Winter phase to win the game</p>
+      </div>
+      <p>There is <strong>no combat</strong> &mdash; only choices, consequences, and shared futures. Player interaction is driven by <strong>resource scarcity</strong>, not destruction.</p>
+      <p>Each player brings a <strong>30-40 card deck</strong>. Let's learn how to play!</p>
+    </div>
+  </div>
+
+  <!-- Slide 2: Resources -->
+  <div class="slide" id="slide-2">
+    <div class="slide-content">
+      <h2>The Five Resources</h2>
+      <p>The game begins with a <strong>shared pool of 10 tokens</strong> in the center &mdash; 2 of each resource type:</p>
+      <div class="token-row">
+        <div class="token-demo">
+          <div class="token-circle" style="background:var(--growth);color:#fff;">2</div>
+          <div class="token-label">Growth</div>
+        </div>
+        <div class="token-demo">
+          <div class="token-circle" style="background:var(--sustainability);color:#000;">2</div>
+          <div class="token-label">Sustainability</div>
+        </div>
+        <div class="token-demo">
+          <div class="token-circle" style="background:var(--community);color:#000;">2</div>
+          <div class="token-label">Community</div>
+        </div>
+        <div class="token-demo">
+          <div class="token-circle" style="background:var(--expression);color:#fff;">2</div>
+          <div class="token-label">Expression</div>
+        </div>
+        <div class="token-demo">
+          <div class="token-circle" style="background:var(--learning);color:#fff;">2</div>
+          <div class="token-label">Learning</div>
+        </div>
+      </div>
+      <p>The pool is a <strong>commons</strong> &mdash; both players claim tokens from it and compete over scarce resources.</p>
+      <div class="example-box">
+        <p><strong>Key rule:</strong> When you <strong>spend</strong> tokens to play cards, they return to the shared pool. But tokens you <strong>hold</strong> stay with you. There is no automatic reset!</p>
+      </div>
+      <p>This means <strong>resource scarcity</strong> is the main way players interact. Hoarding tokens denies them from your opponent.</p>
+    </div>
+  </div>
+
+  <!-- Slide 3: Card Types -->
+  <div class="slide" id="slide-3">
+    <div class="slide-content">
+      <h2>Three Card Types</h2>
+      <p>Your deck is made of three types of cards:</p>
+      <div class="card-row">
+        <div class="card-demo" style="border-color:#9c27b0;">
+          <div class="cd-type" style="color:#9c27b0;">People</div>
+          <div class="cd-name">Local Artist</div>
+          <div class="cd-text">[Activate] Draw 1 card.</div>
+          <div class="cd-text" style="margin-top:4px;font-style:italic;">Ready/Exhausted state. Exhaust to use ability in Summer. Refresh each Spring.</div>
+          <div class="cd-lp">2 LP</div>
+        </div>
+        <div class="card-demo" style="border-color:#4caf50;">
+          <div class="cd-type" style="color:#4caf50;">Location</div>
+          <div class="cd-name">Canal Park</div>
+          <div class="cd-text">Passive: +1 LP per Duluth tag you control.</div>
+          <div class="cd-text" style="margin-top:4px;font-style:italic;">Always active. Can develop to higher levels in Autumn for stronger effects.</div>
+          <div class="cd-lp">1 LP</div>
+        </div>
+        <div class="card-demo" style="border-color:#ff7043;">
+          <div class="cd-type" style="color:#ff7043;">Event</div>
+          <div class="cd-name">Community Feast</div>
+          <div class="cd-text">Gain 3 LP. Each player draws 1 card.</div>
+          <div class="cd-text" style="margin-top:4px;font-style:italic;">One-time effect. Resolves immediately, then discarded.</div>
+        </div>
+      </div>
+      <p style="margin-top:10px;">Cards have <strong>tags</strong> (Artist, Gamer, Convention, Duluth) that create synergies between cards in your deck.</p>
+    </div>
+  </div>
+
+  <!-- Slide 4: Spring -->
+  <div class="slide" id="slide-4">
+    <div class="slide-content">
+      <h2>Spring: Refresh &amp; Acquire</h2>
+      <div class="phase-flow">
+        <span class="phase-box" style="background:#66bb6a;color:#000;">Spring</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Summer</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Autumn</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Winter</span>
+      </div>
+      <p>Each year starts with Spring. The <strong>Start Player</strong> goes first. Each player does three things:</p>
+      <ol>
+        <li><strong>Refresh</strong> all your exhausted People (turn them upright)</li>
+        <li><strong>Draw</strong> 1 card from your deck</li>
+        <li>Take one <strong>resource action</strong>:</li>
+      </ol>
+      <div class="action-demo">
+        <h4>Forage (Safe Default)</h4>
+        <div class="ad-flow">
+          <span class="ad-item">Shared Pool</span>
+          <span class="ad-arrow">&rarr; take 1 &rarr;</span>
+          <span class="ad-item">Your Tokens</span>
+        </div>
+        <p style="font-size:0.72rem;color:var(--text-dim);text-align:center;margin-top:4px;">Net +1 token. Low risk.</p>
+      </div>
+      <div class="action-demo">
+        <h4>Barter (Reshape)</h4>
+        <div class="ad-flow">
+          <span class="ad-item">Return 1</span>
+          <span class="ad-arrow">&rarr;</span>
+          <span class="ad-item">Pool</span>
+          <span class="ad-arrow">&rarr; take 2 different &rarr;</span>
+          <span class="ad-item">You</span>
+        </div>
+        <p style="font-size:0.72rem;color:var(--text-dim);text-align:center;margin-top:4px;">Net +1. Swap colors you don't need.</p>
+      </div>
+      <div class="action-demo">
+        <h4>Pressure (Targeted)</h4>
+        <div class="ad-flow">
+          <span class="ad-item">Give 2 to Opponent</span>
+          <span class="ad-arrow">&rarr;</span>
+          <span class="ad-item">Take 1 of Theirs</span>
+        </div>
+        <p style="font-size:0.72rem;color:var(--text-dim);text-align:center;margin-top:4px;">Net -1 for you, but steal exactly what you need.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Summer -->
+  <div class="slide" id="slide-5">
+    <div class="slide-content">
+      <h2>Summer: Action &amp; Play</h2>
+      <div class="phase-flow">
+        <span class="phase-box" style="background:#555;color:#fff;">Spring</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#ffc107;color:#000;">Summer</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Autumn</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Winter</span>
+      </div>
+      <p>Summer is the main action phase! The <strong>Second Player acts first</strong> (to balance Spring advantage).</p>
+      <p>Players <strong>alternate taking one action</strong> at a time. On your turn, choose one:</p>
+      <ul>
+        <li><strong>Play a card</strong> from your hand &mdash; pay its resource cost (spent tokens return to pool)</li>
+        <li><strong>Activate a Person</strong> &mdash; exhaust a Ready Person to use their ability</li>
+        <li><strong>Pass</strong></li>
+      </ul>
+      <div class="example-box">
+        <p><strong>When does Summer end?</strong> When <strong>both players pass in a row</strong>. If you pass but your opponent acts, you get another chance!</p>
+      </div>
+      <p>After the action phase ends, <strong>Summer triggers</strong> on cards resolve (by Initiative order). There's <strong>no limit</strong> on cards you can play &mdash; resources are the natural gate.</p>
+    </div>
+  </div>
+
+  <!-- Slide 6: Autumn -->
+  <div class="slide" id="slide-6">
+    <div class="slide-content">
+      <h2>Autumn: Response &amp; Development</h2>
+      <div class="phase-flow">
+        <span class="phase-box" style="background:#555;color:#fff;">Spring</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Summer</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#ff7043;color:#000;">Autumn</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Winter</span>
+      </div>
+      <p>Autumn is the <strong>reaction window</strong>. You've seen what happened in Summer and can make one precise adjustment.</p>
+      <ol>
+        <li>Each player may <strong>play 1 card</strong> from their hand (Start Player first)</li>
+        <li><strong>Autumn triggers</strong> resolve</li>
+        <li><strong>Location Development check</strong> &mdash; Locations that meet their advancement conditions go up one level!</li>
+      </ol>
+      <div class="example-box">
+        <p><strong>Development Example:</strong> A Location at Level 1 might say "Advance if you control 2+ People with the Artist tag." If you do, it advances to Level 2, unlocking a stronger passive effect!</p>
+      </div>
+      <p>Locations reward <strong>long-term investment</strong>. Do you keep developing this Location or pivot to something new?</p>
+    </div>
+  </div>
+
+  <!-- Slide 7: Winter -->
+  <div class="slide" id="slide-7">
+    <div class="slide-content">
+      <h2>Winter: Scoring &amp; Victory</h2>
+      <div class="phase-flow">
+        <span class="phase-box" style="background:#555;color:#fff;">Spring</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Summer</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#555;color:#fff;">Autumn</span>
+        <span class="phase-arrow">&rarr;</span>
+        <span class="phase-box" style="background:#42a5f5;color:#000;">Winter</span>
+      </div>
+      <p>Winter is resolved <strong>simultaneously</strong> by both players:</p>
+      <ol>
+        <li><strong>Tally LP</strong> &mdash; add LP from all your in-play cards to your total</li>
+        <li><strong>Winter triggers</strong> resolve</li>
+        <li><strong>Win check</strong> &mdash; if anyone has <strong class="highlight">30+ LP</strong>, they win!</li>
+        <li><strong>Discard</strong> down to 5 cards in hand</li>
+        <li><strong>Swap Start Player</strong> and begin a new Year</li>
+      </ol>
+      <div class="example-box">
+        <p><strong>Important:</strong> Unspent tokens do <strong>NOT</strong> return to the pool. You keep what you've claimed! The only ways tokens re-enter the pool are: spending them on cards, Bartering, or card effects.</p>
+      </div>
+      <p>If both players exceed 30 LP, the player with <strong>more total LP</strong> wins. Tie? Play one more Year!</p>
+    </div>
+  </div>
+
+  <!-- Slide 8: Tags & Synergies -->
+  <div class="slide" id="slide-8">
+    <div class="slide-content">
+      <h2>Tags &amp; Synergies</h2>
+      <p>Cards have <strong>tags</strong> that create powerful synergies when you build around them:</p>
+      <div class="example-box">
+        <p style="margin-bottom:8px;"><strong>Example tags:</strong> Artist, Gamer, Convention, Duluth, Nature, Music, Food, Education</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
+          <span style="background:var(--accent2);padding:3px 10px;border-radius:4px;font-size:0.72rem;">Artist</span>
+          <span style="background:var(--accent2);padding:3px 10px;border-radius:4px;font-size:0.72rem;">Gamer</span>
+          <span style="background:var(--accent2);padding:3px 10px;border-radius:4px;font-size:0.72rem;">Convention</span>
+          <span style="background:var(--accent2);padding:3px 10px;border-radius:4px;font-size:0.72rem;">Duluth</span>
+          <span style="background:var(--accent2);padding:3px 10px;border-radius:4px;font-size:0.72rem;">Nature</span>
+          <span style="background:var(--accent2);padding:3px 10px;border-radius:4px;font-size:0.72rem;">Music</span>
+        </div>
+      </div>
+      <p>Many card abilities reference tags:</p>
+      <ul>
+        <li>"Each People card you control with the <strong>Artist</strong> tag gains +1 LP."</li>
+        <li>"If you control a Location with the <strong>Convention</strong> tag, draw 1 card."</li>
+      </ul>
+      <p>Tags create <strong>archetypal identities</strong> and reward themed deckbuilding. A deck focused on Artist cards will have different strengths than one built around Convention cards.</p>
+      <div class="example-box">
+        <p><strong>Tip:</strong> The two starter decks each focus on different resource pairs and tag themes. Try both to see which style suits you!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9: Ready to Play -->
+  <div class="slide" id="slide-9">
+    <div class="slide-content" style="text-align:center;">
+      <h2>Ready to Play!</h2>
+      <p style="font-size:1rem;color:var(--text);margin-bottom:16px;">You now know the basics of LifeQuest. Time to jump in!</p>
+
+      <div class="example-box">
+        <p style="margin-bottom:6px;"><strong>Remember:</strong></p>
+        <ul style="text-align:left;">
+          <li>Reach <strong class="highlight">30 LP</strong> at end of Winter to win</li>
+          <li><strong>5 shared resources</strong> &mdash; scarcity is the main interaction</li>
+          <li><strong>Spring:</strong> Refresh, Draw, Resource action</li>
+          <li><strong>Summer:</strong> Play cards &amp; activate People</li>
+          <li><strong>Autumn:</strong> 1 card + Location Development</li>
+          <li><strong>Winter:</strong> Score LP and check for victory</li>
+        </ul>
+      </div>
+
+      <p style="margin-top:16px;margin-bottom:8px;">Card abilities are <strong>read-and-resolve</strong> &mdash; read the text and apply it manually. Don't worry about memorizing everything!</p>
+
+      <div class="play-links">
+        <a class="btn-link" href="../online/client.html">🌐 Play Online with a Friend</a>
+        <a class="btn-link" href="../playtest/playtester.html">🎮 Local Playtester (2-Player Hotseat)</a>
+        <a class="btn-link" href="../tools/card-database.html" style="border-color:var(--text-dim);color:var(--text-dim);">🗃️ Browse All Cards</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="slide-nav">
+    <button class="btn btn-secondary" id="btn-prev" onclick="prevSlide()" disabled>&larr; Back</button>
+    <span class="slide-counter" id="slide-counter">1 / 9</span>
+    <button class="btn btn-primary" id="btn-next" onclick="nextSlide()">Next &rarr;</button>
+  </div>
+</div>
+
+<script>
+const totalSlides = 9;
+let currentSlide = 1;
+
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('slide-' + n).classList.add('active');
+  document.getElementById('slide-counter').textContent = n + ' / ' + totalSlides;
+  document.getElementById('progress-fill').style.width = (n / totalSlides * 100) + '%';
+  document.getElementById('btn-prev').disabled = (n === 1);
+  const nextBtn = document.getElementById('btn-next');
+  if (n === totalSlides) {
+    nextBtn.textContent = 'Home';
+    nextBtn.onclick = () => window.location.href = '../index.html';
+  } else {
+    nextBtn.textContent = 'Next \u2192';
+    nextBtn.onclick = nextSlide;
+  }
+  currentSlide = n;
+  window.scrollTo(0, 0);
+}
+
+function nextSlide() { if (currentSlide < totalSlides) showSlide(currentSlide + 1); }
+function prevSlide() { if (currentSlide > 1) showSlide(currentSlide - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+});
+
+// Swipe support for mobile
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(diff) > 60) {
+    if (diff < 0) nextSlide();
+    else prevSlide();
+  }
+}, { passive: true });
+</script>
+</body>
+</html>

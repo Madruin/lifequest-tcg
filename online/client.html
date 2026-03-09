@@ -14,10 +14,10 @@
   --accent2: #533483;
   --text: #eee;
   --text-dim: #999;
-  --growth: #4caf50;
-  --sustainability: #66bb6a;
+  --growth: #666;
+  --sustainability: #4caf50;
   --community: #ffc107;
-  --expression: #e91e63;
+  --expression: #f44336;
   --learning: #2196f3;
   --people-bg: #2d1b4e;
   --location-bg: #1b3a2d;
@@ -101,7 +101,7 @@ h1, h2, h3 { font-weight: 600; }
 
 /* Tokens */
 .token { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: #000; cursor: default; }
-.token.growth { background: var(--growth); }
+.token.growth { background: var(--growth); color: #fff; }
 .token.sustainability { background: var(--sustainability); }
 .token.community { background: var(--community); }
 .token.expression { background: var(--expression); }
@@ -212,7 +212,8 @@ h1, h2, h3 { font-weight: 600; }
 
 /* Token select */
 .token-select { display: flex; gap: 8px; justify-content: center; padding: 12px; flex-wrap: wrap; }
-.token-select .token { width: 44px; height: 44px; font-size: 1rem; }
+.token-select .token { width: 48px; height: 48px; font-size: 1rem; -webkit-tap-highlight-color: transparent; }
+.token-select button.token { border: none; appearance: none; -webkit-appearance: none; }
 
 /* Discard selection */
 .discard-selection { display: flex; gap: 4px; flex-wrap: wrap; margin: 8px 0; }
@@ -266,6 +267,54 @@ h1, h2, h3 { font-weight: 600; }
   .app { grid-template-columns: 1fr; }
   .sidebar { max-height: 120px; }
 }
+
+@media (max-width: 600px) {
+  body { overflow-y: auto; overflow-x: hidden; }
+  .app { height: auto; min-height: 100vh; max-width: 100vw; overflow-x: hidden; }
+  .mini-card { width: 80px; padding: 4px; font-size: 0.62rem; }
+  .mini-card .mc-name { font-size: 0.6rem; }
+  .hand-card { width: 72px; padding: 4px; font-size: 0.6rem; }
+  .hand-card .hc-name { font-size: 0.58rem; }
+  .hidden-card { width: 48px; height: 64px; font-size: 1rem; }
+  .pool-token { width: 30px; height: 30px; font-size: 0.75rem; }
+  .shared-pool { gap: 5px; padding: 4px 8px; }
+  .token { width: 24px; height: 24px; font-size: 0.6rem; }
+  .token-select .token { width: 48px; height: 48px; font-size: 1rem; }
+  .board-cards { gap: 4px; }
+  .hand-zone { gap: 3px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+  .header { padding: 6px 8px; gap: 6px; flex-wrap: wrap; }
+  .header h1 { font-size: 0.9rem; }
+  .phase-bar { margin-left: 0; }
+  .header-info { font-size: 0.7rem; gap: 6px; }
+  .header-info span { padding: 2px 5px; }
+  .header-actions { gap: 4px; }
+  .btn-small { padding: 3px 7px; font-size: 0.65rem; }
+  .action-panel { padding: 6px; }
+  .action-panel h3 { font-size: 0.75rem; }
+  .action-buttons { gap: 4px; }
+  .modal { width: 95%; padding: 14px; }
+  .sidebar { max-height: 100px; }
+  .board { max-width: 100vw; overflow-x: hidden; }
+  .player-zone { padding: 6px; }
+}
+
+/* Rules modal */
+#rules-content { font-size: 0.78rem; line-height: 1.5; }
+#rules-content details { background: var(--bg); border-radius: 6px; margin-bottom: 6px; }
+#rules-content summary { padding: 8px 12px; cursor: pointer; color: var(--accent); font-weight: 600; font-size: 0.8rem; }
+#rules-content summary:hover { background: var(--surface2); border-radius: 6px; }
+#rules-content details[open] summary { border-radius: 6px 6px 0 0; }
+#rules-content details > div { padding: 8px 12px; color: var(--text-dim); }
+#rules-content table { width: 100%; border-collapse: collapse; font-size: 0.72rem; margin: 6px 0; }
+#rules-content th, #rules-content td { padding: 4px 8px; border: 1px solid #444; text-align: left; }
+#rules-content th { background: var(--surface2); color: var(--accent); }
+#rules-content ul { margin-left: 16px; margin-top: 4px; }
+#rules-content li { margin-bottom: 3px; }
+#rules-content p { margin-bottom: 6px; }
+.quick-ref { background: var(--bg); border-radius: 8px; padding: 12px; margin-bottom: 16px; border-left: 3px solid var(--accent); }
+.quick-ref h4 { margin-bottom: 8px; font-size: 0.85rem; color: var(--text); }
+.quick-ref p { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 4px; }
+.quick-ref strong { color: var(--text); }
 </style>
 </head>
 <body>
@@ -352,6 +401,7 @@ h1, h2, h3 { font-weight: 600; }
     <div class="header-actions">
       <span id="hdr-room" style="font-size:0.7rem;color:var(--text-dim);"></span>
       <span class="conn-dot connected" id="hdr-conn-dot"></span>
+      <button class="btn btn-small btn-secondary" onclick="showRulesModal()">Rules</button>
       <button class="btn btn-small btn-secondary" onclick="showManualModal()">Effects</button>
       <button class="btn btn-small btn-danger" onclick="confirmLeave()">Leave</button>
     </div>
@@ -448,6 +498,148 @@ h1, h2, h3 { font-weight: 600; }
   <div class="modal" style="max-width:400px;">
     <h3 style="margin-bottom:12px;color:var(--accent);">Effect Request</h3>
     <div id="approval-content"></div>
+  </div>
+</div>
+
+<!-- Rules modal -->
+<div class="modal-overlay" id="rules-modal" onclick="if(event.target===this)closeRulesModal()">
+  <div class="modal" style="max-width:700px;">
+    <button class="modal-close" onclick="closeRulesModal()">&times;</button>
+    <h3 style="margin-bottom:12px;color:var(--accent);">Rules Reference</h3>
+    <div id="rules-content">
+      <div class="quick-ref">
+        <h4>Quick Reference</h4>
+        <p><strong>Goal:</strong> Reach 30 LP at end of Winter to win.</p>
+        <p><strong>Resources (shared pool):</strong> Growth (gray), Sustainability (green), Community (yellow), Expression (red), Learning (blue) &mdash; 2 each = 10 total</p>
+        <p><strong>Card Types:</strong> People (activate/exhaust), Locations (develop levels), Events (one-time)</p>
+        <p style="margin-top:6px"><strong>Seasons:</strong></p>
+        <ul>
+          <li><strong>Spring:</strong> Refresh People, Draw 1, Resource action (Forage/Barter/Pressure)</li>
+          <li><strong>Summer:</strong> Alternate actions &mdash; play card or activate Person. Both pass = end.</li>
+          <li><strong>Autumn:</strong> Each plays 1 card. Location Development check.</li>
+          <li><strong>Winter:</strong> Tally LP, check 30 LP win, discard to 5.</li>
+        </ul>
+        <p style="margin-top:6px"><strong>Resource Actions (Spring):</strong></p>
+        <ul>
+          <li><strong>Forage:</strong> Take 1 token from shared pool (net +1)</li>
+          <li><strong>Barter:</strong> Return 1 of yours, take 2 different from pool (net +1, reshapes resources)</li>
+          <li><strong>Pressure:</strong> Give 2 to opponent, take 1 of theirs (net -1, targeted)</li>
+        </ul>
+      </div>
+
+      <details>
+        <summary>Overview &amp; Objective</summary>
+        <div>
+          <p>LifeQuest is a non-violent, values-driven trading card game where players build meaningful communities by strategically playing cards and competing over shared resources.</p>
+          <p>Accumulate <strong>30 Life Points (LP)</strong> by playing People, Locations, and Events. The first player to reach 30 LP at the end of a Winter phase wins.</p>
+          <p><strong>Components:</strong> A 30-40 card deck per player, 10 shared Resource Tokens (2 of each), LP tracker.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>The Five Resources</summary>
+        <div>
+          <table>
+            <tr><th>Resource</th><th>Identity</th><th>Mechanical Theme</th></tr>
+            <tr><td><strong>Growth</strong></td><td>Expansion, ambition</td><td>Engine building, tempo</td></tr>
+            <tr><td><strong>Sustainability</strong></td><td>Balance, renewal</td><td>Recursion, recovery</td></tr>
+            <tr><td><strong>Community</strong></td><td>Fairness, mutual aid</td><td>Shared effects, structure</td></tr>
+            <tr><td><strong>Expression</strong></td><td>Creativity, passion</td><td>Burst plays, combos</td></tr>
+            <tr><td><strong>Learning</strong></td><td>Knowledge, strategy</td><td>Card draw, selection</td></tr>
+          </table>
+          <p style="margin-top:8px"><strong>Economy:</strong> Claimed tokens belong to you. Spent tokens return to pool immediately. No automatic Winter reset. Resource scarcity is the primary form of player interaction.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Card Types</summary>
+        <div>
+          <p><strong>People (Interact):</strong> Active agents with Ready/Exhausted state. Activate (exhaust) to use their ability in Summer. Refresh in Spring. May have Initiative for resolution order.</p>
+          <p><strong>Locations (Develop):</strong> Persistent infrastructure with passive, always-on effects. Do not exhaust. May have Development tracks &mdash; enter at Level 1, advance in Autumn when conditions are met.</p>
+          <p><strong>Events (Disrupt):</strong> One-time effects that resolve immediately, then discard. Primary way to inject tempo and respond to changing conditions.</p>
+          <p><strong>Tags:</strong> Keywords (Artist, Gamer, Convention, Duluth, etc.) that enable synergies between cards.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Spring Phase</summary>
+        <div>
+          <p>Start Player acts first, then the other player. Each player:</p>
+          <ol>
+            <li><strong>Refresh</strong> all exhausted People (return to Ready)</li>
+            <li><strong>Draw</strong> 1 card from deck</li>
+            <li><strong>Resource action</strong> &mdash; choose one:
+              <ul>
+                <li><strong>Forage:</strong> Claim 1 token from shared pool</li>
+                <li><strong>Barter:</strong> Return 1 of your tokens, claim 2 different types from pool</li>
+                <li><strong>Pressure:</strong> Give 2 of your tokens to opponent, take 1 of theirs</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </details>
+
+      <details>
+        <summary>Summer Phase</summary>
+        <div>
+          <p><strong>Second Player acts first</strong> (compensating for Start Player's Spring advantage).</p>
+          <p>Players alternate taking one action at a time:</p>
+          <ul>
+            <li><strong>Play a card</strong> from hand (pay resource cost &mdash; spent tokens return to pool)</li>
+            <li><strong>Activate a Person</strong> (exhaust a Ready Person for their ability)</li>
+            <li><strong>Pass</strong></li>
+          </ul>
+          <p>When both players pass consecutively, the action phase ends. Then Summer triggers resolve (Start Player's first, by Initiative order).</p>
+          <p>No limit on cards played &mdash; resources are the natural gate.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Autumn Phase</summary>
+        <div>
+          <p>Start Player acts first, then the other player.</p>
+          <ol>
+            <li>Each player may <strong>play 1 card</strong> from hand (pay cost). This is the reaction window.</li>
+            <li><strong>Autumn triggers</strong> resolve (Start Player's first).</li>
+            <li><strong>Location Development:</strong> Check advancement conditions for all Locations. Locations that meet conditions advance one level.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details>
+        <summary>Winter &amp; Winning</summary>
+        <div>
+          <p>Winter is resolved simultaneously:</p>
+          <ol>
+            <li><strong>Tally LP</strong> from all in-play cards</li>
+            <li><strong>Winter triggers</strong> resolve</li>
+            <li><strong>Win check:</strong> If any player has 30+ LP, game ends</li>
+            <li><strong>Discard</strong> down to 5 cards</li>
+            <li><strong>Swap Start Player</strong> and advance to next Year</li>
+          </ol>
+          <p><strong>Winning:</strong> If both exceed 30 LP, higher total wins. Tie = play one more Year.</p>
+          <p><strong>Important:</strong> Unspent tokens do NOT return to pool. You keep what you've claimed.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Glossary</summary>
+        <div>
+          <table>
+            <tr><th>Term</th><th>Definition</th></tr>
+            <tr><td><strong>Ready</strong></td><td>A Person that can use activated abilities</td></tr>
+            <tr><td><strong>Exhausted</strong></td><td>A Person that has been activated; cannot act until refreshed</td></tr>
+            <tr><td><strong>Activate</strong></td><td>Exhaust a Ready Person for their ability (Summer action)</td></tr>
+            <tr><td><strong>Refresh</strong></td><td>Return Exhausted Person to Ready (happens in Spring)</td></tr>
+            <tr><td><strong>Development</strong></td><td>A Location's power level; enter at 1, advance in Autumn</td></tr>
+            <tr><td><strong>Advance/Degrade</strong></td><td>Increase/decrease Location level; below 1 = discarded</td></tr>
+            <tr><td><strong>Initiative</strong></td><td>People stat; higher resolves first in simultaneous windows</td></tr>
+            <tr><td><strong>Start Player</strong></td><td>Acts first in Spring/Autumn; alternates each year</td></tr>
+            <tr><td><strong>Tags</strong></td><td>Keywords enabling synergy (Artist, Gamer, Convention, etc.)</td></tr>
+          </table>
+        </div>
+      </details>
+    </div>
   </div>
 </div>
 
@@ -1630,18 +1822,19 @@ function showTokenSelect(title, tokenSource, callback) {
   let html = `<h3 style="margin-bottom:12px">${esc(title)}</h3><div class="token-select">`;
   RESOURCES.forEach(r => {
     const count = tokenSource[r] || 0;
-    const dis = count <= 0 ? 'disabled' : 'clickable';
-    html += `<div class="token ${r} ${dis}" onclick="${dis === 'clickable' ? 'window._tokenCb(\'' + r + '\')' : ''}" style="cursor:${count > 0 ? 'pointer' : 'not-allowed'}">${count}</div>`;
+    const dis = count <= 0;
+    html += `<button class="token ${r} ${dis ? 'disabled' : 'clickable'}" ${dis ? 'disabled' : ''} data-resource="${r}" style="cursor:${count > 0 ? 'pointer' : 'not-allowed'}">${count}</button>`;
   });
   html += `</div><div style="text-align:center;margin-top:8px;"><button class="btn btn-small btn-secondary" onclick="closeActionModal()">Cancel</button></div>`;
   el.innerHTML = html;
-  window._tokenCb = callback;
+  el.querySelectorAll('.token-select .token:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', function() { callback(this.dataset.resource); });
+  });
   document.getElementById('action-modal').classList.add('active');
 }
 
 function closeActionModal() {
   document.getElementById('action-modal').classList.remove('active');
-  window._tokenCb = null;
 }
 
 // ==================== CARD DETAIL MODAL ====================
@@ -1769,6 +1962,13 @@ function showManualModal() {
 
 function closeManualModal() {
   document.getElementById('manual-modal').classList.remove('active');
+}
+
+function showRulesModal() {
+  document.getElementById('rules-modal').classList.add('active');
+}
+function closeRulesModal() {
+  document.getElementById('rules-modal').classList.remove('active');
 }
 
 function applyManual(effectType, pi, amount, resource) {
@@ -2257,6 +2457,7 @@ document.addEventListener('keydown', e => {
     closeCardModal();
     closeActionModal();
     closeManualModal();
+    closeRulesModal();
     if (selectionMode) cancelSelection();
   }
 });

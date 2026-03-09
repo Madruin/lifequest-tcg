@@ -13,10 +13,10 @@
   --accent2: #533483;
   --text: #eee;
   --text-dim: #999;
-  --growth: #4caf50;
-  --sustainability: #66bb6a;
+  --growth: #666;
+  --sustainability: #4caf50;
   --community: #ffc107;
-  --expression: #e91e63;
+  --expression: #f44336;
   --learning: #2196f3;
   --people-bg: #2d1b4e;
   --location-bg: #1b3a2d;
@@ -76,7 +76,7 @@ h1, h2, h3 { font-weight: 600; }
 
 /* Token circles */
 .token { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: #000; cursor: default; }
-.token.growth { background: var(--growth); }
+.token.growth { background: var(--growth); color: #fff; }
 .token.sustainability { background: var(--sustainability); }
 .token.community { background: var(--community); }
 .token.expression { background: var(--expression); }
@@ -209,7 +209,8 @@ h1, h2, h3 { font-weight: 600; }
 
 /* Token selection modal */
 .token-select { display: flex; gap: 8px; justify-content: center; padding: 12px; flex-wrap: wrap; }
-.token-select .token { width: 44px; height: 44px; font-size: 1rem; }
+.token-select .token { width: 48px; height: 48px; font-size: 1rem; -webkit-tap-highlight-color: transparent; }
+.token-select button.token { border: none; appearance: none; -webkit-appearance: none; }
 
 /* Win screen */
 .win-banner { text-align: center; padding: 24px; }
@@ -1203,18 +1204,19 @@ function showTokenSelect(title, tokenSource, callback) {
   let html = `<h3 style="margin-bottom:12px">${esc(title)}</h3><div class="token-select">`;
   RESOURCES.forEach(r => {
     const count = tokenSource[r] || 0;
-    const dis = count <= 0 ? 'disabled' : 'clickable';
-    html += `<div class="token ${r} ${dis}" onclick="${dis === 'clickable' ? 'this.dataset.cb&&window._tokenCb(\'' + r + '\')' : ''}" style="cursor:${count > 0 ? 'pointer' : 'not-allowed'}">${count}</div>`;
+    const dis = count <= 0;
+    html += `<button class="token ${r} ${dis ? 'disabled' : 'clickable'}" ${dis ? 'disabled' : ''} data-resource="${r}" style="cursor:${count > 0 ? 'pointer' : 'not-allowed'}">${count}</button>`;
   });
   html += `</div><div style="text-align:center;margin-top:8px;"><button class="btn btn-small btn-secondary" onclick="closeActionModal()">Cancel</button></div>`;
   el.innerHTML = html;
-  window._tokenCb = callback;
+  el.querySelectorAll('.token-select .token:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', function() { callback(this.dataset.resource); });
+  });
   document.getElementById('action-modal').classList.add('active');
 }
 
 function closeActionModal() {
   document.getElementById('action-modal').classList.remove('active');
-  window._tokenCb = null;
 }
 
 // ==================== CARD DETAIL MODAL ====================
