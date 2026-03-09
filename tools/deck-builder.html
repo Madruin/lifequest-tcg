@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeQuest Deck Builder</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --accent2: #533483;
+  --text: #eee;
+  --text-dim: #999;
+  --growth: #666;
+  --sustainability: #4caf50;
+  --community: #ffc107;
+  --expression: #f44336;
+  --learning: #2196f3;
+  --people-bg: #2d1b4e;
+  --location-bg: #1b3a2d;
+  --event-bg: #3a1b1b;
+  --common: #aaa;
+  --uncommon: #4fc3f7;
+  --rare: #ce93d8;
+  --legendary: #ffd54f;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+h1, h2, h3 { font-weight: 600; }
+
+.app { display: grid; grid-template-columns: 1fr 380px; grid-template-rows: auto 1fr; min-height: 100vh; }
+.header {
+  grid-column: 1 / -1; background: var(--surface); padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px; border-bottom: 2px solid var(--accent);
+  flex-wrap: wrap;
+}
+.header h1 { font-size: 1.3rem; }
+.header-actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+
+.btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-family: inherit; font-weight: 600; transition: opacity 0.2s; }
+.btn:hover { opacity: 0.85; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-secondary { background: var(--surface2); color: var(--text); }
+.btn-small { padding: 5px 10px; font-size: 0.78rem; }
+.btn-success { background: #4caf50; color: #fff; }
+.btn-warning { background: #ff9800; color: #000; }
+
+/* Pool panel (left) */
+.pool-panel { background: var(--bg); overflow-y: auto; padding: 16px; }
+.pool-controls { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.pool-controls input, .pool-controls select {
+  padding: 7px 10px; background: var(--surface); border: 1px solid #444;
+  border-radius: 4px; color: var(--text); font-size: 0.85rem; font-family: inherit;
+}
+.pool-controls input[type="text"] { flex: 1; min-width: 120px; }
+.pool-controls select { min-width: 90px; }
+
+.pool-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.pool-card {
+  background: var(--surface); border: 2px solid #333; border-radius: 8px;
+  cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+  overflow: hidden; position: relative;
+}
+.pool-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.pool-card.in-deck { border-color: var(--accent2); }
+.pool-card.in-deck::after {
+  content: '✓'; position: absolute; top: 4px; right: 6px;
+  background: var(--accent2); color: #fff; width: 20px; height: 20px;
+  border-radius: 50%; font-size: 0.65rem; display: flex; align-items: center; justify-content: center;
+}
+.pool-card-art {
+  height: 50px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; background: var(--bg);
+}
+.pool-card-body { padding: 6px 8px; }
+.pool-card-name { font-size: 0.75rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pool-card-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 3px; font-size: 0.65rem; color: var(--text-dim); }
+.pool-card-meta .dots { display: flex; gap: 2px; }
+
+.type-People { border-left: 3px solid var(--accent2); }
+.type-Location { border-left: 3px solid var(--sustainability); }
+.type-Event { border-left: 3px solid var(--expression); }
+
+.dot {
+  width: 12px; height: 12px; border-radius: 50%; display: inline-flex;
+  align-items: center; justify-content: center; font-size: 0.5rem; font-weight: bold; color: #000;
+}
+
+/* Deck panel (right) */
+.deck-panel {
+  background: var(--surface); border-left: 1px solid #333;
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+.deck-header { padding: 16px; border-bottom: 1px solid #333; }
+.deck-header input {
+  width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid #444;
+  border-radius: 4px; color: var(--text); font-size: 1rem; font-weight: 600; font-family: inherit;
+  margin-bottom: 8px;
+}
+.deck-summary {
+  display: flex; gap: 12px; font-size: 0.85rem; color: var(--text-dim); flex-wrap: wrap;
+}
+.deck-summary .count { font-weight: 600; color: var(--text); }
+.deck-summary .warning { color: #ff9800; }
+.deck-summary .valid { color: #4caf50; }
+
+.deck-list { flex: 1; overflow-y: auto; padding: 8px 0; }
+.deck-type-group { margin-bottom: 8px; }
+.deck-type-label {
+  padding: 4px 16px; font-size: 0.75rem; font-weight: 600; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.5px; background: var(--bg);
+}
+.deck-card {
+  display: flex; align-items: center; gap: 8px; padding: 6px 16px;
+  cursor: pointer; transition: background 0.15s; font-size: 0.82rem;
+}
+.deck-card:hover { background: var(--surface2); }
+.deck-card-icon { font-size: 1rem; min-width: 24px; text-align: center; }
+.deck-card-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.deck-card-lp { color: var(--accent); font-weight: 600; font-size: 0.75rem; }
+.deck-card-costs { display: flex; gap: 2px; }
+.deck-card-remove {
+  background: none; border: none; color: var(--text-dim); cursor: pointer;
+  font-size: 1rem; padding: 2px 6px; border-radius: 4px;
+}
+.deck-card-remove:hover { color: var(--accent); background: rgba(233,69,96,0.15); }
+
+/* Stats */
+.deck-stats { border-top: 1px solid #333; padding: 12px 16px; }
+.deck-stats h3 { font-size: 0.85rem; margin-bottom: 8px; color: var(--accent); }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stat-box {
+  background: var(--bg); border-radius: 6px; padding: 8px 10px; font-size: 0.75rem;
+}
+.stat-box label { display: block; color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; margin-bottom: 4px; }
+.stat-bar { display: flex; gap: 2px; align-items: flex-end; height: 32px; margin-top: 4px; }
+.stat-bar-col {
+  flex: 1; background: var(--accent2); border-radius: 2px 2px 0 0;
+  min-width: 12px; position: relative; transition: height 0.3s;
+}
+.stat-bar-col span {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  font-size: 0.6rem; color: var(--text-dim);
+}
+.stat-tag-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.stat-tag { background: var(--surface2); padding: 2px 6px; border-radius: 3px; font-size: 0.65rem; color: var(--text-dim); }
+.stat-tag .tag-count { color: var(--accent); font-weight: 600; margin-left: 3px; }
+
+/* Deck actions */
+.deck-actions { padding: 12px 16px; border-top: 1px solid #333; display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Load modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  z-index: 100; align-items: center; justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--surface); border: 2px solid var(--accent); border-radius: 12px;
+  padding: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;
+}
+.modal-close { position: absolute; top: 8px; right: 12px; background: none; border: none; color: var(--text-dim); font-size: 1.4rem; cursor: pointer; }
+.modal h2 { margin-bottom: 16px; font-size: 1.1rem; }
+.deck-load-option {
+  padding: 12px; margin-bottom: 8px; background: var(--bg); border: 2px solid #333;
+  border-radius: 8px; cursor: pointer; transition: border-color 0.2s;
+}
+.deck-load-option:hover { border-color: var(--accent); }
+.deck-load-option .deck-load-name { font-weight: 600; margin-bottom: 4px; }
+.deck-load-option .deck-load-desc { font-size: 0.8rem; color: var(--text-dim); }
+.deck-load-option .deck-load-meta { font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
+.deck-load-option .starter-badge { display: inline-block; background: var(--accent2); padding: 1px 6px; border-radius: 3px; font-size: 0.65rem; margin-left: 6px; }
+.deck-load-option .custom-badge { display: inline-block; background: var(--surface2); padding: 1px 6px; border-radius: 3px; font-size: 0.65rem; margin-left: 6px; }
+.deck-load-option .deck-load-actions { margin-top: 6px; display: flex; gap: 4px; }
+
+/* Card detail modal */
+.card-detail-modal { max-width: 380px; }
+.card-preview { border-radius: 8px; overflow: hidden; border: 2px solid #444; }
+.card-preview-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: var(--surface2); }
+.card-preview-name { font-weight: 600; font-size: 0.9rem; }
+.card-preview-cost { display: flex; gap: 3px; }
+.card-preview-art { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; background: var(--bg); }
+.card-preview-body { padding: 8px 10px; }
+.card-preview-type-line { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 6px; }
+.card-preview-lp { color: var(--accent); font-weight: 600; }
+.card-preview-abilities { font-size: 0.8rem; line-height: 1.4; }
+.ability .trigger { color: var(--accent); font-weight: 600; font-size: 0.7rem; }
+.card-preview-flavor { font-style: italic; color: var(--text-dim); font-size: 0.75rem; margin-top: 6px; border-top: 1px solid #333; padding-top: 6px; }
+.card-preview-footer { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 0.7rem; color: var(--text-dim); background: var(--bg); }
+
+/* Toast */
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--surface2); color: var(--text); padding: 10px 24px; border-radius: 8px; font-size: 0.85rem; z-index: 200; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* Rarity colors */
+.rarity-common { color: var(--common); }
+.rarity-uncommon { color: var(--uncommon); }
+.rarity-rare { color: var(--rare); }
+.rarity-legendary { color: var(--legendary); }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+  .deck-panel { border-left: none; border-top: 1px solid #333; max-height: 50vh; }
+  .pool-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .header { padding: 10px 16px; }
+  .header h1 { font-size: 1.1rem; }
+}
+
+.empty-state { text-align: center; padding: 40px; color: var(--text-dim); }
+.empty-state h2 { margin-bottom: 8px; }
+.tag { display: inline-block; background: var(--surface2); padding: 1px 6px; border-radius: 3px; font-size: 0.6rem; color: var(--text-dim); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>🃏 LifeQuest Deck Builder</h1>
+    <div class="header-actions">
+      <a href="../index.html" class="btn btn-small btn-secondary" style="text-decoration:none;">← Home</a>
+    </div>
+  </div>
+
+  <!-- Card Pool -->
+  <div class="pool-panel">
+    <div class="pool-controls">
+      <input type="text" id="search" placeholder="Search cards..." oninput="renderPool()">
+      <select id="filter-type" onchange="renderPool()">
+        <option value="">All Types</option>
+        <option value="People">People</option>
+        <option value="Location">Locations</option>
+        <option value="Event">Events</option>
+      </select>
+      <select id="filter-resource" onchange="renderPool()">
+        <option value="">All Resources</option>
+        <option value="growth">Growth</option>
+        <option value="sustainability">Sustainability</option>
+        <option value="community">Community</option>
+        <option value="expression">Expression</option>
+        <option value="learning">Learning</option>
+      </select>
+      <select id="filter-tag" onchange="renderPool()">
+        <option value="">All Tags</option>
+      </select>
+      <select id="filter-rarity" onchange="renderPool()">
+        <option value="">All Rarities</option>
+        <option value="Common">Common</option>
+        <option value="Uncommon">Uncommon</option>
+        <option value="Rare">Rare</option>
+        <option value="Legendary">Legendary</option>
+      </select>
+    </div>
+    <div id="pool-container" class="pool-grid"></div>
+  </div>
+
+  <!-- Deck Panel -->
+  <div class="deck-panel">
+    <div class="deck-header">
+      <input type="text" id="deck-name" placeholder="Deck Name..." value="My Custom Deck">
+      <div class="deck-summary" id="deck-summary"></div>
+    </div>
+    <div class="deck-list" id="deck-list"></div>
+    <div class="deck-stats" id="deck-stats"></div>
+    <div class="deck-actions">
+      <button class="btn btn-small btn-primary" onclick="saveDeck()">Save</button>
+      <button class="btn btn-small btn-secondary" onclick="showLoadModal()">Load</button>
+      <button class="btn btn-small btn-secondary" onclick="exportDeck()">Export</button>
+      <button class="btn btn-small btn-secondary" onclick="document.getElementById('import-input').click()">Import</button>
+      <input type="file" id="import-input" accept=".json" style="display:none" onchange="importDeck(event)">
+      <button class="btn btn-small btn-warning" onclick="clearDeck()">Clear</button>
+    </div>
+  </div>
+</div>
+
+<!-- Load Modal -->
+<div class="modal-overlay" id="load-modal" onclick="if(event.target===this)closeLoadModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLoadModal()">&times;</button>
+    <h2>Load Deck</h2>
+    <div id="load-list"></div>
+  </div>
+</div>
+
+<!-- Card Detail Modal -->
+<div class="modal-overlay" id="card-modal" onclick="if(event.target===this)closeCardModal()">
+  <div class="modal card-detail-modal">
+    <button class="modal-close" onclick="closeCardModal()">&times;</button>
+    <div id="card-modal-content"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;">
+      <button class="btn btn-small btn-primary" id="card-modal-add" onclick="addFromModal()">Add to Deck</button>
+      <button class="btn btn-small btn-secondary" onclick="closeCardModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== CONSTANTS ====================
+const RESOURCES = ['growth','sustainability','community','expression','learning'];
+const RES_LABELS = { growth:'Growth', sustainability:'Sustain', community:'Community', expression:'Express', learning:'Learn' };
+const TYPE_ICONS = { People: '👤', Location: '🏠', Event: '🎪' };
+const STORAGE_KEY = 'lifequest-custom-decks';
+
+// ==================== STATE ====================
+let cardDb = [];
+let starterDecks = [];
+let currentDeck = []; // array of card IDs
+let editingDeckId = null;
+let modalCardId = null;
+
+// ==================== HELPERS ====================
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function getCardArtHtml(card, size) {
+  if (card.image) {
+    const src = card.image.startsWith('http') ? card.image : '../art/' + card.image;
+    const h = size === 'preview' ? '120px' : size === 'tile' ? '50px' : '40px';
+    const fs = size === 'preview' ? '2.5rem' : '1.5rem';
+    return `<img src="${src}" alt="${esc(card.name)}" style="width:100%;height:${h};object-fit:cover;" onerror="this.outerHTML='<span style=\\'font-size:${fs}\\'>${TYPE_ICONS[card.type]||''}</span>'">`;
+  }
+  const fs = size === 'preview' ? '2.5rem' : size === 'tile' ? '1.6rem' : '1rem';
+  return `<span style="font-size:${fs}">${TYPE_ICONS[card.type] || ''}</span>`;
+}
+
+function renderCostDots(cost, large) {
+  if (!cost) return '';
+  let html = '';
+  RESOURCES.forEach(r => {
+    if ((cost[r] || 0) > 0) {
+      const sz = large ? 18 : 12;
+      html += `<span class="dot" style="background:var(--${r});width:${sz}px;height:${sz}px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:${large?'0.65rem':'0.5rem'};font-weight:bold;color:#000;" title="${r}">${cost[r] > 1 ? cost[r] : ''}</span>`;
+    }
+  });
+  return html;
+}
+
+function findCard(id) { return cardDb.find(c => c.id === id); }
+
+// ==================== DATA LOADING ====================
+async function loadData() {
+  try {
+    const [cardsRes, decksRes] = await Promise.all([
+      fetch('../data/cards.json'),
+      fetch('../data/starter-decks.json')
+    ]);
+    if (cardsRes.ok) {
+      const data = await cardsRes.json();
+      cardDb = data.cards || [];
+    }
+    if (decksRes.ok) {
+      const data = await decksRes.json();
+      starterDecks = data.decks || [];
+    }
+  } catch (e) {
+    console.error('Failed to load data:', e);
+  }
+
+  // Populate tag filter
+  const allTags = new Set();
+  cardDb.forEach(c => (c.tags || []).forEach(t => allTags.add(t)));
+  const tagSelect = document.getElementById('filter-tag');
+  [...allTags].sort().forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = t;
+    tagSelect.appendChild(opt);
+  });
+
+  renderPool();
+  renderDeck();
+  toast('Loaded ' + cardDb.length + ' cards');
+}
+
+// ==================== POOL RENDERING ====================
+function getFilteredPool() {
+  let cards = [...cardDb];
+  const search = document.getElementById('search').value.trim().toLowerCase();
+  const typeF = document.getElementById('filter-type').value;
+  const resF = document.getElementById('filter-resource').value;
+  const tagF = document.getElementById('filter-tag').value;
+  const rarityF = document.getElementById('filter-rarity').value;
+
+  if (search) cards = cards.filter(c => c.name.toLowerCase().includes(search) || (c.tags||[]).some(t => t.toLowerCase().includes(search)));
+  if (typeF) cards = cards.filter(c => c.type === typeF);
+  if (resF) cards = cards.filter(c => (c.cost?.[resF] || 0) > 0);
+  if (tagF) cards = cards.filter(c => (c.tags||[]).includes(tagF));
+  if (rarityF) cards = cards.filter(c => c.rarity === rarityF);
+
+  cards.sort((a, b) => a.name.localeCompare(b.name));
+  return cards;
+}
+
+function renderPool() {
+  const cards = getFilteredPool();
+  const container = document.getElementById('pool-container');
+
+  if (!cards.length) {
+    container.innerHTML = cardDb.length === 0
+      ? '<div class="empty-state"><h2>Loading cards...</h2></div>'
+      : '<div class="empty-state"><h2>No matching cards</h2><p>Try different filters.</p></div>';
+    return;
+  }
+
+  container.innerHTML = cards.map(c => {
+    const inDeck = currentDeck.includes(c.id);
+    return `
+      <div class="pool-card type-${c.type} ${inDeck ? 'in-deck' : ''}" onclick="toggleCard('${c.id}')" oncontextmenu="event.preventDefault();showCardDetail('${c.id}')">
+        <div class="pool-card-art">${getCardArtHtml(c, 'tile')}</div>
+        <div class="pool-card-body">
+          <div class="pool-card-name" title="${esc(c.name)}">${esc(c.name)}</div>
+          <div class="pool-card-meta">
+            <span class="rarity-${c.rarity.toLowerCase()}">${c.rarity[0]}</span>
+            <span class="dots">${renderCostDots(c.cost)}</span>
+            ${c.lp ? `<span style="color:var(--accent);font-weight:600">${c.lp}LP</span>` : ''}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ==================== DECK OPERATIONS ====================
+function toggleCard(id) {
+  const idx = currentDeck.indexOf(id);
+  if (idx >= 0) {
+    currentDeck.splice(idx, 1);
+  } else {
+    if (currentDeck.length >= 40) {
+      toast('Deck is full (40 cards max)');
+      return;
+    }
+    currentDeck.push(id);
+  }
+  renderPool();
+  renderDeck();
+}
+
+function removeFromDeck(id) {
+  const idx = currentDeck.indexOf(id);
+  if (idx >= 0) {
+    currentDeck.splice(idx, 1);
+    renderPool();
+    renderDeck();
+  }
+}
+
+function clearDeck() {
+  if (currentDeck.length === 0) return;
+  if (!confirm('Clear all cards from the deck?')) return;
+  currentDeck = [];
+  editingDeckId = null;
+  document.getElementById('deck-name').value = 'My Custom Deck';
+  renderPool();
+  renderDeck();
+  toast('Deck cleared');
+}
+
+// ==================== DECK RENDERING ====================
+function renderDeck() {
+  renderDeckSummary();
+  renderDeckList();
+  renderDeckStats();
+}
+
+function renderDeckSummary() {
+  const el = document.getElementById('deck-summary');
+  const count = currentDeck.length;
+  const totalLp = currentDeck.reduce((s, id) => {
+    const c = findCard(id);
+    return s + (c && c.type !== 'Event' ? (c.lp || 0) : 0);
+  }, 0);
+
+  let countClass = '';
+  let countLabel = '';
+  if (count < 30) { countClass = 'warning'; countLabel = '(need ' + (30 - count) + ' more)'; }
+  else if (count > 40) { countClass = 'warning'; countLabel = '(over limit!)'; }
+  else { countClass = 'valid'; countLabel = '✓'; }
+
+  el.innerHTML = `
+    <span>Cards: <span class="count ${countClass}">${count}/40</span> ${countLabel}</span>
+    <span>LP Potential: <span class="count">${totalLp}</span></span>
+  `;
+}
+
+function renderDeckList() {
+  const el = document.getElementById('deck-list');
+  if (currentDeck.length === 0) {
+    el.innerHTML = '<div class="empty-state" style="padding:24px"><h2>Empty Deck</h2><p>Click cards on the left to add them.<br>Right-click a card to see details.</p></div>';
+    return;
+  }
+
+  const groups = { People: [], Location: [], Event: [] };
+  currentDeck.forEach(id => {
+    const card = findCard(id);
+    if (card) {
+      if (!groups[card.type]) groups[card.type] = [];
+      groups[card.type].push(card);
+    }
+  });
+
+  let html = '';
+  ['People', 'Location', 'Event'].forEach(type => {
+    const cards = groups[type] || [];
+    if (!cards.length) return;
+    cards.sort((a, b) => a.name.localeCompare(b.name));
+    html += `<div class="deck-type-group">
+      <div class="deck-type-label">${TYPE_ICONS[type]} ${type} (${cards.length})</div>
+      ${cards.map(c => `
+        <div class="deck-card" onclick="showCardDetail('${c.id}')">
+          <span class="deck-card-icon">${TYPE_ICONS[c.type]}</span>
+          <span class="deck-card-name">${esc(c.name)}</span>
+          <span class="deck-card-costs">${renderCostDots(c.cost)}</span>
+          ${c.lp ? `<span class="deck-card-lp">${c.lp}LP</span>` : ''}
+          <button class="deck-card-remove" onclick="event.stopPropagation();removeFromDeck('${c.id}')" title="Remove">×</button>
+        </div>
+      `).join('')}
+    </div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+function renderDeckStats() {
+  const el = document.getElementById('deck-stats');
+  if (currentDeck.length === 0) { el.innerHTML = ''; return; }
+
+  const cards = currentDeck.map(findCard).filter(Boolean);
+
+  // Type split
+  const typeCounts = { People: 0, Location: 0, Event: 0 };
+  cards.forEach(c => typeCounts[c.type] = (typeCounts[c.type] || 0) + 1);
+
+  // Cost curve
+  const costCurve = {};
+  cards.forEach(c => {
+    const cost = c.totalCost || 0;
+    const bucket = cost >= 3 ? '3+' : String(cost);
+    costCurve[bucket] = (costCurve[bucket] || 0) + 1;
+  });
+  const costBuckets = ['0', '1', '2', '3+'];
+  const maxCost = Math.max(...costBuckets.map(b => costCurve[b] || 0), 1);
+
+  // Resource needs
+  const resNeeds = {};
+  RESOURCES.forEach(r => resNeeds[r] = 0);
+  cards.forEach(c => RESOURCES.forEach(r => resNeeds[r] += (c.cost?.[r] || 0)));
+
+  // Tags
+  const tagCounts = {};
+  cards.forEach(c => (c.tags || []).forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1));
+  const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, 12);
+
+  el.innerHTML = `
+    <h3>Deck Stats</h3>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <label>Type Split</label>
+        <div style="font-size:0.8rem;">
+          ${Object.entries(typeCounts).filter(([,v]) => v > 0).map(([t,v]) => `${TYPE_ICONS[t]} ${v}`).join(' &nbsp; ')}
+        </div>
+      </div>
+      <div class="stat-box">
+        <label>Cost Curve</label>
+        <div class="stat-bar">
+          ${costBuckets.map(b => {
+            const count = costCurve[b] || 0;
+            const h = Math.round((count / maxCost) * 28) + 4;
+            return `<div class="stat-bar-col" style="height:${h}px"><span>${count}</span></div>`;
+          }).join('')}
+        </div>
+        <div style="display:flex;justify-content:space-around;font-size:0.55rem;color:var(--text-dim);margin-top:2px;">
+          ${costBuckets.map(b => `<span>${b}</span>`).join('')}
+        </div>
+      </div>
+      <div class="stat-box" style="grid-column:1/-1;">
+        <label>Resource Needs</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+          ${RESOURCES.filter(r => resNeeds[r] > 0).map(r =>
+            `<span style="display:flex;align-items:center;gap:4px;font-size:0.8rem;">
+              <span class="dot" style="background:var(--${r});width:14px;height:14px;"></span>
+              ${RES_LABELS[r]}: ${resNeeds[r]}
+            </span>`
+          ).join('')}
+        </div>
+      </div>
+      ${sortedTags.length ? `<div class="stat-box" style="grid-column:1/-1;">
+        <label>Tags</label>
+        <div class="stat-tag-list">
+          ${sortedTags.map(([t, c]) => `<span class="stat-tag">${esc(t)}<span class="tag-count">${c}</span></span>`).join('')}
+        </div>
+      </div>` : ''}
+    </div>
+  `;
+}
+
+// ==================== CARD DETAIL ====================
+function showCardDetail(id) {
+  const card = findCard(id);
+  if (!card) return;
+  modalCardId = id;
+
+  const content = document.getElementById('card-modal-content');
+  const totalCost = RESOURCES.reduce((s, r) => s + (card.cost?.[r]||0), 0);
+  const typeLine = `${card.type}${card.initiative ? ' (Init ' + card.initiative + ')' : ''}${card.maxLevel > 1 ? ' (Lvl 1-' + card.maxLevel + ')' : ''}${(card.tags&&card.tags.length) ? ' — ' + card.tags.join(', ') : ''}`;
+
+  content.innerHTML = `
+    <div class="card-preview type-${card.type}">
+      <div class="card-preview-header">
+        <span class="card-preview-name">${esc(card.name)}</span>
+        <div class="card-preview-cost">${renderCostDots(card.cost, true)}</div>
+      </div>
+      <div class="card-preview-art">${getCardArtHtml(card, 'preview')}</div>
+      <div class="card-preview-body">
+        <div class="card-preview-type-line"><span>${typeLine}</span>${card.lp ? `<span class="card-preview-lp">${card.lp} LP</span>` : ''}</div>
+        ${(card.abilities&&card.abilities.length) ? `<div class="card-preview-abilities">
+          ${card.abilities.map(a => `<div class="ability"><span class="trigger">[${a.trigger}]</span> ${esc(a.text)}</div>`).join('')}
+        </div>` : ''}
+        ${card.flavorText ? `<div class="card-preview-flavor">${esc(card.flavorText)}</div>` : ''}
+      </div>
+      <div class="card-preview-footer">
+        <span class="rarity-${card.rarity.toLowerCase()}">${card.rarity}</span>
+        <span>${card.set || 'No Set'}</span>
+      </div>
+    </div>
+  `;
+
+  const addBtn = document.getElementById('card-modal-add');
+  const inDeck = currentDeck.includes(id);
+  addBtn.textContent = inDeck ? 'Remove from Deck' : 'Add to Deck';
+  addBtn.className = `btn btn-small ${inDeck ? 'btn-warning' : 'btn-primary'}`;
+
+  document.getElementById('card-modal').classList.add('active');
+}
+
+function addFromModal() {
+  if (modalCardId) {
+    toggleCard(modalCardId);
+    const inDeck = currentDeck.includes(modalCardId);
+    const addBtn = document.getElementById('card-modal-add');
+    addBtn.textContent = inDeck ? 'Remove from Deck' : 'Add to Deck';
+    addBtn.className = `btn btn-small ${inDeck ? 'btn-warning' : 'btn-primary'}`;
+  }
+}
+
+function closeCardModal() {
+  document.getElementById('card-modal').classList.remove('active');
+  modalCardId = null;
+}
+
+// ==================== SAVE / LOAD / EXPORT ====================
+function getCustomDecks() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"customDecks":[]}');
+  } catch { return { customDecks: [] }; }
+}
+
+function saveCustomDecks(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function saveDeck() {
+  const name = document.getElementById('deck-name').value.trim() || 'Untitled Deck';
+  if (currentDeck.length === 0) { toast('Cannot save empty deck'); return; }
+
+  const data = getCustomDecks();
+  const now = new Date().toISOString().slice(0, 10);
+
+  if (editingDeckId) {
+    const idx = data.customDecks.findIndex(d => d.id === editingDeckId);
+    if (idx >= 0) {
+      data.customDecks[idx].name = name;
+      data.customDecks[idx].cards = [...currentDeck];
+      data.customDecks[idx].cardCount = currentDeck.length;
+      data.customDecks[idx].modified = now;
+      saveCustomDecks(data);
+      toast('Deck updated: ' + name);
+      return;
+    }
+  }
+
+  const newDeck = {
+    id: 'deck_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7),
+    name,
+    cards: [...currentDeck],
+    cardCount: currentDeck.length,
+    created: now,
+    modified: now
+  };
+  data.customDecks.push(newDeck);
+  editingDeckId = newDeck.id;
+  saveCustomDecks(data);
+  toast('Deck saved: ' + name);
+}
+
+function showLoadModal() {
+  const data = getCustomDecks();
+  const el = document.getElementById('load-list');
+  let html = '';
+
+  // Starter decks
+  if (starterDecks.length) {
+    html += '<h3 style="margin-bottom:8px;font-size:0.9rem;color:var(--text-dim);">Starter Decks</h3>';
+    starterDecks.forEach((d, i) => {
+      html += `
+        <div class="deck-load-option" onclick="loadStarterDeck(${i})">
+          <div class="deck-load-name">${esc(d.name)} <span class="starter-badge">STARTER</span></div>
+          <div class="deck-load-desc">${esc(d.description)}</div>
+          <div class="deck-load-meta">${d.cardCount} cards</div>
+        </div>`;
+    });
+  }
+
+  // Custom decks
+  if (data.customDecks.length) {
+    html += '<h3 style="margin:16px 0 8px;font-size:0.9rem;color:var(--text-dim);">Custom Decks</h3>';
+    data.customDecks.forEach(d => {
+      html += `
+        <div class="deck-load-option">
+          <div class="deck-load-name" onclick="loadCustomDeck('${d.id}')">${esc(d.name)} <span class="custom-badge">CUSTOM</span></div>
+          <div class="deck-load-meta" onclick="loadCustomDeck('${d.id}')">${d.cardCount} cards · Modified ${d.modified || 'unknown'}</div>
+          <div class="deck-load-actions">
+            <button class="btn btn-small btn-primary" onclick="event.stopPropagation();loadCustomDeck('${d.id}')">Load</button>
+            <button class="btn btn-small btn-secondary" onclick="event.stopPropagation();deleteCustomDeck('${d.id}')">Delete</button>
+          </div>
+        </div>`;
+    });
+  }
+
+  if (!html) {
+    html = '<div class="empty-state"><p>No saved decks. Build one and save it!</p></div>';
+  }
+
+  el.innerHTML = html;
+  document.getElementById('load-modal').classList.add('active');
+}
+
+function closeLoadModal() {
+  document.getElementById('load-modal').classList.remove('active');
+}
+
+function loadStarterDeck(idx) {
+  const deck = starterDecks[idx];
+  if (!deck) return;
+  currentDeck = [...deck.cards];
+  editingDeckId = null;
+  document.getElementById('deck-name').value = deck.name + ' (Copy)';
+  closeLoadModal();
+  renderPool();
+  renderDeck();
+  toast('Loaded starter: ' + deck.name);
+}
+
+function loadCustomDeck(id) {
+  const data = getCustomDecks();
+  const deck = data.customDecks.find(d => d.id === id);
+  if (!deck) return;
+  currentDeck = [...deck.cards];
+  editingDeckId = deck.id;
+  document.getElementById('deck-name').value = deck.name;
+  closeLoadModal();
+  renderPool();
+  renderDeck();
+  toast('Loaded: ' + deck.name);
+}
+
+function deleteCustomDeck(id) {
+  if (!confirm('Delete this deck?')) return;
+  const data = getCustomDecks();
+  data.customDecks = data.customDecks.filter(d => d.id !== id);
+  saveCustomDecks(data);
+  if (editingDeckId === id) editingDeckId = null;
+  showLoadModal(); // refresh the list
+  toast('Deck deleted');
+}
+
+function exportDeck() {
+  if (currentDeck.length === 0) { toast('Nothing to export'); return; }
+  const name = document.getElementById('deck-name').value.trim() || 'Untitled';
+
+  // Build type split
+  const typeSplit = { People: 0, Location: 0, Event: 0 };
+  const cards = currentDeck.map(findCard).filter(Boolean);
+  cards.forEach(c => typeSplit[c.type] = (typeSplit[c.type] || 0) + 1);
+
+  // Build resource info
+  const resNeeds = {};
+  RESOURCES.forEach(r => resNeeds[r] = 0);
+  cards.forEach(c => RESOURCES.forEach(r => resNeeds[r] += (c.cost?.[r] || 0)));
+  const primary = RESOURCES.filter(r => resNeeds[r] > 0).sort((a, b) => resNeeds[b] - resNeeds[a]).slice(0, 2);
+
+  const deckObj = {
+    name,
+    description: 'Custom deck — ' + currentDeck.length + ' cards',
+    primaryResources: primary,
+    cards: [...currentDeck],
+    cardCount: currentDeck.length,
+    typeSplit
+  };
+
+  const blob = new Blob([JSON.stringify(deckObj, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name.replace(/[^a-zA-Z0-9_-]/g, '_') + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Deck exported');
+}
+
+function importDeck(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const deck = JSON.parse(e.target.result);
+      if (!deck.cards || !Array.isArray(deck.cards)) {
+        toast('Invalid deck file');
+        return;
+      }
+      // Validate card IDs exist
+      const validCards = deck.cards.filter(id => findCard(id));
+      if (validCards.length === 0) {
+        toast('No valid cards found in file');
+        return;
+      }
+      currentDeck = validCards;
+      editingDeckId = null;
+      document.getElementById('deck-name').value = deck.name || 'Imported Deck';
+      renderPool();
+      renderDeck();
+      toast('Imported ' + validCards.length + ' cards' + (validCards.length < deck.cards.length ? ' (' + (deck.cards.length - validCards.length) + ' not found)' : ''));
+    } catch {
+      toast('Failed to parse deck file');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ==================== KEYBOARD ====================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeCardModal();
+    closeLoadModal();
+  }
+});
+
+// ==================== INIT ====================
+loadData();
+</script>
+</body>
+</html>

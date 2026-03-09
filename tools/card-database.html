@@ -311,6 +311,11 @@ h1, h2, h3 { font-weight: 600; }
       <label>Art Notes</label>
       <textarea id="card-art-notes" placeholder="Description for future artist..."></textarea>
     </div>
+    <div class="form-group">
+      <label>Card Image (filename or URL)</label>
+      <input type="text" id="card-image" placeholder="e.g. card_ex01.png or https://..." oninput="previewImageField()">
+      <div id="card-image-preview" style="margin-top:6px;max-height:80px;overflow:hidden;border-radius:4px;"></div>
+    </div>
 
     <div class="section-divider">
       <h3>Tags</h3>
@@ -445,6 +450,25 @@ setTimeout(() => {
   document.getElementById('location-fields').style.display = t === 'Location' ? '' : 'none';
 }, 0);
 const TYPE_ICONS = { People: "\u{1F464}", Location: "\u{1F3E0}", Event: "\u{1F3AA}" };
+
+function getCardArtHtml(card, size) {
+  if (card.image) {
+    const src = card.image.startsWith('http') ? card.image : '../art/' + card.image;
+    const h = size === 'preview' ? '120px' : size === 'tile' ? '80px' : '40px';
+    const fs = size === 'preview' ? '2.5rem' : '1.5rem';
+    return `<img src="${src}" alt="${esc(card.name)}" style="width:100%;height:${h};object-fit:cover;" onerror="this.outerHTML='<span style=\\'font-size:${fs}\\'>${TYPE_ICONS[card.type]||''}</span>'">`;
+  }
+  const fs = size === 'preview' ? '2.5rem' : size === 'tile' ? '2rem' : '1rem';
+  return `<span style="font-size:${fs}">${TYPE_ICONS[card.type] || ''}</span>`;
+}
+
+function previewImageField() {
+  const val = document.getElementById('card-image').value.trim();
+  const preview = document.getElementById('card-image-preview');
+  if (!val) { preview.innerHTML = ''; return; }
+  const src = val.startsWith('http') ? val : '../art/' + val;
+  preview.innerHTML = `<img src="${src}" style="max-height:80px;border-radius:4px;" onerror="this.outerHTML='<span style=\\'color:var(--text-dim);font-size:0.8rem\\'>Image not found</span>'">`;
+}
 const RARITY_ORDER = { Common: 0, Uncommon: 1, Rare: 2, Legendary: 3 };
 
 // ==================== PERSISTENCE ====================
@@ -526,6 +550,7 @@ function gatherCardData() {
     abilities,
     flavorText: document.getElementById('card-flavor').value.trim(),
     artNotes: document.getElementById('card-art-notes').value.trim(),
+    image: document.getElementById('card-image').value.trim(),
     tags: [...currentTags],
     localConnection: localConn,
     designerNotes: document.getElementById('card-notes').value.trim()
@@ -603,6 +628,8 @@ function loadCardIntoEditor(id) {
 
   document.getElementById('card-flavor').value = card.flavorText || '';
   document.getElementById('card-art-notes').value = card.artNotes || '';
+  document.getElementById('card-image').value = card.image || '';
+  previewImageField();
 
   // Tags
   currentTags = [...(card.tags || [])];
@@ -649,6 +676,8 @@ function resetEditor() {
   document.getElementById('abilities-list').innerHTML = '';
   document.getElementById('card-flavor').value = '';
   document.getElementById('card-art-notes').value = '';
+  document.getElementById('card-image').value = '';
+  document.getElementById('card-image-preview').innerHTML = '';
   currentTags = [];
   renderTags();
   document.getElementById('local-type').value = '';
@@ -795,7 +824,7 @@ function renderCards() {
     container.className = 'card-grid';
     container.innerHTML = cards.map(c => `
       <div class="card-tile type-${c.type}" onclick="openModal('${c.id}')">
-        <div class="card-tile-art">${TYPE_ICONS[c.type] || '?'}</div>
+        <div class="card-tile-art">${getCardArtHtml(c, 'tile')}</div>
         <div class="card-tile-body">
           <div class="card-tile-name">${esc(c.name)}</div>
           <div class="card-tile-meta">
@@ -850,7 +879,7 @@ function openModal(id) {
         <span class="card-preview-name">${esc(card.name)}</span>
         <div class="card-preview-cost">${renderCostDotsLarge(card.cost)}</div>
       </div>
-      <div class="card-preview-art">${TYPE_ICONS[card.type] || '?'}</div>
+      <div class="card-preview-art">${getCardArtHtml(card, 'preview')}</div>
       <div class="card-preview-body">
         <div class="card-preview-type-line">
           <span>${card.type}${card.initiative ? ' (Init ' + card.initiative + ')' : ''}${card.maxLevel > 1 ? ' (Lvl 1-' + card.maxLevel + ')' : ''}${(card.tags&&card.tags.length) ? ' - ' + card.tags.join(', ') : ''}</span>

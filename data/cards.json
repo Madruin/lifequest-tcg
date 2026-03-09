@@ -72,6 +72,7 @@
       ],
       "flavorText": "Three months of hot glue and heartbreak, all for one perfect moment on that stage.",
       "artNotes": "Person in elaborate handmade costume, sewing supplies visible, convention hall backdrop.",
+      "image": "",
       "tags": [
         "Artist",
         "Pop Culture",
@@ -114,6 +115,7 @@
       ],
       "flavorText": "She's been selling hand-painted minis since before the con had a name.",
       "artNotes": "Older woman behind a vendor table covered in miniatures and art prints, warm smile.",
+      "image": "",
       "tags": [
         "Vendor",
         "Artist",
@@ -124,7 +126,7 @@
         "name": "Convention Vendors",
         "description": "Represents the dedicated vendors who return year after year"
       },
-      "designerNotes": "Card selection on a body via Activate. Combo with Convention Locations upgrades to straight draw. High initiative means she resolves before most others. 3 LP is strong for 2 cost \u00e2\u20ac\u201d justify with the Activate requirement.",
+      "designerNotes": "Card selection on a body via Activate. Combo with Convention Locations upgrades to straight draw. High initiative means she resolves before most others. 3 LP is strong for 2 cost — justify with the Activate requirement.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -157,6 +159,7 @@
       ],
       "flavorText": "Where Duluth's biggest fans come together under one roof.",
       "artNotes": "Interior of the DECC arena floor filled with vendor booths, cosplayers, and banners. Lake Superior visible through windows.",
+      "image": "",
       "tags": [
         "Convention",
         "Pop Culture",
@@ -167,7 +170,7 @@
         "name": "Duluth Entertainment Convention Center",
         "description": "DECC, the venue that hosts Excalibur Con and many community events"
       },
-      "designerNotes": "Keystone Location for Convention decks. 3 development levels \u00e2\u20ac\u201d starts as cost reducer, scales into LP engine + card advantage. Advance condition requires board commitment. Rare is right for this much text.",
+      "designerNotes": "Keystone Location for Convention decks. 3 development levels — starts as cost reducer, scales into LP engine + card advantage. Advance condition requires board commitment. Rare is right for this much text.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -194,6 +197,7 @@
       ],
       "flavorText": "The crowd leans forward as the voice actor steps up to the mic.",
       "artNotes": "Convention panel room with spotlight on a table of speakers, excited audience silhouettes.",
+      "image": "",
       "tags": [
         "Convention",
         "Learning",
@@ -231,6 +235,7 @@
       ],
       "flavorText": "Sometimes you need a breath of Lake Superior air between panels.",
       "artNotes": "Person walking along the Lakewalk with Lake Superior and the Aerial Lift Bridge in the background, convention badge still hanging around neck.",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth",
@@ -272,6 +277,7 @@
       ],
       "flavorText": "Win or lose, everyone leaves the table with a new friend.",
       "artNotes": "Group of diverse people around a tabletop game, dice and cards visible, convention setting.",
+      "image": "",
       "tags": [
         "Gamer",
         "Convention",
@@ -282,7 +288,7 @@
         "name": "Excalibur Con Gaming",
         "description": "Tabletop gaming tournaments and open play at the convention"
       },
-      "designerNotes": "Shared benefit card \u00e2\u20ac\u201d both draw, but you get more LP. Community cost fits the White archetype identity. Convention Location combo is straightforward.",
+      "designerNotes": "Shared benefit card — both draw, but you get more LP. Community cost fits the White archetype identity. Convention Location combo is straightforward.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -309,8 +315,9 @@
           "text": "Lvl 1: You may claim 1 additional Resource Token this Spring. Lvl 2: Claim 1 additional token and draw 1 card."
         }
       ],
-      "flavorText": "Tacos, pierogis, and kettle corn \u00e2\u20ac\u201d the real reason half the crowd showed up.",
+      "flavorText": "Tacos, pierogis, and kettle corn — the real reason half the crowd showed up.",
       "artNotes": "Row of colorful food trucks with a line of convention-goers, DECC visible in background.",
+      "image": "",
       "tags": [
         "Food",
         "Community",
@@ -353,6 +360,7 @@
       ],
       "flavorText": "She somehow keeps all the plates spinning while making it look effortless.",
       "artNotes": "Determined woman with clipboard and headset, walkie-talkie in hand, convention chaos organized behind her.",
+      "image": "",
       "tags": [
         "Leader",
         "Convention",
@@ -396,6 +404,7 @@
       ],
       "flavorText": "Every sketch starts a conversation. Every commission tells a story.",
       "artNotes": "Long row of artist tables with original art, prints, and sketches. Artists drawing for fans.",
+      "image": "",
       "tags": [
         "Artist",
         "Convention",
@@ -406,7 +415,7 @@
         "name": "Artist Alley",
         "description": "The artist alley section of Excalibur Con"
       },
-      "designerNotes": "Artist archetype payoff Location. 2 Expression cost is the Red investment. Develops by having Artists on board \u00e2\u20ac\u201d natural synergy. Autumn ability provides Expression recycling for the resource-hungry archetype.",
+      "designerNotes": "Artist archetype payoff Location. 2 Expression cost is the Red investment. Develops by having Artists on board — natural synergy. Autumn ability provides Expression recycling for the resource-hungry archetype.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -433,6 +442,7 @@
       ],
       "flavorText": "Welcome to Excalibur Con! Let the games begin.",
       "artNotes": "Crowded convention entrance with banners dropping, excited attendees pouring in.",
+      "image": "",
       "tags": [
         "Convention",
         "Community",
@@ -472,6 +482,7 @@
       ],
       "flavorText": "The after-con debrief spot. Best enjoyed with a Lake Superior Ale.",
       "artNotes": "Historic brick brewery building interior, warm lighting, group of friends at a table with convention lanyards.",
+      "image": "",
       "tags": [
         "Food",
         "Duluth",
@@ -482,7 +493,7 @@
         "name": "Fitger's Brewhouse",
         "description": "Historic Duluth brewery and restaurant, popular after-convention gathering spot"
       },
-      "designerNotes": "Sustainability (Green) \u00e2\u20ac\u201d slow, compounding value. Develops as your board grows. Winter-focused, rewards patience and board building. Lvl 2 adds a token-to-card conversion for late game flexibility.",
+      "designerNotes": "Sustainability (Green) — slow, compounding value. Develops as your board grows. Winter-focused, rewards patience and board building. Lvl 2 adds a token-to-card conversion for late game flexibility.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -514,6 +525,7 @@
       ],
       "flavorText": "They show up early, stay late, and never ask for credit.",
       "artNotes": "Young person in a volunteer t-shirt setting up chairs and hanging banners, cheerful expression.",
+      "image": "",
       "tags": [
         "Community",
         "Youth",
@@ -522,7 +534,7 @@
       "localConnection": {
         "type": "person",
         "name": "Con Volunteers",
-        "description": "The backbone of every community event \u00e2\u20ac\u201d unpaid, underappreciated, essential"
+        "description": "The backbone of every community event — unpaid, underappreciated, essential"
       },
       "designerNotes": "Community (White) workhorse. Token on entry is tempo. Activate for Event discount creates Summer sequencing decisions: exhaust Volunteer, then play the discounted Event. Low initiative because she's a helper, not a leader.",
       "created": "2026-02-26T00:00:00Z",
@@ -552,6 +564,7 @@
       ],
       "flavorText": "Welcome to Anime Club! Cosplay optional but encouraged.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Gamer",
         "Youth",
@@ -594,6 +607,7 @@
       ],
       "flavorText": "The crowd goes silent as the legendary creator takes the stage.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Convention",
         "Pop Culture",
@@ -636,6 +650,7 @@
       ],
       "flavorText": "Three years of weekends, one demo booth. Worth every late night.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Gamer",
         "Convention",
@@ -674,6 +689,7 @@
       ],
       "flavorText": "Five bucks for a caricature, fifteen for a portrait.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Convention"
@@ -715,6 +731,7 @@
       ],
       "flavorText": "One question per person, please -- and hold the spoilers.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Convention",
         "Learning",
@@ -757,6 +774,7 @@
       ],
       "flavorText": "I've watched that one clip 847 times. Don't judge me.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Pop Culture",
         "Youth",
@@ -795,6 +813,7 @@
       ],
       "flavorText": "In thirty minutes, a blank canvas becomes a masterpiece.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Pop Culture",
@@ -833,6 +852,7 @@
       ],
       "flavorText": "What year did the original series premiere? ...1987.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Gamer",
         "Convention"
@@ -874,6 +894,7 @@
       ],
       "flavorText": "Volume one through forty-seven. First editions. Don't touch the spines.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Pop Culture",
         "Youth"
@@ -911,6 +932,7 @@
       ],
       "flavorText": "Check one, check two. All good? Cool, let's roll.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Convention",
         "Community"
@@ -952,6 +974,7 @@
       ],
       "flavorText": "The foam sword took six weeks. The LED armor took all summer.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Convention",
@@ -994,6 +1017,7 @@
       ],
       "flavorText": "Hold that pose. Now one without the mask. Perfect.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Pop Culture",
@@ -1036,6 +1060,7 @@
       ],
       "flavorText": "Jay Cooke State Park, rain or shine. Fifteen years and counting.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth"
@@ -1073,6 +1098,7 @@
       ],
       "flavorText": "Watch your step on the basalt -- and keep your eyes peeled for moose.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth",
@@ -1111,6 +1137,7 @@
       ],
       "flavorText": "It's a porter aged with Lake Superior water. You can taste the iron.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Food",
         "Duluth"
@@ -1152,6 +1179,7 @@
       ],
       "flavorText": "That bridge has opened over eleven thousand times. I can tell you about each one.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Duluth",
         "Learning"
@@ -1197,6 +1225,7 @@
       ],
       "flavorText": "Eight hundred feet of iron and purpose, sliding under the lift bridge at dawn.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Duluth",
         "Community"
@@ -1238,6 +1267,7 @@
       ],
       "flavorText": "Try the wild rice. It's from Fond du Lac. You won't find better.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Food",
         "Duluth",
@@ -1280,6 +1310,7 @@
       ],
       "flavorText": "Finals week at the library, con weekend at the DECC. Same energy.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Youth",
         "Duluth",
@@ -1322,6 +1353,7 @@
       ],
       "flavorText": "Guitar case open, Lake Superior for a backdrop. Not a bad office.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Duluth",
@@ -1364,6 +1396,7 @@
       ],
       "flavorText": "Door by door, block by block. That's how things actually change.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Community",
         "Duluth"
@@ -1405,6 +1438,7 @@
       ],
       "flavorText": "Spirit Mountain powder day. Everything else can wait.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth",
@@ -1447,6 +1481,7 @@
       ],
       "flavorText": "Is it always this loud? I love it.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Youth",
         "Convention"
@@ -1488,6 +1523,7 @@
       ],
       "flavorText": "Sixty thousand followers. They all want to know what badge ribbon I got.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Pop Culture",
         "Youth",
@@ -1527,6 +1563,7 @@
       ],
       "flavorText": "Restored and reimagined. The marquee lights up Superior Street once again.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Duluth",
@@ -1566,6 +1603,7 @@
       ],
       "flavorText": "Twenty tables, infinite possibilities. Dice hit the table at nine sharp.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Gamer",
         "Convention"
@@ -1604,6 +1642,7 @@
       ],
       "flavorText": "Glue guns at the ready. Show's in three hours.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Convention",
@@ -1643,6 +1682,7 @@
       ],
       "flavorText": "Locals know to bring a jacket. The wind off the lake doesn't care what month it is.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Duluth",
         "Nature",
@@ -1682,6 +1722,7 @@
       ],
       "flavorText": "Overlooking the lake from eight hundred feet up. Winter's playground.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth"
@@ -1720,6 +1761,7 @@
       ],
       "flavorText": "Three hundred miles of ridgeline, birch, and basalt. One step at a time.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth"
@@ -1758,6 +1800,7 @@
       ],
       "flavorText": "Five stories of blue stone and a view that goes forever.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Duluth",
         "Learning"
@@ -1796,6 +1839,7 @@
       ],
       "flavorText": "Where the regulars know your order and the coffee's always fresh.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Food",
         "Duluth"
@@ -1834,6 +1878,7 @@
       ],
       "flavorText": "The longest freshwater sandbar in the world. Locals claim it; tourists discover it.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth",
@@ -1873,6 +1918,7 @@
       ],
       "flavorText": "Knowledge doesn't have a cover charge. Never has.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Learning",
         "Duluth",
@@ -1912,6 +1958,7 @@
       ],
       "flavorText": "Marathon runners, tourists, and locals all end up here eventually.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Food",
         "Duluth",
@@ -1951,6 +1998,7 @@
       ],
       "flavorText": "Since 1905, the bridge has lifted for every ship that asked.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Duluth",
         "Community"
@@ -1987,6 +2035,7 @@
       ],
       "flavorText": "The judges deliberate. The audience has already decided.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Convention",
         "Pop Culture",
@@ -2024,6 +2073,7 @@
       ],
       "flavorText": "It's 2 AM. One more round?",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Gamer",
         "Convention"
@@ -2060,6 +2110,7 @@
       ],
       "flavorText": "Can you draw my DnD character? She's a tiefling bard with anxiety.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Convention"
@@ -2096,6 +2147,7 @@
       ],
       "flavorText": "Wait -- is that actually them? IN DULUTH?!",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Pop Culture",
         "Convention"
@@ -2132,6 +2184,7 @@
       ],
       "flavorText": "The real networking happens after the badge comes off.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Convention",
         "Community",
@@ -2169,6 +2222,7 @@
       ],
       "flavorText": "Two uncommons and a rare for that holographic. Final offer.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Gamer",
         "Convention"
@@ -2205,6 +2259,7 @@
       ],
       "flavorText": "And the award goes to...",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Convention",
         "Artist",
@@ -2242,6 +2297,7 @@
       ],
       "flavorText": "It started with one dancer. By the chorus, the whole vendor hall was moving.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Pop Culture",
         "Community"
@@ -2278,6 +2334,7 @@
       ],
       "flavorText": "Three million views overnight. Welcome to the internet.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Pop Culture",
         "Youth"
@@ -2314,6 +2371,7 @@
       ],
       "flavorText": "Watch a blank page become a dragon in twenty minutes.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Convention",
@@ -2351,6 +2409,7 @@
       ],
       "flavorText": "Strike a pose by the lake. The Aerial Lift Bridge makes the best backdrop.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Pop Culture",
         "Convention",
@@ -2388,6 +2447,7 @@
       ],
       "flavorText": "That question changed the whole conversation.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Convention",
         "Learning"
@@ -2424,6 +2484,7 @@
       ],
       "flavorText": "The lake decides when the storm ends. Not you.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth"
@@ -2460,6 +2521,7 @@
       ],
       "flavorText": "Five thirty AM on the shore. Worth every lost minute of sleep.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth"
@@ -2496,6 +2558,7 @@
       ],
       "flavorText": "Forty bags of trash. Twelve volunteers. One very clean park.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Community",
         "Nature",
@@ -2533,6 +2596,7 @@
       ],
       "flavorText": "Grill's fired up, music's playing, and nobody remembers whose yard this started in.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Community",
         "Duluth",
@@ -2570,6 +2634,7 @@
       ],
       "flavorText": "The horn echoes off the hillside. A thousand feet of steel glides beneath the bridge.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Duluth"
       ],
@@ -2605,6 +2670,7 @@
       ],
       "flavorText": "Rhubarb season. The early birds got the jam.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Food",
         "Duluth",
@@ -2642,6 +2708,7 @@
       ],
       "flavorText": "Trilliums along the trail. Some things can't be rushed.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature"
       ],
@@ -2677,6 +2744,7 @@
       ],
       "flavorText": "Driftwood crackles. Stars reflect off the water. Nobody checks their phone.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Community",
         "Nature",
@@ -2714,6 +2782,7 @@
       ],
       "flavorText": "The city goes quiet. Everything's possible again under fresh white.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Nature",
         "Duluth"
@@ -2750,6 +2819,7 @@
       ],
       "flavorText": "This building survived the 1918 fire. So did the stories inside it.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Duluth",
         "Learning"
@@ -2786,6 +2856,7 @@
       ],
       "flavorText": "You're the one who makes those candles? I've been looking for you everywhere.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Community"
       ],
@@ -2821,6 +2892,7 @@
       ],
       "flavorText": "It hit her in the middle of the lecture. The whole thesis, crystal clear.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Artist",
         "Learning"
@@ -2857,6 +2929,7 @@
       ],
       "flavorText": "My neighbor told me about this place. Said it changed her life.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Community"
       ],
@@ -2892,6 +2965,7 @@
       ],
       "flavorText": "There's always room for one more at the table.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Community",
         "Food"
@@ -2928,6 +3002,7 @@
       ],
       "flavorText": "Matching cosplays. Different fandoms. Best friends by Sunday.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Community",
         "Convention"
@@ -2964,6 +3039,7 @@
       ],
       "flavorText": "Sometimes the bravest thing is to let go and begin again.",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Sustainability",
         "Learning"
@@ -3000,6 +3076,7 @@
       ],
       "flavorText": "Same time next year?",
       "artNotes": "",
+      "image": "",
       "tags": [
         "Convention",
         "Community",

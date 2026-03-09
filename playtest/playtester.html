@@ -372,6 +372,16 @@ const RESOURCES = ['growth','sustainability','community','expression','learning'
 const RES_LABELS = { growth:'Growth', sustainability:'Sustain', community:'Community', expression:'Express', learning:'Learn' };
 const RES_SHORT = { growth:'G', sustainability:'S', community:'C', expression:'E', learning:'L' };
 const TYPE_ICONS = { People: '\u{1F464}', Location: '\u{1F3E0}', Event: '\u{1F3AA}' };
+function getCardArtHtml(card, size) {
+  if (card.image) {
+    const src = card.image.startsWith('http') ? card.image : '../art/' + card.image;
+    const h = size === 'preview' ? '120px' : size === 'tile' ? '80px' : '40px';
+    const fs = size === 'preview' ? '2.5rem' : '1.5rem';
+    return `<img src="${src}" alt="${esc(card.name)}" style="width:100%;height:${h};object-fit:cover;" onerror="this.outerHTML='<span style=\\'font-size:${fs}\\'>${TYPE_ICONS[card.type]||''}</span>'">`;
+  }
+  const fs = size === 'preview' ? '2.5rem' : size === 'tile' ? '2rem' : '1rem';
+  return `<span style="font-size:${fs}">${TYPE_ICONS[card.type] || ''}</span>`;
+}
 const STORAGE_KEY = 'lifequest-playtest';
 const UNDO_LIMIT = 50;
 
@@ -592,25 +602,48 @@ function buildDeck(deckDef) {
 }
 
 // ==================== SETUP SCREEN ====================
+function getAllDecks() {
+  let customDecks = [];
+  try {
+    const raw = JSON.parse(localStorage.getItem('lifequest-custom-decks') || '{"customDecks":[]}');
+    customDecks = (raw.customDecks || []).map(d => ({
+      name: d.name + ' (Custom)',
+      description: 'Custom deck — ' + d.cardCount + ' cards',
+      cards: d.cards,
+      cardCount: d.cardCount,
+      typeSplit: null,
+      isCustom: true
+    }));
+  } catch(e) {}
+  return [...starterDecks, ...customDecks];
+}
+
 function setupReady() {
+  const allDecks = getAllDecks();
   document.getElementById('setup-status').textContent =
-    cardDb.length + ' cards loaded, ' + starterDecks.length + ' starter decks';
+    cardDb.length + ' cards loaded, ' + allDecks.length + ' decks available';
 
   // Render deck options
   for (const pid of [1, 2]) {
     const container = document.getElementById('p' + pid + '-decks');
-    container.innerHTML = starterDecks.map((d, i) =>
-      `<div class="deck-option" data-p="${pid}" data-i="${i}" onclick="selectDeck(${pid},${i})">
+    container.innerHTML = allDecks.map((d, i) => {
+      // Calculate type split if missing
+      let typeSplit = d.typeSplit;
+      if (!typeSplit && d.cards) {
+        typeSplit = { People: 0, Location: 0, Event: 0 };
+        d.cards.forEach(id => { const c = cardDb.find(x => x.id === id); if (c) typeSplit[c.type] = (typeSplit[c.type]||0) + 1; });
+      }
+      return `<div class="deck-option${d.isCustom ? ' custom-deck' : ''}" data-p="${pid}" data-i="${i}" onclick="selectDeck(${pid},${i})">
         <h3>${esc(d.name)}</h3>
         <p>${esc(d.description)}</p>
         <div class="deck-stats">
-          <span>Cards: ${d.cardCount}</span>
-          <span>People: ${d.typeSplit?.People||'?'}</span>
-          <span>Locations: ${d.typeSplit?.Location||'?'}</span>
-          <span>Events: ${d.typeSplit?.Event||'?'}</span>
+          <span>Cards: ${d.cardCount || d.cards?.length || '?'}</span>
+          <span>People: ${typeSplit?.People||'?'}</span>
+          <span>Locations: ${typeSplit?.Location||'?'}</span>
+          <span>Events: ${typeSplit?.Event||'?'}</span>
         </div>
-      </div>`
-    ).join('');
+      </div>`;
+    }).join('');
   }
 
   // Check for saved game
@@ -640,8 +673,9 @@ function startGame() {
   undoStack = [];
 
   // Build and shuffle decks
-  game.players[0].deck = shuffle(buildDeck(starterDecks[p1DeckChoice]));
-  game.players[1].deck = shuffle(buildDeck(starterDecks[p2DeckChoice]));
+  const allDecks = getAllDecks();
+  game.players[0].deck = shuffle(buildDeck(allDecks[p1DeckChoice]));
+  game.players[1].deck = shuffle(buildDeck(allDecks[p2DeckChoice]));
 
   // Draw starting hands (5 cards each)
   for (let p = 0; p < 2; p++) {
@@ -657,7 +691,7 @@ function startGame() {
   game.activePlayer = game.startPlayer;
   game.phaseStep = 'p0-refresh';
 
-  logAction('Game started! ' + name1 + ' (' + starterDecks[p1DeckChoice].name + ') vs ' + name2 + ' (' + starterDecks[p2DeckChoice].name + ')');
+  logAction('Game started! ' + name1 + ' (' + allDecks[p1DeckChoice].name + ') vs ' + name2 + ' (' + allDecks[p2DeckChoice].name + ')');
   logAction(game.players[game.startPlayer].name + ' is the Start Player for Year 1');
 
   document.getElementById('app-setup').style.display = 'none';
@@ -1256,7 +1290,7 @@ function renderCardPreview(card) {
         <span class="card-preview-name">${esc(card.name)}</span>
         <div class="card-preview-cost">${costs}</div>
       </div>
-      <div class="card-preview-art">${TYPE_ICONS[card.type] || ''}</div>
+      <div class="card-preview-art">${getCardArtHtml(card, 'preview')}</div>
       <div class="card-preview-body">
         <div class="card-preview-type-line"><span>${typeLine}</span><span class="card-preview-lp">${card.lp || 0} LP</span></div>
         <div class="card-preview-abilities">${abilities || '<em>No abilities</em>'}</div>

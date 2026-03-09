@@ -652,6 +652,16 @@ const RESOURCES = ['growth','sustainability','community','expression','learning'
 const RES_LABELS = { growth:'Growth', sustainability:'Sustain', community:'Community', expression:'Express', learning:'Learn' };
 const RES_SHORT = { growth:'G', sustainability:'S', community:'C', expression:'E', learning:'L' };
 const TYPE_ICONS = { People: '\u{1F464}', Location: '\u{1F3E0}', Event: '\u{1F3AA}' };
+function getCardArtHtml(card, size) {
+  if (card.image) {
+    const src = card.image.startsWith('http') ? card.image : '../art/' + card.image;
+    const h = size === 'preview' ? '120px' : size === 'tile' ? '80px' : '40px';
+    const fs = size === 'preview' ? '2.5rem' : '1.5rem';
+    return `<img src="${src}" alt="${esc(card.name)}" style="width:100%;height:${h};object-fit:cover;" onerror="this.outerHTML='<span style=\\'font-size:${fs}\\'>${TYPE_ICONS[card.type]||''}</span>'">`;
+  }
+  const fs = size === 'preview' ? '2.5rem' : size === 'tile' ? '2rem' : '1rem';
+  return `<span style="font-size:${fs}">${TYPE_ICONS[card.type] || ''}</span>`;
+}
 const PEER_PREFIX = 'lifequest-';
 const PING_INTERVAL = 15000;
 
@@ -674,6 +684,7 @@ let myDeckChoice = -1;
 let oppDeckChoice = -1;
 let myReady = false;
 let oppReady = false;
+let oppCustomDeck = null; // stores opponent's custom deck data if they picked one
 let chatMessages = [];
 let pingTimer = null;
 let waitingForHost = false;
@@ -985,7 +996,14 @@ function onDeckList(msg) {
 
 function onDeckSelect(msg) {
   oppDeckChoice = msg.deckIndex;
-  toast(oppName + ' selected a deck');
+  // Store opponent's custom deck data if provided
+  if (msg.customDeck) {
+    oppCustomDeck = msg.customDeck;
+    toast(oppName + ' selected: ' + msg.customDeck.name);
+  } else {
+    oppCustomDeck = null;
+    toast(oppName + ' selected a deck');
+  }
   updateDeckSelectUI();
 }
 
@@ -1121,6 +1139,7 @@ function goToDeckSelect() {
   oppDeckChoice = -1;
   myReady = false;
   oppReady = false;
+  oppCustomDeck = null;
   selectionMode = null;
   waitingForHost = false;
   document.getElementById('app-playing').style.display = 'none';
@@ -1129,23 +1148,45 @@ function goToDeckSelect() {
 }
 
 // ==================== DECK SELECT ====================
+function getAllDecks() {
+  let customDecks = [];
+  try {
+    const raw = JSON.parse(localStorage.getItem('lifequest-custom-decks') || '{"customDecks":[]}');
+    customDecks = (raw.customDecks || []).map(d => ({
+      name: d.name + ' (Custom)',
+      description: 'Custom deck — ' + d.cardCount + ' cards',
+      cards: d.cards,
+      cardCount: d.cardCount,
+      typeSplit: null,
+      isCustom: true
+    }));
+  } catch(e) {}
+  return [...starterDecks, ...customDecks];
+}
+
 function renderDeckOptions() {
+  const allDecks = getAllDecks();
   const status = document.getElementById('deckselect-status');
-  status.textContent = cardDb.length + ' cards loaded, ' + starterDecks.length + ' starter decks';
+  status.textContent = cardDb.length + ' cards loaded, ' + allDecks.length + ' decks available';
 
   const container = document.getElementById('deck-options');
-  container.innerHTML = starterDecks.map((d, i) =>
-    `<div class="deck-option${myDeckChoice === i ? ' selected' : ''}" onclick="selectDeck(${i})">
+  container.innerHTML = allDecks.map((d, i) => {
+    let typeSplit = d.typeSplit;
+    if (!typeSplit && d.cards) {
+      typeSplit = { People: 0, Location: 0, Event: 0 };
+      d.cards.forEach(id => { const c = cardDb.find(x => x.id === id); if (c) typeSplit[c.type] = (typeSplit[c.type]||0) + 1; });
+    }
+    return `<div class="deck-option${myDeckChoice === i ? ' selected' : ''}${d.isCustom ? ' custom-deck' : ''}" onclick="selectDeck(${i})">
       <h3>${esc(d.name)}</h3>
       <p>${esc(d.description)}</p>
       <div class="deck-stats">
-        <span>Cards: ${d.cardCount}</span>
-        <span>People: ${d.typeSplit?.People||'?'}</span>
-        <span>Locations: ${d.typeSplit?.Location||'?'}</span>
-        <span>Events: ${d.typeSplit?.Event||'?'}</span>
+        <span>Cards: ${d.cardCount || d.cards?.length || '?'}</span>
+        <span>People: ${typeSplit?.People||'?'}</span>
+        <span>Locations: ${typeSplit?.Location||'?'}</span>
+        <span>Events: ${typeSplit?.Event||'?'}</span>
       </div>
-    </div>`
-  ).join('');
+    </div>`;
+  }).join('');
 
   updateDeckSelectUI();
 }
@@ -1153,7 +1194,14 @@ function renderDeckOptions() {
 function selectDeck(idx) {
   myDeckChoice = idx;
   renderDeckOptions();
-  sendMsg({ type: 'deck-select', deckIndex: idx });
+  const allDecks = getAllDecks();
+  const deck = allDecks[idx];
+  // If custom deck, send the full card list so the opponent can build it
+  if (deck && deck.isCustom) {
+    sendMsg({ type: 'deck-select', deckIndex: idx, customDeck: { name: deck.name, cards: deck.cards, cardCount: deck.cardCount } });
+  } else {
+    sendMsg({ type: 'deck-select', deckIndex: idx });
+  }
 }
 
 function toggleReady() {
@@ -1186,8 +1234,19 @@ function hostStartGame() {
   if (myDeckChoice < 0 || oppDeckChoice < 0) { toast('Both players must select a deck'); return; }
 
   game = newGameState(myName, oppName);
-  game.players[0].deck = shuffle(buildDeck(starterDecks[myDeckChoice]));
-  game.players[1].deck = shuffle(buildDeck(starterDecks[oppDeckChoice]));
+
+  // Build host's deck
+  const allDecks = getAllDecks();
+  const myDeck = allDecks[myDeckChoice];
+  game.players[0].deck = shuffle(buildDeck(myDeck));
+
+  // Build opponent's deck — use synced custom deck data if available
+  if (oppCustomDeck) {
+    game.players[1].deck = shuffle(buildDeck(oppCustomDeck));
+  } else {
+    const oppDeck = starterDecks[oppDeckChoice]; // opponent chose a starter deck (same indices)
+    game.players[1].deck = shuffle(buildDeck(oppDeck));
+  }
 
   // Draw starting hands
   for (let p = 0; p < 2; p++) {
@@ -1874,7 +1933,7 @@ function renderCardPreview(card) {
         <span class="card-preview-name">${esc(card.name)}</span>
         <div class="card-preview-cost">${costs}</div>
       </div>
-      <div class="card-preview-art">${TYPE_ICONS[card.type] || ''}</div>
+      <div class="card-preview-art">${getCardArtHtml(card, 'preview')}</div>
       <div class="card-preview-body">
         <div class="card-preview-type-line"><span>${typeLine}</span><span class="card-preview-lp">${card.lp || 0} LP</span></div>
         <div class="card-preview-abilities">${abilities || '<em>No abilities</em>'}</div>
