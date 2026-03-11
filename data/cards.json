@@ -59,7 +59,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -102,7 +101,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -126,7 +124,7 @@
         "name": "Convention Vendors",
         "description": "Represents the dedicated vendors who return year after year"
       },
-      "designerNotes": "Card selection on a body via Activate. Combo with Convention Locations upgrades to straight draw. High initiative means she resolves before most others. 3 LP is strong for 2 cost — justify with the Activate requirement.",
+      "designerNotes": "Card selection on a body via Activate. Combo with Convention Locations upgrades to straight draw. High activation priority means she resolves before most others. 3 LP is strong for 2 cost \u00e2\u20ac\u201d justify with the Activate requirement.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -170,7 +168,7 @@
         "name": "Duluth Entertainment Convention Center",
         "description": "DECC, the venue that hosts Excalibur Con and many community events"
       },
-      "designerNotes": "Keystone Location for Convention decks. 3 development levels — starts as cost reducer, scales into LP engine + card advantage. Advance condition requires board commitment. Rare is right for this much text.",
+      "designerNotes": "Keystone Location for Convention decks. 3 development levels \u00e2\u20ac\u201d starts as cost reducer, scales into LP engine + card advantage. Advance condition requires board commitment. Rare is right for this much text.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -288,7 +286,7 @@
         "name": "Excalibur Con Gaming",
         "description": "Tabletop gaming tournaments and open play at the convention"
       },
-      "designerNotes": "Shared benefit card — both draw, but you get more LP. Community cost fits the White archetype identity. Convention Location combo is straightforward.",
+      "designerNotes": "Shared benefit card \u00e2\u20ac\u201d both draw, but you get more LP. Community cost fits the White archetype identity. Convention Location combo is straightforward.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -315,7 +313,7 @@
           "text": "Lvl 1: You may claim 1 additional Resource Token this Spring. Lvl 2: Claim 1 additional token and draw 1 card."
         }
       ],
-      "flavorText": "Tacos, pierogis, and kettle corn — the real reason half the crowd showed up.",
+      "flavorText": "Tacos, pierogis, and kettle corn \u00e2\u20ac\u201d the real reason half the crowd showed up.",
       "artNotes": "Row of colorful food trucks with a line of convention-goers, DECC visible in background.",
       "image": "",
       "tags": [
@@ -347,7 +345,6 @@
         "learning": 1
       },
       "totalCost": 2,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "played",
@@ -371,7 +368,7 @@
         "name": "Convention Staff",
         "description": "The volunteers and organizers who make Excalibur Con happen"
       },
-      "designerNotes": "Tutor on entry + Activate for cost reduction. High initiative (3) means she sets up for others. In the Summer back-and-forth, activate her first, then play the cheap Event. Rare for the tutor.",
+      "designerNotes": "Tutor on entry + Activate for cost reduction. High activation priority (3) means she sets up for others. In the Summer back-and-forth, activate her first, then play the cheap Event. Rare for the tutor.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -415,7 +412,7 @@
         "name": "Artist Alley",
         "description": "The artist alley section of Excalibur Con"
       },
-      "designerNotes": "Artist archetype payoff Location. 2 Expression cost is the Red investment. Develops by having Artists on board — natural synergy. Autumn ability provides Expression recycling for the resource-hungry archetype.",
+      "designerNotes": "Artist archetype payoff Location. 2 Expression cost is the Red investment. Develops by having Artists on board \u00e2\u20ac\u201d natural synergy. Autumn ability provides Expression recycling for the resource-hungry archetype.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -493,7 +490,7 @@
         "name": "Fitger's Brewhouse",
         "description": "Historic Duluth brewery and restaurant, popular after-convention gathering spot"
       },
-      "designerNotes": "Sustainability (Green) — slow, compounding value. Develops as your board grows. Winter-focused, rewards patience and board building. Lvl 2 adds a token-to-card conversion for late game flexibility.",
+      "designerNotes": "Sustainability (Green) \u00e2\u20ac\u201d slow, compounding value. Develops as your board grows. Winter-focused, rewards patience and board building. Lvl 2 adds a token-to-card conversion for late game flexibility.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -512,7 +509,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "played",
@@ -534,9 +530,9 @@
       "localConnection": {
         "type": "person",
         "name": "Con Volunteers",
-        "description": "The backbone of every community event — unpaid, underappreciated, essential"
+        "description": "The backbone of every community event \u00e2\u20ac\u201d unpaid, underappreciated, essential"
       },
-      "designerNotes": "Community (White) workhorse. Token on entry is tempo. Activate for Event discount creates Summer sequencing decisions: exhaust Volunteer, then play the discounted Event. Low initiative because she's a helper, not a leader.",
+      "designerNotes": "Community (White) workhorse. Token on entry is tempo. Activate for Event discount creates Summer sequencing decisions: exhaust Volunteer, then play the discounted Event. Low activation priority because she's a helper, not a leader.",
       "created": "2026-02-26T00:00:00Z",
       "modified": "2026-03-03T00:00:00Z"
     },
@@ -555,7 +551,6 @@
         "learning": 1
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -594,7 +589,6 @@
         "learning": 1
       },
       "totalCost": 3,
-      "initiative": 5,
       "abilities": [
         {
           "trigger": "played",
@@ -637,7 +631,6 @@
         "learning": 1
       },
       "totalCost": 2,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "played",
@@ -680,7 +673,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -718,7 +710,6 @@
         "learning": 1
       },
       "totalCost": 2,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -761,7 +752,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "played",
@@ -804,7 +794,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 4,
       "abilities": [
         {
           "trigger": "activate",
@@ -843,7 +832,6 @@
         "learning": 1
       },
       "totalCost": 1,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -881,7 +869,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -923,7 +910,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -961,7 +947,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -1004,7 +989,6 @@
         "learning": 1
       },
       "totalCost": 2,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -1047,7 +1031,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "ongoing",
@@ -1089,7 +1072,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -1128,7 +1110,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -1166,7 +1147,6 @@
         "learning": 1
       },
       "totalCost": 2,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -1208,7 +1188,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 4,
       "abilities": [
         {
           "trigger": "played",
@@ -1254,7 +1233,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "played",
@@ -1297,7 +1275,6 @@
         "learning": 1
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -1340,7 +1317,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -1383,7 +1359,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -1425,7 +1400,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -1468,7 +1442,6 @@
         "learning": 0
       },
       "totalCost": 0,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "played",
@@ -1510,7 +1483,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -1637,7 +1609,7 @@
       "abilities": [
         {
           "trigger": "ongoing",
-          "text": "Lvl 1: People with the Artist tag you control have +1 Initiative. Lvl 2: Also, cards with the Artist tag cost 1 fewer Expression (min 0). Lvl 3: Also, gain 1 LP for each Artist-tagged People during Winter."
+          "text": "Lvl 1: People with the Artist tag you control have +1 LP during Winter. Lvl 2: Also, cards with the Artist tag cost 1 fewer Expression (min 0). Lvl 3: Also, gain 1 LP for each Artist-tagged People during Winter."
         }
       ],
       "flavorText": "Glue guns at the ready. Show's in three hours.",
@@ -3106,7 +3078,6 @@
         "learning": 1
       },
       "totalCost": 2,
-      "initiative": 4,
       "abilities": [
         {
           "trigger": "activate",
@@ -3117,7 +3088,7 @@
           "text": "All People you control gain +1 LP until end of Winter."
         }
       ],
-      "flavorText": "His voice fills the hall — and somehow, everyone laughs at the same time.",
+      "flavorText": "His voice fills the hall \u00e2\u20ac\u201d and somehow, everyone laughs at the same time.",
       "artNotes": "Charismatic man at a signing table, long line of excited fans, convention hall backdrop.",
       "image": "",
       "tags": [
@@ -3130,7 +3101,7 @@
         "name": "SungWon Cho (ProZD)",
         "description": "Voice actor and content creator, celebrity guest at Excalibur Con 2026"
       },
-      "designerNotes": "Legendary headliner. Played trigger gives an immediate board-wide LP buff. Activate is generous (both draw) but you get the LP bonus. High initiative resolves first. 4 LP base is premium for 2 cost — justified by Legendary rarity.",
+      "designerNotes": "Legendary headliner. Played trigger gives an immediate board-wide LP buff. Activate is generous (both draw) but you get the LP bonus. High activation priority resolves first. 4 LP base is premium for 2 cost \u00e2\u20ac\u201d justified by Legendary rarity.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3149,7 +3120,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -3160,7 +3130,7 @@
           "text": "If you control 2 or more Guest-tagged cards, draw 1 card."
         }
       ],
-      "flavorText": "She brought the Amazing Digital Circus to life — and Duluth couldn't get enough.",
+      "flavorText": "She brought the Amazing Digital Circus to life \u00e2\u20ac\u201d and Duluth couldn't get enough.",
       "artNotes": "Voice actress at a microphone during a panel, animated expressions, audience captivated.",
       "image": "",
       "tags": [
@@ -3173,7 +3143,7 @@
         "name": "Marissa Lenti",
         "description": "Voice of Pomni in The Amazing Digital Circus, panel guest at Excalibur Con"
       },
-      "designerNotes": "Strong Rare. Activate buffs others and gives resource back if Guest synergy. Summer draw rewards a Guest-heavy board. 3 LP at 1 cost is pushed — Rare rarity justifies it.",
+      "designerNotes": "Strong Rare. Activate buffs others and gives resource back if Guest synergy. Summer draw rewards a Guest-heavy board. 3 LP at 1 cost is pushed \u00e2\u20ac\u201d Rare rarity justifies it.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3192,7 +3162,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -3203,7 +3172,7 @@
           "text": "If Christina Masterson is in play, both gain +1 LP."
         }
       ],
-      "flavorText": "The Red Ranger taught Superhero U — and the crowd paid close attention.",
+      "flavorText": "The Red Ranger taught Superhero U \u00e2\u20ac\u201d and the crowd paid close attention.",
       "artNotes": "Athletic man in a teaching pose, convention stage, fans in superhero costumes.",
       "image": "",
       "tags": [
@@ -3235,7 +3204,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -3259,7 +3227,7 @@
         "name": "Christina Masterson",
         "description": "Power Rangers Megaforce actress, panel guest at Excalibur Con"
       },
-      "designerNotes": "Card draw engine. Combo pair with Andrew Gray — run both for mutual +1 LP. Activate draw is bread-and-butter useful. 2 LP base at 2 cost is standard.",
+      "designerNotes": "Card draw engine. Combo pair with Andrew Gray \u00e2\u20ac\u201d run both for mutual +1 LP. Activate draw is bread-and-butter useful. 2 LP base at 2 cost is standard.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3278,7 +3246,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -3302,7 +3269,7 @@
         "name": "Elle Firespray",
         "description": "Mini painting instructor who runs beginner and advanced classes at Excalibur Con"
       },
-      "designerNotes": "Artist tag enabler. Her ongoing makes all Artists better, and her activate lets non-Artists join the party. Low cost, low LP base — value comes from synergy.",
+      "designerNotes": "Artist tag enabler. Her ongoing makes all Artists better, and her activate lets non-Artists join the party. Low cost, low LP base \u00e2\u20ac\u201d value comes from synergy.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3321,7 +3288,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -3332,7 +3298,7 @@
           "text": "If you played an Event this Summer, draw 1 card."
         }
       ],
-      "flavorText": "His pen never stopped moving — sketches for fans between every panel.",
+      "flavorText": "His pen never stopped moving \u00e2\u20ac\u201d sketches for fans between every panel.",
       "artNotes": "Comic book artist sketching at a table, stacks of comics and prints, fans watching him draw.",
       "image": "",
       "tags": [
@@ -3364,7 +3330,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
@@ -3375,7 +3340,7 @@
           "text": "If you control a Location with the Convention tag, gain 2 LP instead of 1."
         }
       ],
-      "flavorText": "Drink & Draw wasn't just about the art — it was about making friends over ink and laughter.",
+      "flavorText": "Drink & Draw wasn't just about the art \u00e2\u20ac\u201d it was about making friends over ink and laughter.",
       "artNotes": "Artist hosting a social drawing event, people laughing and sketching together at a table with drinks.",
       "image": "",
       "tags": [
@@ -3388,7 +3353,7 @@
         "name": "Dylan Jacobson",
         "description": "Local artist who hosts Dylan's Drink & Draw social art events at Excalibur Con"
       },
-      "designerNotes": "Community-focused artist. Activate is generous — both players draw — but you get LP. Combo with Convention Location doubles the LP payoff. Social gameplay mirrors the character.",
+      "designerNotes": "Community-focused artist. Activate is generous \u00e2\u20ac\u201d both players draw \u00e2\u20ac\u201d but you get LP. Combo with Convention Location doubles the LP payoff. Social gameplay mirrors the character.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3407,7 +3372,6 @@
         "learning": 1
       },
       "totalCost": 2,
-      "initiative": 4,
       "abilities": [
         {
           "trigger": "activate",
@@ -3418,7 +3382,7 @@
           "text": "Gain 1 LP for each developed Location you control (level 2+)."
         }
       ],
-      "flavorText": "She built this con from the ground up — and she wasn't done yet.",
+      "flavorText": "She built this con from the ground up \u00e2\u20ac\u201d and she wasn't done yet.",
       "artNotes": "Confident woman with a clipboard and headset coordinating a bustling convention floor.",
       "image": "",
       "tags": [
@@ -3431,7 +3395,7 @@
         "name": "Erin Glesner",
         "description": "Committee Chair of Excalibur Con, the driving force behind the convention"
       },
-      "designerNotes": "Keystone card for Location development decks. Activate bypasses advance conditions — extremely powerful. Winter LP scales with developed Locations. High initiative (4) means she plans ahead. Rare justified.",
+      "designerNotes": "Keystone card for Location development decks. Activate bypasses advance conditions \u00e2\u20ac\u201d extremely powerful. Winter LP scales with developed Locations. High activation priority (4) means she plans ahead. Rare justified.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3450,7 +3414,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -3461,7 +3424,7 @@
           "text": "If you control another People card with the Convention tag, gain 1 Community token from the pool."
         }
       ],
-      "flavorText": "The wrestling promoter brought the hype — and the crowd brought the noise.",
+      "flavorText": "The wrestling promoter brought the hype \u00e2\u20ac\u201d and the crowd brought the noise.",
       "artNotes": "Energetic promoter with a microphone hyping up a crowd in a convention hall wrestling ring area.",
       "image": "",
       "tags": [
@@ -3474,7 +3437,7 @@
         "name": "Dave Sabik",
         "description": "Local wrestling promoter, brings Discover Pro Wrestling entertainment to Excalibur Con"
       },
-      "designerNotes": "Interaction card — opponent discards. Not too punishing (they choose), but repeated activation is strong. Summer resource gain with Convention synergy. Good tempo card.",
+      "designerNotes": "Interaction card \u00e2\u20ac\u201d opponent discards. Not too punishing (they choose), but repeated activation is strong. Summer resource gain with Convention synergy. Good tempo card.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3493,7 +3456,6 @@
         "learning": 1
       },
       "totalCost": 1,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -3504,7 +3466,7 @@
           "text": "Cards with the Gamer tag you play cost 1 fewer total resource (minimum 0)."
         }
       ],
-      "flavorText": "Roll for initiative. Actually, never mind — I'll just tell you what happens.",
+      "flavorText": "Roll for initiative. Actually, never mind \u00e2\u20ac\u201d I'll just tell you what happens.",
       "artNotes": "Person behind a GM screen with dice, maps, and miniatures, players gathered around a table.",
       "image": "",
       "tags": [
@@ -3536,7 +3498,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -3547,7 +3508,7 @@
           "text": "If you control 2 or more Artist-tagged People, gain 1 LP."
         }
       ],
-      "flavorText": "Craftsmanship, creativity, presentation — every stitch tells a story.",
+      "flavorText": "Craftsmanship, creativity, presentation \u00e2\u20ac\u201d every stitch tells a story.",
       "artNotes": "Person with a judging clipboard examining an elaborate cosplay costume, bright stage lights.",
       "image": "",
       "tags": [
@@ -3579,7 +3540,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -3603,7 +3563,7 @@
         "name": "Volunteer Pod Leaders",
         "description": "Volunteer coordinators like Haley and Jackie who manage con volunteer teams"
       },
-      "designerNotes": "Readying cheap People gives extra actions. Played trigger grabs a Community token for tempo. High initiative (3) on a 1-cost is good for setting up combos.",
+      "designerNotes": "Readying cheap People gives extra actions. Played trigger grabs a Community token for tempo. High activation priority (3) on a 1-cost is good for setting up combos.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3622,7 +3582,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "played",
@@ -3646,7 +3605,7 @@
         "name": "VIP Early Entry",
         "description": "VIP badge holders enter at 10:30 AM, 30 minutes before general admission"
       },
-      "designerNotes": "Strong draw on entry (2 cards). Spring resource doubling accelerates your economy. Low initiative means you don't get combat priority, but the value is in resources and cards.",
+      "designerNotes": "Strong draw on entry (2 cards). Spring resource doubling accelerates your economy. Low activation priority means you don't get combat priority, but the value is in resources and cards.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3665,7 +3624,6 @@
         "learning": 0
       },
       "totalCost": 2,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "ongoing",
@@ -3708,7 +3666,6 @@
         "learning": 1
       },
       "totalCost": 1,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -3732,7 +3689,7 @@
         "name": "Nerd Nite",
         "description": "Community speaker series featured at Excalibur Con with short fun presentations"
       },
-      "designerNotes": "Knowledge sharing — both draw, you get LP. Combo bonus for Summer timing. Good common role-player.",
+      "designerNotes": "Knowledge sharing \u00e2\u20ac\u201d both draw, you get LP. Combo bonus for Summer timing. Good common role-player.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3751,7 +3708,6 @@
         "learning": 1
       },
       "totalCost": 2,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "activate",
@@ -3794,11 +3750,10 @@
         "learning": 1
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "activate",
-          "text": "Roll a die (mentally). Gain 1 or 2 LP (your choice — honor system!)."
+          "text": "Roll a die (mentally). Gain 1 or 2 LP (your choice \u00e2\u20ac\u201d honor system!)."
         },
         {
           "trigger": "combo",
@@ -3837,7 +3792,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 3,
       "abilities": [
         {
           "trigger": "ongoing",
@@ -3861,7 +3815,7 @@
         "name": "Celebrity Handlers",
         "description": "Staff who manage celebrity guest logistics at Excalibur Con"
       },
-      "designerNotes": "Guest enabler. Ongoing discount makes Guests cheaper to deploy. Activate tutors for Guests. Low LP but high utility — you play this to find your headliners.",
+      "designerNotes": "Guest enabler. Ongoing discount makes Guests cheaper to deploy. Activate tutors for Guests. Low LP but high utility \u00e2\u20ac\u201d you play this to find your headliners.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -3880,7 +3834,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 2,
       "abilities": [
         {
           "trigger": "activate",
@@ -3891,7 +3844,7 @@
           "text": "Look at the top card of your deck. You may put it on the bottom."
         }
       ],
-      "flavorText": "A local story told on a global screen — the premiere was packed.",
+      "flavorText": "A local story told on a global screen \u00e2\u20ac\u201d the premiere was packed.",
       "artNotes": "Filmmaker with a camera and clapperboard, excited audience behind him at a screening.",
       "image": "",
       "tags": [
@@ -3923,7 +3876,6 @@
         "learning": 0
       },
       "totalCost": 1,
-      "initiative": 1,
       "abilities": [
         {
           "trigger": "ongoing",
@@ -3991,7 +3943,7 @@
         "name": "Pioneer Hall (DECC)",
         "description": "Main vendor and exhibitor hall at the DECC, fitting 160 booth spaces"
       },
-      "designerNotes": "Premium vendor Location. 3 levels of scaling — LP, resources, cost reduction. Advance condition wants Vendor/Convention board. Autumn LP at max level is the payoff for investment.",
+      "designerNotes": "Premium vendor Location. 3 levels of scaling \u00e2\u20ac\u201d LP, resources, cost reduction. Advance condition wants Vendor/Convention board. Autumn LP at max level is the payoff for investment.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -4110,7 +4062,7 @@
           "text": "Draw 1 card."
         }
       ],
-      "flavorText": "Two rooms, back-to-back panels, zero downtime — just how the con likes it.",
+      "flavorText": "Two rooms, back-to-back panels, zero downtime \u00e2\u20ac\u201d just how the con likes it.",
       "artNotes": "Convention panel rooms with rows of chairs, projector screen, speakers at a table, full audience.",
       "image": "",
       "tags": [
@@ -4198,7 +4150,7 @@
           "text": "If at level 2, look at the top 3 cards. Keep 1."
         }
       ],
-      "flavorText": "Magic drafts, Star Wars showdowns, Lorcana leagues — there's always a tournament firing.",
+      "flavorText": "Magic drafts, Star Wars showdowns, Lorcana leagues \u00e2\u20ac\u201d there's always a tournament firing.",
       "artNotes": "Competitive card game tournament area with players focused on matches, brackets on a board behind them.",
       "image": "",
       "tags": [
@@ -4286,7 +4238,7 @@
           "text": "Gain 1 LP for each Social-tagged card you control."
         }
       ],
-      "flavorText": "The bar, the music, the crowd — Saturday night at the con is where friendships are forged.",
+      "flavorText": "The bar, the music, the crowd \u00e2\u20ac\u201d Saturday night at the con is where friendships are forged.",
       "artNotes": "Elegant ballroom with a bar, people socializing in costume, warm lighting, Lake Superior visible.",
       "image": "",
       "tags": [
@@ -4330,7 +4282,7 @@
           "text": "You may trade 1 token with your opponent (give 1, take 1 of a different type)."
         }
       ],
-      "flavorText": "Strangers walk in, sit down, roll dice — and leave as friends.",
+      "flavorText": "Strangers walk in, sit down, roll dice \u00e2\u20ac\u201d and leave as friends.",
       "artNotes": "Open gaming area with groups playing board games, dice games, card games at communal tables.",
       "image": "",
       "tags": [
@@ -4374,7 +4326,7 @@
           "text": "If you control 2+ Artist-tagged People, draw 1 card."
         }
       ],
-      "flavorText": "Painting minis, bead art, historical crafts — every table a different creative outlet.",
+      "flavorText": "Painting minis, bead art, historical crafts \u00e2\u20ac\u201d every table a different creative outlet.",
       "artNotes": "Workshop room with multiple activity stations, people crafting and creating together.",
       "image": "",
       "tags": [
@@ -4431,7 +4383,7 @@
         "name": "Celebrity Green Room (DECC)",
         "description": "Backstage room for celebrity guests to prepare between panels and signings"
       },
-      "designerNotes": "Guest infrastructure. Cost reduction for Guests, LP on Guest entry (shared — community vibe). Spring resource economy boost with Guest on board. 0 LP base because value is in enabling Guests.",
+      "designerNotes": "Guest infrastructure. Cost reduction for Guests, LP on Guest entry (shared \u00e2\u20ac\u201d community vibe). Spring resource economy boost with Guest on board. 0 LP base because value is in enabling Guests.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -4475,7 +4427,7 @@
         "name": "Discover Pro Wrestling (DPW)",
         "description": "Live wrestling entertainment brought to Excalibur Con by promoter Dave Sabik"
       },
-      "designerNotes": "Comeback mechanic Location. Advance condition requires being behind on LP — underdog theme matches wrestling. Discard on People entry disrupts opponent. Level 2 turns disruption into LP.",
+      "designerNotes": "Comeback mechanic Location. Advance condition requires being behind on LP \u00e2\u20ac\u201d underdog theme matches wrestling. Discard on People entry disrupts opponent. Level 2 turns disruption into LP.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -4500,7 +4452,7 @@
           "text": "Gain 3 LP. If you control a People with the Gamer tag, gain 4 LP instead. If you also control a Location with the Gamer tag, gain 5 LP."
         }
       ],
-      "flavorText": "Armies clash across miniature battlefields — and glory goes to the most strategic general.",
+      "flavorText": "Armies clash across miniature battlefields \u00e2\u20ac\u201d and glory goes to the most strategic general.",
       "artNotes": "Epic miniature wargaming tournament, armies deployed on elaborate terrain, focused players.",
       "image": "",
       "tags": [
@@ -4538,7 +4490,7 @@
           "text": "Choose a Location you control. Advance it 1 level (ignore the advance condition). Gain 1 LP."
         }
       ],
-      "flavorText": "The sword rose from the lake — or in this case, from a very well-painted table.",
+      "flavorText": "The sword rose from the lake \u00e2\u20ac\u201d or in this case, from a very well-painted table.",
       "artNotes": "Dramatic Kings of War miniature scene with a sword-in-lake tableau, players strategizing.",
       "image": "",
       "tags": [
@@ -4551,7 +4503,7 @@
         "name": "Lady of the Lake (Kings of War)",
         "description": "Kings of War miniatures event held early morning at Excalibur Con"
       },
-      "designerNotes": "Location advancement Event. Bypasses advance conditions — very powerful for Location-heavy decks. 2 cost is fair for the effect. Named after the KoW event.",
+      "designerNotes": "Location advancement Event. Bypasses advance conditions \u00e2\u20ac\u201d very powerful for Location-heavy decks. 2 cost is fair for the effect. Named after the KoW event.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -4589,7 +4541,7 @@
         "name": "Magic Sealed Draft",
         "description": "Magic: The Gathering sealed draft events running all weekend at Excalibur Con"
       },
-      "designerNotes": "Shared card churn. Both players draw 3 / discard 2 — net +1 for both, but you get LP. Cheap at 1 cost. Good for decks that want to dig for specific cards.",
+      "designerNotes": "Shared card churn. Both players draw 3 / discard 2 \u00e2\u20ac\u201d net +1 for both, but you get LP. Cheap at 1 cost. Good for decks that want to dig for specific cards.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -4652,7 +4604,7 @@
           "text": "Gain 2 LP. If you control a Location with the Gamer tag, gain 1 token of your choice from the pool."
         }
       ],
-      "flavorText": "Fairy tales and strategy — who knew Disney characters could be so competitive?",
+      "flavorText": "Fairy tales and strategy \u00e2\u20ac\u201d who knew Disney characters could be so competitive?",
       "artNotes": "Players at a colorful card game tournament, whimsical card art visible on the table.",
       "image": "",
       "tags": [
@@ -4690,7 +4642,7 @@
           "text": "Choose a People card you control with the Artist tag. It gains +2 LP until end of Winter. Draw 1 card."
         }
       ],
-      "flavorText": "Every seam inspected, every prop examined — this is where craftsmanship speaks.",
+      "flavorText": "Every seam inspected, every prop examined \u00e2\u20ac\u201d this is where craftsmanship speaks.",
       "artNotes": "Close-up of cosplay details being examined by judges, intricate costume work on display.",
       "image": "",
       "tags": [
@@ -4728,7 +4680,7 @@
           "text": "Gain 2 LP for each People card you control with the Artist tag (maximum 8 LP). Each Artist-tagged People gains +1 LP until end of Winter."
         }
       ],
-      "flavorText": "The lights, the music, the crowd — and one unforgettable walk across the stage.",
+      "flavorText": "The lights, the music, the crowd \u00e2\u20ac\u201d and one unforgettable walk across the stage.",
       "artNotes": "Spectacular cosplay contest on stage, spotlight on a winner, cheering crowd, confetti.",
       "image": "",
       "tags": [
@@ -4742,7 +4694,7 @@
         "name": "Cosplay Contest",
         "description": "Main cosplay competition held at 5 PM both days on the Split Rock stage at Excalibur Con"
       },
-      "designerNotes": "Big Artist payoff Event. 2 LP per Artist (max 8) is the highest LP potential in the set — but needs 4 Artists for max value. Also buffs all Artists. Build-around Rare.",
+      "designerNotes": "Big Artist payoff Event. 2 LP per Artist (max 8) is the highest LP potential in the set \u00e2\u20ac\u201d but needs 4 Artists for max value. Also buffs all Artists. Build-around Rare.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -4840,7 +4792,7 @@
       "abilities": [
         {
           "trigger": "played",
-          "text": "Gain 2 LP. Choose a People card you control — it cannot be affected by your opponent's abilities until end of Winter."
+          "text": "Gain 2 LP. Choose a People card you control \u00e2\u20ac\u201d it cannot be affected by your opponent's abilities until end of Winter."
         }
       ],
       "flavorText": "It's okay to love something deeply. It's also okay to take a break from it.",
@@ -4916,7 +4868,7 @@
       "abilities": [
         {
           "trigger": "played",
-          "text": "Gain 1 LP. Choose a People you control — it gains the Artist tag and +1 LP until end of Winter."
+          "text": "Gain 1 LP. Choose a People you control \u00e2\u20ac\u201d it gains the Artist tag and +1 LP until end of Winter."
         }
       ],
       "flavorText": "Medieval calligraphy meets modern fandom. The quill is mightier than you think.",
@@ -5008,7 +4960,7 @@
         "name": "KPop Demon Hunters Screening",
         "description": "Special movie screening hosted by Marcus Theaters at Excalibur Con"
       },
-      "designerNotes": "High LP but gives opponent 1 LP. 3 net LP + draw at 1 cost is pushed — the opponent benefit balances it. Thematic: movies are shared experiences.",
+      "designerNotes": "High LP but gives opponent 1 LP. 3 net LP + draw at 1 cost is pushed \u00e2\u20ac\u201d the opponent benefit balances it. Thematic: movies are shared experiences.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -5413,7 +5365,7 @@
           "text": "Gain 2 LP. You may return 1 Sustainability token to the pool to draw 2 cards."
         }
       ],
-      "flavorText": "Tiny wooden gears, hand-carved joints — sometimes the old ways are the best ways.",
+      "flavorText": "Tiny wooden gears, hand-carved joints \u00e2\u20ac\u201d sometimes the old ways are the best ways.",
       "artNotes": "Woodworking and crafting demonstration, intricate wooden creations on display, fascinated onlookers.",
       "image": "",
       "tags": [
@@ -5426,7 +5378,7 @@
         "name": "Oaken Hollow Demos",
         "description": "Crafting demonstrations and workshops by Oaken Hollow at Excalibur Con"
       },
-      "designerNotes": "LP + optional draw. 2 LP guaranteed. Can spend an extra Sustainability for 2 cards. Flexible — take the LP or invest for cards. Sustainability theme.",
+      "designerNotes": "LP + optional draw. 2 LP guaranteed. Can spend an extra Sustainability for 2 cards. Flexible \u00e2\u20ac\u201d take the LP or invest for cards. Sustainability theme.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     },
@@ -5451,7 +5403,7 @@
           "text": "Gain 2 tokens of your choice from the pool (may be different types). Gain 1 LP."
         }
       ],
-      "flavorText": "Level Up, Collectors Connection, Radisson — every sponsor made this con possible.",
+      "flavorText": "Level Up, Collectors Connection, Radisson \u00e2\u20ac\u201d every sponsor made this con possible.",
       "artNotes": "Sponsor banners and logos displayed prominently, appreciation ceremony moment.",
       "image": "",
       "tags": [
@@ -5540,7 +5492,7 @@
         "name": "Excalibur Con Committee Panel",
         "description": "Closing panel and ceremony wrapping up the convention"
       },
-      "designerNotes": "Diversity payoff. LP scales with unique tags you control — rewards a varied board. Max 6 LP at 2 cost is excellent if you hit it. Build diverse boards.",
+      "designerNotes": "Diversity payoff. LP scales with unique tags you control \u00e2\u20ac\u201d rewards a varied board. Max 6 LP at 2 cost is excellent if you hit it. Build diverse boards.",
       "created": "2026-03-09T00:00:00Z",
       "modified": "2026-03-09T00:00:00Z"
     }

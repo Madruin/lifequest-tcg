@@ -631,8 +631,8 @@ function newEngine(deckCardsA, deckCardsB) {
     status: 'playing',
     pool: { growth:2, sustainability:2, community:2, expression:2, learning:2 },
     players: [
-      { lp:0, tokens:emptyTokens(), hand:[], board:[], deck:shuffle([...deckCardsA]), discard:[], autumnPlayed:false },
-      { lp:0, tokens:emptyTokens(), hand:[], board:[], deck:shuffle([...deckCardsB]), discard:[], autumnPlayed:false }
+      { lp:0, tokens:emptyTokens(), hand:[], board:[], deck:shuffle([...deckCardsA]), discard:[] },
+      { lp:0, tokens:emptyTokens(), hand:[], board:[], deck:shuffle([...deckCardsB]), discard:[] }
     ],
     // Tracking
     cardsPlayed: [],   // {cardId, player, year, season}
@@ -1052,7 +1052,7 @@ function resolveSeasonTriggers(eng, season) {
     for (const entry of eng.players[pi].board) {
       for (const ab of (entry.card._parsed || [])) {
         if (ab.trigger === season && !ab.unparsed) {
-          triggers.push({ pi, entry, ab, initiative: entry.card.initiative || 0 });
+          triggers.push({ pi, entry, ab });
         }
       }
     }
@@ -1060,7 +1060,7 @@ function resolveSeasonTriggers(eng, season) {
   const sp = eng.startPlayer;
   triggers.sort((a,b) => {
     if (a.pi !== b.pi) return a.pi === sp ? -1 : 1;
-    return b.initiative - a.initiative;
+    return 0;
   });
 
   for (const t of triggers) {
@@ -1186,11 +1186,8 @@ function runYear(eng) {
     currentPlayer = otherP(currentPlayer);
   }
 
-  // === AUTUMN ===
+  // === AUTUMN (Harvest & Development) ===
   eng.season = 'autumn';
-  // Start player plays 1 card or passes
-  aiAutumnAction(eng, sp);
-  aiAutumnAction(eng, op);
 
   // Autumn triggers
   resolveSeasonTriggers(eng, 'autumn');
@@ -1455,20 +1452,7 @@ function aiSummerAction(eng, pi) {
   return { type: 'pass' };
 }
 
-function aiAutumnAction(eng, pi) {
-  const p = eng.players[pi];
-  // Play best affordable card, or pass
-  let bestIdx = -1, bestScore = 0;
-  for (let i = 0; i < p.hand.length; i++) {
-    if (canAfford(p.tokens, p.hand[i].cost)) {
-      const s = aiCardScore(eng, pi, p.hand[i]);
-      if (s > bestScore) { bestScore = s; bestIdx = i; }
-    }
-  }
-  if (bestIdx >= 0) {
-    enginePlayCard(eng, pi, bestIdx);
-  }
-}
+// aiAutumnAction removed — Autumn no longer has card plays
 
 
 // =====================================================================

@@ -49,7 +49,7 @@ People are your active agents. They have a **Ready/Exhausted** state.
 - When **Ready**, a Person can be **activated**: exhaust them (turn sideways) to use their activated ability. This is a Summer action.
 - People **refresh** (return to Ready) at the start of each Spring.
 - People may also have **triggered abilities** that fire automatically during specific seasons.
-- Some People have an **Initiative** value. When multiple People abilities resolve in the same window, higher Initiative resolves first. If tied, the Start Player's People resolve first.
+- When multiple triggers resolve in the same window, the **Start Player's triggers resolve first**.
 
 People force tactical decisions every turn: *Do I activate this Person now, or hold them Ready for later?*
 
@@ -131,17 +131,16 @@ After each action, priority passes to the other player. **When both players pass
 If you pass but your opponent takes an action, you get another chance to act. The phase only ends when neither player wants to do anything more.
 
 After the action phase ends:
-- **Summer triggers** on all in-play cards resolve. Start Player's triggers resolve first. If multiple People have abilities resolving in the same window, resolve by Initiative (highest first), then by Start Player priority.
+- **Summer triggers** on all in-play cards resolve. Start Player's triggers resolve first.
 
 **There is no limit on the number of cards you can play.** Resources are the natural gate. If you've built an engine that lets you play four cards in one Summer, that's the payoff.
 
-### AUTUMN (Response & Combo)
+### AUTUMN (Harvest & Development)
 
-The Start Player acts first, then the other player.
+1. **Autumn triggers** on all in-play cards resolve. Start Player's triggers resolve first.
+2. **Location Development**: Locations that meet their advancement conditions advance one level.
 
-1. Each player may **play 1 card** from their hand (pay its resource cost). This is the reaction window — you've seen what happened in Summer and can make one precise adjustment.
-2. **Autumn triggers** on all in-play cards resolve. Start Player's triggers resolve first.
-3. **Location Development**: Check advancement conditions for all Locations. Locations that meet their conditions advance one level.
+Autumn is the harvest phase — your board bears fruit, and Locations grow stronger. No cards are played in Autumn.
 
 ### WINTER (Reflection & Scoring)
 
@@ -177,7 +176,6 @@ Winter is resolved simultaneously by both players.
 | **Development Level** | A Location's current power level. Locations enter at Level 1 and may advance or degrade. |
 | **Advance** | Increase a Location's Development Level by 1 (checked in Autumn). |
 | **Degrade** | Decrease a Location's Development Level by 1. Below Level 1 = discarded. |
-| **Initiative** | A value on some People cards. Higher Initiative resolves first in simultaneous windows. |
 | **Forage** | Spring action: claim 1 token from pool. |
 | **Barter** | Spring action: return 1 of your tokens, claim 2 different from pool. |
 | **Pressure** | Spring action: give 2 of your tokens to opponent, take 1 of theirs. |

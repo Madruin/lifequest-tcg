@@ -267,15 +267,8 @@ h1, h2, h3 { font-weight: 600; }
       <div class="resource-cost"><span class="resource-dot learning"></span><label>Learn</label><input type="number" id="cost-learning" value="0" min="0" max="9"></div>
     </div>
 
-    <!-- People-specific fields -->
+    <!-- People-specific fields (reserved for future People-only stats) -->
     <div class="section-divider" id="people-fields" style="display:none">
-      <h3>People Stats</h3>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Initiative</label>
-          <input type="number" id="card-initiative" value="0" min="0" max="10" title="Higher resolves first in simultaneous windows">
-        </div>
-      </div>
     </div>
 
     <!-- Location-specific fields -->
@@ -558,7 +551,6 @@ function gatherCardData() {
 
   // People-specific
   if (type === 'People') {
-    result.initiative = parseInt(document.getElementById('card-initiative').value) || 0;
   }
   // Location-specific
   if (type === 'Location') {
@@ -649,7 +641,6 @@ function loadCardIntoEditor(id) {
   document.getElementById('card-notes').value = card.designerNotes || '';
 
   // People-specific
-  document.getElementById('card-initiative').value = card.initiative || 0;
   document.getElementById('people-fields').style.display = card.type === 'People' ? '' : 'none';
   // Location-specific
   document.getElementById('card-max-level').value = card.maxLevel || 1;
@@ -684,7 +675,6 @@ function resetEditor() {
   document.getElementById('local-name').value = '';
   document.getElementById('local-desc').value = '';
   document.getElementById('card-notes').value = '';
-  document.getElementById('card-initiative').value = '0';
   document.getElementById('card-max-level').value = '1';
   document.getElementById('card-advance-cond').value = '';
   document.getElementById('people-fields').style.display = 'none';
@@ -882,7 +872,7 @@ function openModal(id) {
       <div class="card-preview-art">${getCardArtHtml(card, 'preview')}</div>
       <div class="card-preview-body">
         <div class="card-preview-type-line">
-          <span>${card.type}${card.initiative ? ' (Init ' + card.initiative + ')' : ''}${card.maxLevel > 1 ? ' (Lvl 1-' + card.maxLevel + ')' : ''}${(card.tags&&card.tags.length) ? ' - ' + card.tags.join(', ') : ''}</span>
+          <span>${card.type}${card.maxLevel > 1 ? ' (Lvl 1-' + card.maxLevel + ')' : ''}${(card.tags&&card.tags.length) ? ' - ' + card.tags.join(', ') : ''}</span>
           ${card.lp ? `<span class="card-preview-lp">${card.lp} LP</span>` : ''}
         </div>
         ${(card.abilities&&card.abilities.length) ? `<div class="card-preview-abilities">
@@ -1002,12 +992,11 @@ function importJSON(event) {
 }
 
 function exportCSV() {
-  const headers = ['Name','Type','Rarity','LP','Set','Total Cost','Growth','Sustainability','Community','Expression','Learning','Initiative','Max Level','Tags','Abilities','Flavor Text','Local Connection','Art Notes','Designer Notes'];
+  const headers = ['Name','Type','Rarity','LP','Set','Total Cost','Growth','Sustainability','Community','Expression','Learning','Max Level','Tags','Abilities','Flavor Text','Local Connection','Art Notes','Designer Notes'];
   const rows = db.cards.map(c => [
     c.name, c.type, c.rarity, c.lp, c.set||'',
     RESOURCES.reduce((s,r) => s + (c.cost?.[r]||0), 0),
     ...RESOURCES.map(r => c.cost?.[r]||0),
-    c.initiative||'',
     c.maxLevel||'',
     (c.tags||[]).join('; '),
     (c.abilities||[]).map(a => `[${a.trigger}] ${a.text}`).join(' | '),

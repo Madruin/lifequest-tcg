@@ -613,7 +613,7 @@ function showCardDetail(id) {
 
   const content = document.getElementById('card-modal-content');
   const totalCost = RESOURCES.reduce((s, r) => s + (card.cost?.[r]||0), 0);
-  const typeLine = `${card.type}${card.initiative ? ' (Init ' + card.initiative + ')' : ''}${card.maxLevel > 1 ? ' (Lvl 1-' + card.maxLevel + ')' : ''}${(card.tags&&card.tags.length) ? ' — ' + card.tags.join(', ') : ''}`;
+  const typeLine = `${card.type}${card.maxLevel > 1 ? ' (Lvl 1-' + card.maxLevel + ')' : ''}${(card.tags&&card.tags.length) ? ' — ' + card.tags.join(', ') : ''}`;
 
   content.innerHTML = `
     <div class="card-preview type-${card.type}">

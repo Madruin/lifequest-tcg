@@ -742,7 +742,7 @@ function getTriggersForSeason(season) {
     for (const entry of p.board) {
       for (const ab of (entry.card.abilities || [])) {
         if (ab.trigger === season) {
-          results.push({ playerIdx: pi, card: entry.card, entry, text: ab.text, initiative: entry.card.initiative || 0 });
+          results.push({ playerIdx: pi, card: entry.card, entry, text: ab.text });
         }
       }
     }
@@ -750,7 +750,7 @@ function getTriggersForSeason(season) {
   const sp = game.startPlayer;
   results.sort((a,b) => {
     if (a.playerIdx !== b.playerIdx) return a.playerIdx === sp ? -1 : 1;
-    return (b.initiative || 0) - (a.initiative || 0);
+    return 0;
   });
   return results;
 }
@@ -758,7 +758,7 @@ function getTriggersForSeason(season) {
 function emptyTokens() { return { growth:0, sustainability:0, community:0, expression:0, learning:0 }; }
 
 function newPlayer(name) {
-  return { name, lp: 0, tokens: emptyTokens(), hand: [], board: [], deck: [], discard: [], autumnPlayed: false };
+  return { name, lp: 0, tokens: emptyTokens(), hand: [], board: [], deck: [], discard: [] };
 }
 
 function newGameState(p1Name, p2Name) {
@@ -1362,10 +1362,7 @@ function advancePhase() {
         const triggers = getTriggersForSeason('summer');
         if (triggers.length === 0) {
           game.season = 'autumn';
-          game.phaseStep = 'p0-play';
-          game.activePlayer = sp;
-          game.players[0].autumnPlayed = false;
-          game.players[1].autumnPlayed = false;
+          game.phaseStep = 'triggers';
           logAction('--- Autumn begins ---');
           if (isHost) broadcastState('autumn-start');
           render();
@@ -1377,18 +1374,6 @@ function advancePhase() {
       break;
     }
     case 'autumn': {
-      if (game.phaseStep === 'p0-play') {
-        game.activePlayer = sp;
-        if (isHost) broadcastState('autumn-p0');
-        render();
-        return;
-      }
-      if (game.phaseStep === 'p1-play') {
-        game.activePlayer = op;
-        if (isHost) broadcastState('autumn-p1');
-        render();
-        return;
-      }
       if (game.phaseStep === 'triggers') {
         const triggers = getTriggersForSeason('autumn');
         if (triggers.length === 0) {
@@ -1652,17 +1637,6 @@ function execPlayCard(handIndex) {
   if (game.season === 'summer') {
     game.summerConsecutivePasses = 0;
     game.activePlayer = otherPlayer(ap);
-  } else if (game.season === 'autumn') {
-    game.players[ap].autumnPlayed = true;
-    if (game.phaseStep === 'p0-play') {
-      game.phaseStep = 'p1-play';
-    } else {
-      game.phaseStep = 'triggers';
-    }
-  }
-
-  if (game.season === 'autumn' && (game.phaseStep === 'p1-play' || game.phaseStep === 'triggers')) {
-    advancePhase();
   }
   return true;
 }
@@ -1698,15 +1672,6 @@ function execPass() {
       return true;
     }
     game.activePlayer = otherPlayer(ap);
-  } else if (game.season === 'autumn') {
-    logAction(game.players[ap].name + ' passed (Autumn)');
-    if (game.phaseStep === 'p0-play') {
-      game.phaseStep = 'p1-play';
-    } else {
-      game.phaseStep = 'triggers';
-    }
-    advancePhase();
-    return true;
   }
   return true;
 }
@@ -1714,10 +1679,7 @@ function execPass() {
 function execFinishTriggers() {
   if (game.season === 'summer') {
     game.season = 'autumn';
-    game.phaseStep = 'p0-play';
-    game.activePlayer = game.startPlayer;
-    game.players[0].autumnPlayed = false;
-    game.players[1].autumnPlayed = false;
+    game.phaseStep = 'triggers';
     logAction('--- Autumn begins ---');
   } else if (game.season === 'autumn') {
     game.phaseStep = 'development';
@@ -1918,7 +1880,6 @@ function renderCardPreview(card) {
     .join('');
 
   let typeLine = card.type;
-  if (card.initiative) typeLine += ' | Initiative: ' + card.initiative;
   if (card.maxLevel && card.maxLevel > 1) typeLine += ' | Max Level: ' + card.maxLevel;
 
   const abilities = (card.abilities || []).map(a =>
@@ -2395,7 +2356,7 @@ function renderActionPanel() {
     }
     case 'autumn': {
       if (game.phaseStep === 'triggers') {
-        titleEl.textContent = 'Autumn Triggers';
+        titleEl.textContent = 'Autumn — Harvest Triggers';
         renderTriggerPanel('autumn');
         return;
       }
@@ -2404,20 +2365,8 @@ function renderActionPanel() {
         renderDevelopmentPanel();
         return;
       }
-      if (!isMyTurn) return;
-      titleEl.textContent = 'Your Autumn (Play 1 Card)';
-      if (selectionMode?.type === 'play-card') {
-        el.innerHTML = `<button class="btn btn-small btn-secondary" onclick="cancelSelection()">Cancel</button>`;
-        msgEl.textContent = 'Click a card in your hand to play it';
-        return;
-      }
-      const myPa = game.players[myPlayerIdx];
-      const handA = isHost ? myPa.hand : myHand;
-      el.innerHTML = `
-        <button class="btn btn-primary" onclick="enterPlayCardMode()" ${(!handA || handA.length===0)?'disabled':''}>Play a Card</button>
-        <button class="btn btn-secondary" onclick="doPass()">Pass</button>
-      `;
-      msgEl.textContent = 'Play 1 card or pass';
+      titleEl.textContent = 'Autumn — Harvest & Development';
+      msgEl.textContent = 'Autumn triggers resolve, then Locations develop.';
       break;
     }
     case 'winter': {
@@ -2451,11 +2400,11 @@ function renderTriggerPanel(season) {
       <button class="btn btn-primary" onclick="doFinishTriggers()">Continue</button>`;
     return;
   }
-  let html = `<div class="trigger-panel"><h4>Resolve these triggers (Start Player first, by Initiative):</h4>`;
+  let html = `<div class="trigger-panel"><h4>Resolve these triggers (Start Player's first):</h4>`;
   triggers.forEach(t => {
     html += `<div class="trigger-item">
       <span class="ti-owner">${esc(game.players[t.playerIdx].name)}</span>
-      <span class="ti-name">${esc(t.card.name)}</span> (Init: ${t.initiative})
+      <span class="ti-name">${esc(t.card.name)}</span>
       <div class="ti-text">${esc(t.text)}</div>
     </div>`;
   });
